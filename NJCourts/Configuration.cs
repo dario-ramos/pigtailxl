@@ -20,6 +20,30 @@ namespace NJCourts
             }
         }
 
+        public static string ProcessName
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["ProcessName"];
+            }
+        }
+
+        public static string ProcessPath
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["ProcessPath"];
+            }
+        }
+
+        public static string StopFilePath
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["StopFilePath"];
+            }
+        }
+
         public static string ZipCodeFiltersFile
         {
             get

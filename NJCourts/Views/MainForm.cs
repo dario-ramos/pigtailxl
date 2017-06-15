@@ -22,8 +22,20 @@ namespace NJCourts
             InitializeComponent();
         }
 
+        public bool FiltersEnabled
+        {
+            set
+            {
+                cbZipCodeFilters.Enabled = value;
+                rtbZipCodeFilters.Enabled = value;
+                cbDateFilter.Enabled = value;
+                txtDateFiledFrom.Enabled = txtDateFiledTo.Enabled = value;
+                btnStopProcess.Enabled = value;
+            }
+        }
+
         /**
-         * Fill the grid
+         * Fill the grid with county data
          */
         public void SetCounties(List<County> counties)
         {
@@ -75,6 +87,36 @@ namespace NJCourts
         public void ShowWarningMessage(string msg)
         {
             ShowColoredTextMessage(msg, Color.Orange);
+        }
+
+        /**
+         * Delegate to presenter
+         */
+        private void BtnStartProcess_OnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                _presenter.StartProcess();
+            }
+            catch(Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        /**
+         * Delegate to presenter 
+         */
+        private void BtnStopProcess_OnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                _presenter.StopProcess();
+            }
+            catch(Exception ex)
+            {
+                HandleError(ex);
+            }
         }
 
         /**

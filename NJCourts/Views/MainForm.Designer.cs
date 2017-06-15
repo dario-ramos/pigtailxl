@@ -39,10 +39,12 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dgvCounties = new System.Windows.Forms.DataGridView();
-            this.label3 = new System.Windows.Forms.Label();
             this.CountyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CountyCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Processed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label3 = new System.Windows.Forms.Label();
+            this.btnStartProcess = new System.Windows.Forms.Button();
+            this.btnStopProcess = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCounties)).BeginInit();
@@ -50,7 +52,7 @@
             // 
             // rtbMessageLog
             // 
-            this.rtbMessageLog.Location = new System.Drawing.Point(12, 488);
+            this.rtbMessageLog.Location = new System.Drawing.Point(12, 522);
             this.rtbMessageLog.Name = "rtbMessageLog";
             this.rtbMessageLog.ReadOnly = true;
             this.rtbMessageLog.Size = new System.Drawing.Size(601, 109);
@@ -155,15 +157,6 @@
             this.dgvCounties.Size = new System.Drawing.Size(556, 225);
             this.dgvCounties.TabIndex = 0;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(26, 472);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(71, 13);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "Message Log";
-            // 
             // CountyName
             // 
             this.CountyName.HeaderText = "County Name";
@@ -182,11 +175,42 @@
             this.Processed.Name = "Processed";
             this.Processed.ReadOnly = true;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 506);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(71, 13);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Message Log";
+            // 
+            // btnStartProcess
+            // 
+            this.btnStartProcess.Location = new System.Drawing.Point(413, 493);
+            this.btnStartProcess.Name = "btnStartProcess";
+            this.btnStartProcess.Size = new System.Drawing.Size(92, 23);
+            this.btnStartProcess.TabIndex = 12;
+            this.btnStartProcess.Text = "Start Process";
+            this.btnStartProcess.UseVisualStyleBackColor = true;
+            this.btnStartProcess.Click += new System.EventHandler(this.BtnStartProcess_OnClick);
+            // 
+            // btnStopProcess
+            // 
+            this.btnStopProcess.Location = new System.Drawing.Point(521, 493);
+            this.btnStopProcess.Name = "btnStopProcess";
+            this.btnStopProcess.Size = new System.Drawing.Size(92, 23);
+            this.btnStopProcess.TabIndex = 13;
+            this.btnStopProcess.Text = "Stop Process";
+            this.btnStopProcess.UseVisualStyleBackColor = true;
+            this.btnStopProcess.Click += new System.EventHandler(this.BtnStopProcess_OnClick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(625, 609);
+            this.ClientSize = new System.Drawing.Size(625, 643);
+            this.Controls.Add(this.btnStopProcess);
+            this.Controls.Add(this.btnStartProcess);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -220,6 +244,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CountyName;
         private System.Windows.Forms.DataGridViewTextBoxColumn CountyCode;
         private System.Windows.Forms.DataGridViewTextBoxColumn Processed;
+        private System.Windows.Forms.Button btnStartProcess;
+        private System.Windows.Forms.Button btnStopProcess;
     }
 }
 

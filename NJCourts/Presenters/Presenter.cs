@@ -23,6 +23,8 @@ namespace NJCourts.Presenters
             _model.CountiesRead += OnCountiesRead;
             _model.DateFilterRead += OnDateFilterRead;
             _model.Error += OnError;
+            _model.ProcessStopped += OnProcessStopped;
+            _model.StoppingProcess += OnStoppingProcess;
             _model.Warning += OnWarning;
             _model.ZipCodeFiltersRead += OnZipCodesRead;
         }
@@ -33,6 +35,22 @@ namespace NJCourts.Presenters
         public void Init()
         {
             _model.Init();
+        }
+
+        /**
+         * Delegate to model
+         */
+        public void StartProcess()
+        {
+            _model.StartProcess();
+        }
+
+        /**
+         * Delegate to model
+         */
+        public void StopProcess()
+        {
+            _model.StopProcess();
         }
 
         /**
@@ -57,6 +75,22 @@ namespace NJCourts.Presenters
         private void OnError(string errorMsg)
         {
             _view.ShowErrorMessage(errorMsg);
+        }
+
+        /**
+         * Re-enable filters 
+         */
+        private void OnProcessStopped()
+        {
+            _view.FiltersEnabled = true;
+        }
+
+        /**
+         * Disable filters until process is stoppped
+         */
+        private void OnStoppingProcess()
+        {
+            _view.FiltersEnabled = false;
         }
 
         /**

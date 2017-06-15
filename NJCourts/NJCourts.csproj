@@ -50,6 +50,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Models\County.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\ProcessMonitor.cs" />
     <Compile Include="Presenters\Presenter.cs" />
     <Compile Include="Views\IView.cs" />
     <Compile Include="Views\MainForm.cs">

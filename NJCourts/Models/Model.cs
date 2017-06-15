@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 
@@ -12,9 +13,13 @@ namespace NJCourts.Models
     {
         public event Action CountiesRead;
         public event Action DateFilterRead;
+        public event Action ProcessStopped;
+        public event Action StoppingProcess;
         public event Action ZipCodeFiltersRead;
         public event Action<string> Error;
         public event Action<string> Warning;
+
+        private ProcessMonitor _processMonitor;
 
         /**
          * Constructor
@@ -25,6 +30,7 @@ namespace NJCourts.Models
             DateFiledFrom = null;
             DateFiledTo = null;
             ZipCodeFilters = new List<int>();
+            _processMonitor = new ProcessMonitor();
         }
 
         /**
@@ -73,9 +79,32 @@ namespace NJCourts.Models
         }
 
         /**
-         * 
+         * Fire process 
          */
-        void ReadCounties()
+        public void StartProcess()
+        {
+            Process.Start(Configuration.ProcessPath);
+        }
+
+        /**
+         * Create file in control dir, disable filters and wait for process to end
+         */
+        public void StopProcess()
+        {
+            File.Create(Configuration.StopFilePath);
+            StoppingProcess?.Invoke();
+            Process[] processes = Process.GetProcessesByName(Configuration.ProcessName);
+            foreach(Process p in processes)
+            {
+                p.WaitForExit();
+            }
+            ProcessStopped?.Invoke();
+        }
+
+        /**
+         * Read all county files
+         */
+        private void ReadCounties()
         {
             const string DONE_SUFFIX = "|Done";
             foreach (string filePath in Directory.EnumerateFiles(Configuration.InputDirectory))

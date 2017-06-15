@@ -6,6 +6,8 @@ namespace NJCourts.Views
 {
     public interface IView
     {
+        bool FiltersEnabled { set; }
+
         void SetCounties(List<County> counties);
 
         void SetDateFilter(DateTime? dateFiledFrom, DateTime? dateFiledTo);
