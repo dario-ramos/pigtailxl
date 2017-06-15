@@ -11,5 +11,13 @@ namespace NJCourts
                 return ConfigurationManager.AppSettings["InputDirectory"];
             }
         }
+
+        public static string ZipCodeFile
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["ZipCodeFile"];
+            }
+        }
     }
 }

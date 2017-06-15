@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace NJCourts
 {
@@ -21,15 +22,30 @@ namespace NJCourts
         }
 
         /**
+         * Place zip code filter values on the UI. Overwrite everything, don't append
+         */
+        public void SetZipCodeFilters(List<int> zipCodeFilters)
+        {
+            rtbZipCodeFilters.Text = string.Join(",", zipCodeFilters);
+            cbZipCodeFilters.Checked = zipCodeFilters.Count > 0;
+        }
+
+        /**
          * Display an error message. It's appended, so older ones are kept
          * Save current color, set to red, print and restore
-         */ 
+         */
         public void ShowErrorMessage(string errorMsg)
         {
-            Color oldColor = rtbMessageLog.SelectionColor;
-            rtbMessageLog.SelectionColor = Color.Red;
-            rtbMessageLog.AppendText(errorMsg + Environment.NewLine);
-            rtbMessageLog.SelectionColor = oldColor;
+            ShowColoredTextMessage(errorMsg, Color.Red);
+        }
+
+        /**
+         * Display a warning message. It's appended, so older ones are kept
+         * Save current color, set to orange, print and restore
+         */
+        public void ShowWarningMessage(string msg)
+        {
+            ShowColoredTextMessage(msg, Color.Orange);
         }
 
         /**
@@ -53,6 +69,14 @@ namespace NJCourts
             {
                 HandleError(ex);
             }
+        }
+
+        private void ShowColoredTextMessage(string msg, Color color)
+        {
+            Color oldColor = rtbMessageLog.SelectionColor;
+            rtbMessageLog.SelectionColor = color;
+            rtbMessageLog.AppendText(msg + Environment.NewLine);
+            rtbMessageLog.SelectionColor = oldColor;
         }
 
     }
