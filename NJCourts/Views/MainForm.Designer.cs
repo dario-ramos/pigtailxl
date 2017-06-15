@@ -38,8 +38,14 @@
             this.txtDateFiledTo = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.dgvCounties = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
+            this.CountyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CountyCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Processed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCounties)).BeginInit();
             this.SuspendLayout();
             // 
             // rtbMessageLog
@@ -53,16 +59,16 @@
             // 
             // rtbZipCodeFilters
             // 
-            this.rtbZipCodeFilters.Location = new System.Drawing.Point(20, 57);
+            this.rtbZipCodeFilters.Location = new System.Drawing.Point(17, 52);
             this.rtbZipCodeFilters.Name = "rtbZipCodeFilters";
-            this.rtbZipCodeFilters.Size = new System.Drawing.Size(556, 66);
+            this.rtbZipCodeFilters.Size = new System.Drawing.Size(556, 44);
             this.rtbZipCodeFilters.TabIndex = 1;
             this.rtbZipCodeFilters.Text = "";
             // 
             // cbZipCodeFilters
             // 
             this.cbZipCodeFilters.AutoSize = true;
-            this.cbZipCodeFilters.Location = new System.Drawing.Point(20, 34);
+            this.cbZipCodeFilters.Location = new System.Drawing.Point(17, 20);
             this.cbZipCodeFilters.Name = "cbZipCodeFilters";
             this.cbZipCodeFilters.Size = new System.Drawing.Size(66, 17);
             this.cbZipCodeFilters.TabIndex = 2;
@@ -72,7 +78,7 @@
             // cbDateFilter
             // 
             this.cbDateFilter.AutoSize = true;
-            this.cbDateFilter.Location = new System.Drawing.Point(20, 138);
+            this.cbDateFilter.Location = new System.Drawing.Point(17, 111);
             this.cbDateFilter.Name = "cbDateFilter";
             this.cbDateFilter.Size = new System.Drawing.Size(74, 17);
             this.cbDateFilter.TabIndex = 4;
@@ -81,7 +87,7 @@
             // 
             // txtDateFiledFrom
             // 
-            this.txtDateFiledFrom.Location = new System.Drawing.Point(20, 183);
+            this.txtDateFiledFrom.Location = new System.Drawing.Point(17, 156);
             this.txtDateFiledFrom.Name = "txtDateFiledFrom";
             this.txtDateFiledFrom.Size = new System.Drawing.Size(117, 20);
             this.txtDateFiledFrom.TabIndex = 5;
@@ -89,7 +95,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 164);
+            this.label1.Location = new System.Drawing.Point(17, 137);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(81, 13);
             this.label1.TabIndex = 6;
@@ -98,7 +104,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(163, 164);
+            this.label2.Location = new System.Drawing.Point(160, 137);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(71, 13);
             this.label2.TabIndex = 8;
@@ -106,7 +112,7 @@
             // 
             // txtDateFiledTo
             // 
-            this.txtDateFiledTo.Location = new System.Drawing.Point(163, 183);
+            this.txtDateFiledTo.Location = new System.Drawing.Point(160, 156);
             this.txtDateFiledTo.Name = "txtDateFiledTo";
             this.txtDateFiledTo.Size = new System.Drawing.Size(117, 20);
             this.txtDateFiledTo.TabIndex = 7;
@@ -120,21 +126,34 @@
             this.groupBox1.Controls.Add(this.txtDateFiledFrom);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.cbDateFilter);
-            this.groupBox1.Location = new System.Drawing.Point(12, 239);
+            this.groupBox1.Location = new System.Drawing.Point(12, 279);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(601, 216);
+            this.groupBox1.Size = new System.Drawing.Size(601, 190);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filters";
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.dgvCounties);
             this.groupBox2.Location = new System.Drawing.Point(12, 13);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(601, 220);
+            this.groupBox2.Size = new System.Drawing.Size(601, 260);
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Summary";
+            // 
+            // dgvCounties
+            // 
+            this.dgvCounties.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvCounties.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.CountyName,
+            this.CountyCode,
+            this.Processed});
+            this.dgvCounties.Location = new System.Drawing.Point(20, 20);
+            this.dgvCounties.Name = "dgvCounties";
+            this.dgvCounties.Size = new System.Drawing.Size(556, 225);
+            this.dgvCounties.TabIndex = 0;
             // 
             // label3
             // 
@@ -144,6 +163,24 @@
             this.label3.Size = new System.Drawing.Size(71, 13);
             this.label3.TabIndex = 11;
             this.label3.Text = "Message Log";
+            // 
+            // CountyName
+            // 
+            this.CountyName.HeaderText = "County Name";
+            this.CountyName.Name = "CountyName";
+            this.CountyName.ReadOnly = true;
+            // 
+            // CountyCode
+            // 
+            this.CountyCode.HeaderText = "County Code";
+            this.CountyCode.Name = "CountyCode";
+            this.CountyCode.ReadOnly = true;
+            // 
+            // Processed
+            // 
+            this.Processed.HeaderText = "Processed";
+            this.Processed.Name = "Processed";
+            this.Processed.ReadOnly = true;
             // 
             // MainForm
             // 
@@ -159,6 +196,8 @@
             this.Load += new System.EventHandler(this.MainForm_OnLoad);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCounties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -177,6 +216,10 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.DataGridView dgvCounties;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CountyName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CountyCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Processed;
     }
 }
 

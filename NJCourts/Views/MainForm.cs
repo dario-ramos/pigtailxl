@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using NJCourts.Models;
 
 namespace NJCourts
 {
@@ -19,6 +20,18 @@ namespace NJCourts
         public MainForm()
         {
             InitializeComponent();
+        }
+
+        /**
+         * Fill the grid
+         */
+        public void SetCounties(List<County> counties)
+        {
+            counties.Sort(delegate (County c1, County c2) { return c1.Name.CompareTo(c2.Name); });
+            foreach(County county in counties)
+            {
+                dgvCounties.Rows.Add(county.Name, county.Code, county.Processed? "Done" : "");
+            }
         }
 
         /**

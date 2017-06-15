@@ -20,6 +20,7 @@ namespace NJCourts.Presenters
         {
             _model = new Model();
             _view = view;
+            _model.CountiesRead += OnCountiesRead;
             _model.DateFilterRead += OnDateFilterRead;
             _model.Error += OnError;
             _model.Warning += OnWarning;
@@ -32,6 +33,14 @@ namespace NJCourts.Presenters
         public void Init()
         {
             _model.Init();
+        }
+
+        /**
+         * When the model is done reading counties, show them in the view
+         */
+        private void OnCountiesRead()
+        {
+            _view.SetCounties(_model.Counties);
         }
 
         /**

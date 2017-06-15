@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
+    <Compile Include="Models\County.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Presenters\Presenter.cs" />
     <Compile Include="Views\IView.cs" />

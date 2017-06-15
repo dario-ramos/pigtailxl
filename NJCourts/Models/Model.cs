@@ -10,6 +10,7 @@ namespace NJCourts.Models
      */
     public class Model
     {
+        public event Action CountiesRead;
         public event Action DateFilterRead;
         public event Action ZipCodeFiltersRead;
         public event Action<string> Error;
@@ -20,9 +21,10 @@ namespace NJCourts.Models
          */
         public Model()
         {
-            ZipCodeFilters = new List<int>();
+            Counties = new List<County>();
             DateFiledFrom = null;
             DateFiledTo = null;
+            ZipCodeFilters = new List<int>();
         }
 
         /**
@@ -37,6 +39,11 @@ namespace NJCourts.Models
          * End date filter range
          */
         public DateTime? DateFiledTo
+        {
+            get; private set;
+        }
+
+        public List<County> Counties
         {
             get; private set;
         }
@@ -62,6 +69,31 @@ namespace NJCourts.Models
             }
             ReadZipCodeFilters();
             ReadDateFilter();
+            ReadCounties();
+        }
+
+        /**
+         * 
+         */
+        void ReadCounties()
+        {
+            const string DONE_SUFFIX = "|Done";
+            foreach (string filePath in Directory.EnumerateFiles(Configuration.InputDirectory))
+            {
+                string fileName = Path.GetFileName(filePath);
+                if (fileName != Configuration.ZipCodeFiltersFile && fileName != Configuration.DateFiltersFile)
+                {
+                    string county = File.ReadAllText(filePath);
+                    bool processed = county.EndsWith(DONE_SUFFIX);
+                    Counties.Add(new County
+                    {
+                        Code = processed ? int.Parse(county.Replace(DONE_SUFFIX, "")) : int.Parse(county),
+                        Name = fileName,
+                        Processed = processed
+                    });
+                }
+            }
+            CountiesRead?.Invoke();
         }
 
         /**
