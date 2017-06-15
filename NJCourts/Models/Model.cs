@@ -117,7 +117,7 @@ namespace NJCourts.Models
                     Counties.Add(new County
                     {
                         Code = processed ? int.Parse(county.Replace(DONE_SUFFIX, "")) : int.Parse(county),
-                        Name = fileName,
+                        Name = Path.GetFileNameWithoutExtension(fileName),
                         Processed = processed
                     });
                 }
