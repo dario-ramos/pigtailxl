@@ -4,6 +4,14 @@ namespace NJCourts
 {
     public static class Configuration
     {
+        public static string DateFiltersFile
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["DateFiltersFile"];
+            }
+        }
+
         public static string InputDirectory
         {
             get
@@ -12,11 +20,11 @@ namespace NJCourts
             }
         }
 
-        public static string ZipCodeFile
+        public static string ZipCodeFiltersFile
         {
             get
             {
-                return ConfigurationManager.AppSettings["ZipCodeFile"];
+                return ConfigurationManager.AppSettings["ZipCodeFiltersFile"];
             }
         }
     }

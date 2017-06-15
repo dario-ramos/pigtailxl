@@ -22,6 +22,22 @@ namespace NJCourts
         }
 
         /**
+         * Only set filter checkbox as checked if both dates are set
+         */
+        public void SetDateFilter(DateTime? dateFiledFrom, DateTime? dateFiledTo)
+        {
+            if(dateFiledFrom.HasValue)
+            {
+                txtDateFiledFrom.Text = dateFiledFrom.Value.ToString("dd/mm/yyyy");
+            }
+            if (dateFiledTo.HasValue)
+            {
+                txtDateFiledTo.Text = dateFiledTo.Value.ToString("dd/mm/yyyy");
+            }
+            cbDateFilter.Checked = dateFiledFrom.HasValue && dateFiledTo.HasValue;
+        }
+
+        /**
          * Place zip code filter values on the UI. Overwrite everything, don't append
          */
         public void SetZipCodeFilters(List<int> zipCodeFilters)

@@ -20,6 +20,7 @@ namespace NJCourts.Presenters
         {
             _model = new Model();
             _view = view;
+            _model.DateFilterRead += OnDateFilterRead;
             _model.Error += OnError;
             _model.Warning += OnWarning;
             _model.ZipCodeFiltersRead += OnZipCodesRead;
@@ -34,18 +35,32 @@ namespace NJCourts.Presenters
         }
 
         /**
+         * When the model is done reading the date filter, show it in the view
+         */
+        private void OnDateFilterRead()
+        {
+            _view.SetDateFilter(_model.DateFiledFrom, _model.DateFiledTo);
+        }
+
+        /**
          * When the model reports an error, show it in the view
-         */ 
+         */
         private void OnError(string errorMsg)
         {
             _view.ShowErrorMessage(errorMsg);
         }
 
+        /**
+         * When the model reports a warning, show it in the view
+         */
         private void OnWarning(string msg)
         {
             _view.ShowWarningMessage(msg);
         }
 
+        /**
+         * When the model is done reading all zip code filters, show them in the view
+         */
         private void OnZipCodesRead()
         {
             _view.SetZipCodeFilters(_model.ZipCodeFilters);
