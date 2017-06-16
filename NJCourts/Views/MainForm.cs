@@ -4,13 +4,14 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using NJCourts.Models;
+using ComponentFactory.Krypton.Toolkit;
 
 namespace NJCourts
 {
     /**
      * Application main and only form
      */
-    public partial class MainForm : Form, IView
+    public partial class MainForm : KryptonForm, IView
     {
         private Presenters.Presenter _presenter;
 
@@ -26,11 +27,16 @@ namespace NJCourts
         {
             set
             {
-                cbZipCodeFilters.Enabled = value;
-                rtbZipCodeFilters.Enabled = value;
-                cbDateFilter.Enabled = value;
-                txtDateFiledFrom.Enabled = txtDateFiledTo.Enabled = value;
-                btnStopProcess.Enabled = value;
+                this.Enabled = value;
+            }
+        }
+
+        public bool ProcessRunning
+        {
+            set
+            {
+                btnStartStopProcess.Text = value ? "Stop Process" : "Start Process";
+                btnStartStopProcess.Enabled = true;
             }
         }
 
@@ -90,28 +96,22 @@ namespace NJCourts
         }
 
         /**
-         * Delegate to presenter
+         * Disable start/stop button while waiting for process to stop
          */
-        private void BtnStartProcess_OnClick(object sender, EventArgs e)
+        public void StoppingProcess()
         {
-            try
-            {
-                _presenter.StartProcess();
-            }
-            catch(Exception ex)
-            {
-                HandleError(ex);
-            }
+            btnStartStopProcess.Enabled = false;
+            btnStartStopProcess.Text = "Stopping...";
         }
 
         /**
-         * Delegate to presenter 
+         * Delegate to presenter
          */
-        private void BtnStopProcess_OnClick(object sender, EventArgs e)
+        private void BtnStartStopProcess_OnClick(object sender, EventArgs e)
         {
             try
             {
-                _presenter.StopProcess();
+                _presenter.StartStopProcess();
             }
             catch(Exception ex)
             {

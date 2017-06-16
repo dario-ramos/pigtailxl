@@ -8,6 +8,8 @@ namespace NJCourts.Views
     {
         bool FiltersEnabled { set; }
 
+        bool ProcessRunning { set; }
+
         void SetCounties(List<County> counties);
 
         void SetDateFilter(DateTime? dateFiledFrom, DateTime? dateFiledTo);
@@ -17,5 +19,7 @@ namespace NJCourts.Views
         void ShowErrorMessage(string errorMsg);
 
         void ShowWarningMessage(string msg);
+
+        void StoppingProcess();
     }
 }

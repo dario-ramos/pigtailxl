@@ -13,13 +13,14 @@ namespace NJCourts.Models
     {
         public event Action CountiesRead;
         public event Action DateFilterRead;
+        public event Action ProcessStarted;
         public event Action ProcessStopped;
         public event Action StoppingProcess;
         public event Action ZipCodeFiltersRead;
         public event Action<string> Error;
         public event Action<string> Warning;
 
-        private ProcessMonitor _processMonitor;
+        private bool _processRunning;
 
         /**
          * Constructor
@@ -30,7 +31,7 @@ namespace NJCourts.Models
             DateFiledFrom = null;
             DateFiledTo = null;
             ZipCodeFilters = new List<int>();
-            _processMonitor = new ProcessMonitor();
+            StopProcess();
         }
 
         /**
@@ -79,25 +80,40 @@ namespace NJCourts.Models
         }
 
         /**
-         * Fire process 
+         * Start or stop process according to current state
          */
-        public void StartProcess()
+        public void StartStopProcess()
+        {
+            if (_processRunning)
+            {
+                StopProcess();
+            }else
+            {
+                StartProcess();
+            }
+        }
+
+        private void StartProcess()
         {
             Process.Start(Configuration.ProcessPath);
+            ProcessStarted?.Invoke();
+            _processRunning = true;
         }
 
         /**
          * Create file in control dir, disable filters and wait for process to end
          */
-        public void StopProcess()
+        private void StopProcess()
         {
-            File.Create(Configuration.StopFilePath);
+            var stopFile = File.Create(Configuration.StopFilePath);
+            stopFile.Close();
             StoppingProcess?.Invoke();
             Process[] processes = Process.GetProcessesByName(Configuration.ProcessName);
             foreach(Process p in processes)
             {
                 p.WaitForExit();
             }
+            _processRunning = false;
             ProcessStopped?.Invoke();
         }
 
