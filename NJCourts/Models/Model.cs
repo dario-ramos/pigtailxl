@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace NJCourts.Models
 {
@@ -62,9 +63,13 @@ namespace NJCourts.Models
             get; private set;
         }
 
+        /**
+         * Save filters to files
+         */
         public void ApplyFilters(List<int> zipCodeFilters, Tuple<DateTime?, DateTime?> dateFilter)
         {
-            //TODO
+            SaveZipCodeFilters(zipCodeFilters);
+            SaveDateFilter(dateFilter);
         }
 
         /**
@@ -138,6 +143,7 @@ namespace NJCourts.Models
                 if (fileName != Configuration.ZipCodeFiltersFile && fileName != Configuration.DateFiltersFile)
                 {
                     string county = File.ReadAllText(filePath);
+                    county = county.Replace(Environment.NewLine, "");
                     bool processed = county.EndsWith(DONE_SUFFIX);
                     Counties.Add(new County
                     {
@@ -162,29 +168,41 @@ namespace NJCourts.Models
                 Warning?.Invoke("Date filters file " + dateFilterFilePath + " does not exist, will be created empty");
                 File.Create(dateFilterFilePath);
             }
-            using (StreamReader sr = File.OpenText(dateFilterFilePath))
+            string s = File.ReadAllText(dateFilterFilePath);
+            if (string.IsNullOrWhiteSpace(s))
             {
-                string line = string.Empty;
-                int iLine = 1;
-                while ((line = sr.ReadLine()) != null)
+                DateFilterRead?.Invoke();
+                return;
+            }
+            string[] dateStrings = s.Split(',');
+            if(dateStrings.Length >= 1)
+            {
+                DateTime date;
+                if (DateTime.TryParseExact(dateStrings[0], "dd/mm/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
                 {
-                    DateTime date;
-                    if (DateTime.TryParseExact(line, "dd/mm/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                    if (DateFiledFrom == null)
                     {
-                        if(DateFiledFrom == null)
-                        {
-                            DateFiledFrom = date;
-                        }else if(DateFiledTo == null)
-                        {
-                            DateFiledTo = date;
-                            break;
-                        }
+                        DateFiledFrom = date;
                     }
-                    else
+                }
+                else
+                {
+                    Warning?.Invoke("Invalid from date " + dateStrings[0]);
+                }
+            }
+            if (dateStrings.Length >= 2)
+            {
+                DateTime date;
+                if (DateTime.TryParseExact(dateStrings[1], "dd/mm/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                {
+                    if (DateFiledTo == null)
                     {
-                        Warning?.Invoke("Invalid date " + line + " in line " + iLine);
+                        DateFiledTo = date;
                     }
-                    iLine++;
+                }
+                else
+                {
+                    Warning?.Invoke("Invalid to date " + dateStrings[1]);
                 }
             }
             DateFilterRead?.Invoke();
@@ -201,24 +219,30 @@ namespace NJCourts.Models
                 Warning?.Invoke("Zip file " + zipCodeFiltersFilePath + " does not exist, will be created empty");
                 File.Create(zipCodeFiltersFilePath);
             }
-            using (StreamReader sr = File.OpenText(zipCodeFiltersFilePath))
+            string zipCodeFilters = File.ReadAllText(zipCodeFiltersFilePath);
+            if (string.IsNullOrWhiteSpace(zipCodeFilters))
             {
-                string line = string.Empty;
-                int iLine = 1;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    int zipCodeFilter = -1;
-                    if( int.TryParse(line, out zipCodeFilter))
-                    {
-                        ZipCodeFilters.Add(zipCodeFilter);
-                    }else
-                    {
-                        Warning?.Invoke("Non numeric zip code " + line + " in line " + iLine);
-                    }
-                    iLine++;
-                }
+                ZipCodeFiltersRead?.Invoke();
+                return;
             }
+            ZipCodeFilters = zipCodeFilters.Split(',').Select(Int32.Parse).ToList();
             ZipCodeFiltersRead?.Invoke();
+        }
+
+        private void SaveDateFilter(Tuple<DateTime?,DateTime?> dateFilter)
+        {
+            string dateFrom = dateFilter.Item1.HasValue ? dateFilter.Item1.Value.ToString("dd/mm/yyyy") : "";
+            string dateTo = dateFilter.Item2.HasValue ? dateFilter.Item2.Value.ToString("dd/mm/yyyy") : "";
+            string toSave = dateFrom + ","  + dateTo;
+            string dateFilterFilePath = Path.Combine(Configuration.InputDirectory, Configuration.DateFiltersFile);
+            File.WriteAllText(dateFilterFilePath, toSave);
+        }
+
+        private void SaveZipCodeFilters(List<int> zipCodeFilters)
+        {
+            string toSave = string.Join(",", zipCodeFilters);
+            string zipCodeFiltersFilePath = Path.Combine(Configuration.InputDirectory, Configuration.ZipCodeFiltersFile);
+            File.WriteAllText(zipCodeFiltersFilePath, toSave);
         }
     }
 }

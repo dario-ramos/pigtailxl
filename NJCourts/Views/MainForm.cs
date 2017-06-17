@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using NJCourts.Models;
 using ComponentFactory.Krypton.Toolkit;
 using System.Linq;
+using System.Globalization;
 
 namespace NJCourts
 {
@@ -65,7 +66,18 @@ namespace NJCourts
         {
             get
             {
-                return new Tuple<DateTime?, DateTime?>(null, null);
+                DateTime? dateFrom = null;
+                DateTime? dateTo = null;
+                DateTime read;
+                if (DateTime.TryParseExact(txtDateFiledFrom.Text, "dd/mm/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out read))
+                {
+                    dateFrom = read;
+                }
+                if (DateTime.TryParseExact(txtDateFiledTo.Text, "dd/mm/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out read))
+                {
+                    dateTo = read;
+                }
+                return new Tuple<DateTime?, DateTime?>(dateFrom, dateTo);
             }
             set
             {
