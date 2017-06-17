@@ -31,6 +31,14 @@ namespace NJCourts.Presenters
         }
 
         /**
+         * Grab data from view and send to model
+         */
+        public void ApplyFilters()
+        {
+            _model.ApplyFilters(_view.ZipCodeFilters, _view.DateFilter);
+        }
+
+        /**
          * Initialize model
          */
         public void Init()
@@ -59,7 +67,7 @@ namespace NJCourts.Presenters
          */
         private void OnDateFilterRead()
         {
-            _view.SetDateFilter(_model.DateFiledFrom, _model.DateFiledTo);
+            _view.DateFilter = new Tuple<DateTime?, DateTime?>(_model.DateFiledFrom, _model.DateFiledTo);
         }
 
         /**
@@ -109,7 +117,8 @@ namespace NJCourts.Presenters
          */
         private void OnZipCodesRead()
         {
-            _view.SetZipCodeFilters(_model.ZipCodeFilters);
+            _view.ZipCodeFilters = _model.ZipCodeFilters;
         }
+
     }
 }

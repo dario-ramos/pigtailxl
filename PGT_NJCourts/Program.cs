@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace PGT_NJCourts.exe
 {
@@ -14,7 +9,7 @@ namespace PGT_NJCourts.exe
         {
             while (!File.Exists(@"C:\Temp\NJCourts\Stop.txt"))
             {
-                Thread.Sleep(30000);
+                Thread.Sleep(10000);
             }
         }
     }

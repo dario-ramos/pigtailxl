@@ -31,7 +31,6 @@ namespace NJCourts.Models
             DateFiledFrom = null;
             DateFiledTo = null;
             ZipCodeFilters = new List<int>();
-            StopProcess();
         }
 
         /**
@@ -63,6 +62,11 @@ namespace NJCourts.Models
             get; private set;
         }
 
+        public void ApplyFilters(List<int> zipCodeFilters, Tuple<DateTime?, DateTime?> dateFilter)
+        {
+            //TODO
+        }
+
         /**
          * Check if input directory exists 
          * Then, read all files
@@ -77,6 +81,7 @@ namespace NJCourts.Models
             ReadZipCodeFilters();
             ReadDateFilter();
             ReadCounties();
+            StopProcess();
         }
 
         /**
@@ -105,12 +110,16 @@ namespace NJCourts.Models
          */
         private void StopProcess()
         {
-            var stopFile = File.Create(Configuration.StopFilePath);
-            stopFile.Close();
             StoppingProcess?.Invoke();
+            Process[] allProcesses = Process.GetProcesses();
             Process[] processes = Process.GetProcessesByName(Configuration.ProcessName);
-            foreach(Process p in processes)
+            foreach (Process p in processes)
             {
+                if (!File.Exists(Configuration.StopFilePath))
+                {
+                    var stopFile = File.Create(Configuration.StopFilePath);
+                    stopFile.Close();
+                }
                 p.WaitForExit();
             }
             _processRunning = false;

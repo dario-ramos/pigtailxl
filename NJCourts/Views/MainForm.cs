@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using NJCourts.Models;
 using ComponentFactory.Krypton.Toolkit;
+using System.Linq;
 
 namespace NJCourts
 {
@@ -21,6 +22,9 @@ namespace NJCourts
         public MainForm()
         {
             InitializeComponent();
+            Enabled = false;
+            ProcessRunning = true;
+            StoppingProcess();
         }
 
         public bool FiltersEnabled
@@ -40,6 +44,45 @@ namespace NJCourts
             }
         }
 
+        public List<int> ZipCodeFilters
+        {
+            get
+            {
+                return rtbZipCodeFilters.Text.Split(',').Select(Int32.Parse).ToList();
+            }
+            set
+            {
+                rtbZipCodeFilters.Text = string.Join(",", value);
+                cbZipCodeFilters.Checked = value.Count > 0;
+            }
+        }
+
+        /**
+         * Only set filter checkbox as checked if both dates are set
+         * From: Item1, To: Item2
+         */
+        public Tuple<DateTime?, DateTime?> DateFilter
+        {
+            get
+            {
+                return new Tuple<DateTime?, DateTime?>(null, null);
+            }
+            set
+            {
+                var dateFiledFrom = value.Item1;
+                var dateFiledTo = value.Item2;
+                if (dateFiledFrom.HasValue)
+                {
+                    txtDateFiledFrom.Text = dateFiledFrom.Value.ToString("dd/mm/yyyy");
+                }
+                if (dateFiledTo.HasValue)
+                {
+                    txtDateFiledTo.Text = dateFiledTo.Value.ToString("dd/mm/yyyy");
+                }
+                cbDateFilter.Checked = dateFiledFrom.HasValue && dateFiledTo.HasValue;
+            }
+        }
+
         /**
          * Fill the grid with county data
          */
@@ -50,31 +93,6 @@ namespace NJCourts
             {
                 dgvCounties.Rows.Add(county.Name, county.Code, county.Processed? "Done" : "");
             }
-        }
-
-        /**
-         * Only set filter checkbox as checked if both dates are set
-         */
-        public void SetDateFilter(DateTime? dateFiledFrom, DateTime? dateFiledTo)
-        {
-            if(dateFiledFrom.HasValue)
-            {
-                txtDateFiledFrom.Text = dateFiledFrom.Value.ToString("dd/mm/yyyy");
-            }
-            if (dateFiledTo.HasValue)
-            {
-                txtDateFiledTo.Text = dateFiledTo.Value.ToString("dd/mm/yyyy");
-            }
-            cbDateFilter.Checked = dateFiledFrom.HasValue && dateFiledTo.HasValue;
-        }
-
-        /**
-         * Place zip code filter values on the UI. Overwrite everything, don't append
-         */
-        public void SetZipCodeFilters(List<int> zipCodeFilters)
-        {
-            rtbZipCodeFilters.Text = string.Join(",", zipCodeFilters);
-            cbZipCodeFilters.Checked = zipCodeFilters.Count > 0;
         }
 
         /**
@@ -102,6 +120,14 @@ namespace NJCourts
         {
             btnStartStopProcess.Enabled = false;
             btnStartStopProcess.Text = "Stopping...";
+        }
+
+        /**
+         * Delegate to presenter
+         */
+        private void BtnApplyFilters_OnClick(object sender, EventArgs e)
+        {
+            _presenter.ApplyFilters();
         }
 
         /**
@@ -135,13 +161,30 @@ namespace NJCourts
             try
             {
                 _presenter = new Presenters.Presenter(this);
-                _presenter.Init();
             }catch(Exception ex)
             {
                 HandleError(ex);
             }
         }
 
+        /**
+         * As soon as the window is visible, init everything
+         */
+        private void MainForm_OnShown(object sender, EventArgs e)
+        {
+            try
+            {
+                _presenter.Init();
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        /**
+         * Selection color is restored after printing
+         */ 
         private void ShowColoredTextMessage(string msg, Color color)
         {
             Color oldColor = rtbMessageLog.SelectionColor;

@@ -40,6 +40,7 @@ namespace NJCourts
             this.label2 = new System.Windows.Forms.Label();
             this.txtDateFiledTo = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnApplyFilters = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dgvCounties = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
             this.CountyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -120,6 +121,7 @@ namespace NJCourts
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnApplyFilters);
             this.groupBox1.Controls.Add(this.rtbZipCodeFilters);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.cbZipCodeFilters);
@@ -133,6 +135,15 @@ namespace NJCourts
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filters";
+            // 
+            // btnApplyFilters
+            // 
+            this.btnApplyFilters.Location = new System.Drawing.Point(505, 156);
+            this.btnApplyFilters.Name = "btnApplyFilters";
+            this.btnApplyFilters.Size = new System.Drawing.Size(90, 25);
+            this.btnApplyFilters.TabIndex = 9;
+            this.btnApplyFilters.Values.Text = "Apply";
+            this.btnApplyFilters.Click += new System.EventHandler(this.BtnApplyFilters_OnClick);
             // 
             // groupBox2
             // 
@@ -192,7 +203,7 @@ namespace NJCourts
             // 
             // btnStartStopProcess
             // 
-            this.btnStartStopProcess.Location = new System.Drawing.Point(523, 491);
+            this.btnStartStopProcess.Location = new System.Drawing.Point(517, 491);
             this.btnStartStopProcess.Name = "btnStartStopProcess";
             this.btnStartStopProcess.Size = new System.Drawing.Size(90, 25);
             this.btnStartStopProcess.TabIndex = 14;
@@ -212,6 +223,7 @@ namespace NJCourts
             this.Name = "MainForm";
             this.Text = "NJCourts - Desktop App";
             this.Load += new System.EventHandler(this.MainForm_OnLoad);
+            this.Shown += new System.EventHandler(this.MainForm_OnShown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -240,6 +252,7 @@ namespace NJCourts
         private System.Windows.Forms.DataGridViewTextBoxColumn CountyName;
         private System.Windows.Forms.DataGridViewTextBoxColumn CountyCode;
         private System.Windows.Forms.DataGridViewTextBoxColumn Processed;
+        private KryptonButton btnApplyFilters;
     }
 }
 
