@@ -222,6 +222,7 @@ namespace NJCourts
             this.Controls.Add(this.rtbMessageLog);
             this.Name = "MainForm";
             this.Text = "NJCourts - Desktop App";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_OnLoad);
             this.Shown += new System.EventHandler(this.MainForm_OnShown);
             this.groupBox1.ResumeLayout(false);

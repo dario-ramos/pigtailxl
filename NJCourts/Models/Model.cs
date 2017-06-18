@@ -117,6 +117,27 @@ namespace NJCourts.Models
         }
 
         /**
+         * Create file in control dir, disable filters and wait for process to end
+         */
+        public void StopProcess()
+        {
+            StoppingProcess?.Invoke();
+            Process[] allProcesses = Process.GetProcesses();
+            Process[] processes = Process.GetProcessesByName(Configuration.ProcessName);
+            foreach (Process p in processes)
+            {
+                if (!File.Exists(Configuration.StopFilePath))
+                {
+                    var stopFile = File.Create(Configuration.StopFilePath);
+                    stopFile.Close();
+                }
+                p.WaitForExit();
+            }
+            _processRunning = false;
+            ProcessStopped?.Invoke();
+        }
+
+        /**
          * Event handler for when a file's contents change
          * */
         private void OnCountyFileChanged(object source, FileSystemEventArgs e)
@@ -151,7 +172,6 @@ namespace NJCourts.Models
                         }
                         // do something...
                         _lastRead = lastWriteTime;
-
                     }
                 }
             }
@@ -166,27 +186,6 @@ namespace NJCourts.Models
             Process.Start(Configuration.ProcessPath);
             ProcessStarted?.Invoke();
             _processRunning = true;
-        }
-
-        /**
-         * Create file in control dir, disable filters and wait for process to end
-         */
-        private void StopProcess()
-        {
-            StoppingProcess?.Invoke();
-            Process[] allProcesses = Process.GetProcesses();
-            Process[] processes = Process.GetProcessesByName(Configuration.ProcessName);
-            foreach (Process p in processes)
-            {
-                if (!File.Exists(Configuration.StopFilePath))
-                {
-                    var stopFile = File.Create(Configuration.StopFilePath);
-                    stopFile.Close();
-                }
-                p.WaitForExit();
-            }
-            _processRunning = false;
-            ProcessStopped?.Invoke();
         }
 
         /**

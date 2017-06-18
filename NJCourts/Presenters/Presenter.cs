@@ -56,6 +56,14 @@ namespace NJCourts.Presenters
         }
 
         /**
+         * Delegate to model
+         */
+        public void StopProcess()
+        {
+            _model.StopProcess();
+        }
+
+        /**
          * When the model is done reading counties, show them in the view
          */
         private void OnCountiesRead()

@@ -186,6 +186,14 @@ namespace NJCourts
         }
 
         /**
+         * When closing, stop the process if it is active
+         */ 
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _presenter.StopProcess();
+        }
+
+        /**
          * Once form is loaded, create and initialize presenter
          */
         private void MainForm_OnLoad(object sender, System.EventArgs e)
