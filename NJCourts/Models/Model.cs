@@ -18,10 +18,13 @@ namespace NJCourts.Models
         public event Action ProcessStopped;
         public event Action StoppingProcess;
         public event Action ZipCodeFiltersRead;
+        public event Action<County> CountyUpdated;
         public event Action<string> Error;
         public event Action<string> Warning;
 
         private bool _processRunning;
+        private DateTime _lastRead = DateTime.MinValue;
+        private FileSystemWatcher _countiesWatcher;
 
         /**
          * Constructor
@@ -32,6 +35,15 @@ namespace NJCourts.Models
             DateFiledFrom = null;
             DateFiledTo = null;
             ZipCodeFilters = new List<int>();
+            _countiesWatcher = new FileSystemWatcher();
+            _countiesWatcher.Path = Configuration.InputDirectory;
+            _countiesWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                                            | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+            // Only watch text files.
+            _countiesWatcher.Filter = "*.txt";
+            _countiesWatcher.Changed += OnCountyFileChanged;
+            _countiesWatcher.EnableRaisingEvents = true;
+            _lastRead = DateTime.MinValue;
         }
 
         /**
@@ -97,9 +109,55 @@ namespace NJCourts.Models
             if (_processRunning)
             {
                 StopProcess();
-            }else
+            }
+            else
             {
                 StartProcess();
+            }
+        }
+
+        /**
+         * Event handler for when a file's contents change
+         * */
+        private void OnCountyFileChanged(object source, FileSystemEventArgs e)
+        {
+            try
+            {
+                Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
+                lock (e)
+                {
+                    if (e.ChangeType == WatcherChangeTypes.Changed)
+                    {
+                        var now = DateTime.Now;
+                        var lastWriteTime = File.GetLastWriteTime(e.FullPath);
+
+                        string fileName = Path.GetFileNameWithoutExtension(e.FullPath);
+                        if (!fileName.StartsWith("_"))
+                        {
+                            County toUpdate = ReadCounty(e.FullPath);
+                            if (toUpdate == null)
+                            {
+                                return;
+                            }
+                            foreach (var county in Counties)
+                            {
+                                if (county.Name == toUpdate.Name)
+                                {
+                                    county.Code = toUpdate.Code;
+                                    county.Processed = toUpdate.Processed;
+                                    CountyUpdated?.Invoke(county);
+                                }
+                            }
+                        }
+                        // do something...
+                        _lastRead = lastWriteTime;
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Error?.Invoke(ex.Message);
             }
         }
 
@@ -136,24 +194,50 @@ namespace NJCourts.Models
          */
         private void ReadCounties()
         {
-            const string DONE_SUFFIX = "|Done";
+
             foreach (string filePath in Directory.EnumerateFiles(Configuration.InputDirectory))
             {
-                string fileName = Path.GetFileName(filePath);
-                if (fileName != Configuration.ZipCodeFiltersFile && fileName != Configuration.DateFiltersFile)
+                County county = ReadCounty(filePath);
+                if (county != null)
                 {
-                    string county = File.ReadAllText(filePath);
-                    county = county.Replace(Environment.NewLine, "");
-                    bool processed = county.EndsWith(DONE_SUFFIX);
-                    Counties.Add(new County
-                    {
-                        Code = processed ? int.Parse(county.Replace(DONE_SUFFIX, "")) : int.Parse(county),
-                        Name = Path.GetFileNameWithoutExtension(fileName),
-                        Processed = processed
-                    });
+                    Counties.Add(county);
                 }
             }
             CountiesRead?.Invoke();
+        }
+
+        /**
+         * Read county information from a specific file
+         * Check file last write time to discard duplicate events
+         */
+        private County ReadCounty(string filePath)
+        {
+            const string DONE_SUFFIX = "|Done";
+            string fileName = Path.GetFileName(filePath);
+            if (fileName != Configuration.ZipCodeFiltersFile && fileName != Configuration.DateFiltersFile)
+            {
+                string county = "";
+                using (FileStream countyFileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    using (StreamReader countyFileReader = new StreamReader(countyFileStream))
+                    {
+                        county = countyFileReader.ReadToEnd();
+                    }
+                }
+                if (string.IsNullOrWhiteSpace(county))
+                {
+                    return null;
+                }
+                county = county.Replace(Environment.NewLine, "");
+                bool processed = county.EndsWith(DONE_SUFFIX);
+                return new County
+                {
+                    Code = processed ? int.Parse(county.Replace(DONE_SUFFIX, "")) : int.Parse(county),
+                    Name = Path.GetFileNameWithoutExtension(fileName),
+                    Processed = processed
+                };
+            }
+            return null;
         }
 
         /**
@@ -175,7 +259,7 @@ namespace NJCourts.Models
                 return;
             }
             string[] dateStrings = s.Split(',');
-            if(dateStrings.Length >= 1)
+            if (dateStrings.Length >= 1)
             {
                 DateTime date;
                 if (DateTime.TryParseExact(dateStrings[0], "dd/mm/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
@@ -215,7 +299,8 @@ namespace NJCourts.Models
         private void ReadZipCodeFilters()
         {
             string zipCodeFiltersFilePath = Path.Combine(Configuration.InputDirectory, Configuration.ZipCodeFiltersFile);
-            if (!File.Exists(zipCodeFiltersFilePath)){
+            if (!File.Exists(zipCodeFiltersFilePath))
+            {
                 Warning?.Invoke("Zip file " + zipCodeFiltersFilePath + " does not exist, will be created empty");
                 File.Create(zipCodeFiltersFilePath);
             }
@@ -229,11 +314,11 @@ namespace NJCourts.Models
             ZipCodeFiltersRead?.Invoke();
         }
 
-        private void SaveDateFilter(Tuple<DateTime?,DateTime?> dateFilter)
+        private void SaveDateFilter(Tuple<DateTime?, DateTime?> dateFilter)
         {
             string dateFrom = dateFilter.Item1.HasValue ? dateFilter.Item1.Value.ToString("dd/mm/yyyy") : "";
             string dateTo = dateFilter.Item2.HasValue ? dateFilter.Item2.Value.ToString("dd/mm/yyyy") : "";
-            string toSave = dateFrom + ","  + dateTo;
+            string toSave = dateFrom + "," + dateTo;
             string dateFilterFilePath = Path.Combine(Configuration.InputDirectory, Configuration.DateFiltersFile);
             File.WriteAllText(dateFilterFilePath, toSave);
         }

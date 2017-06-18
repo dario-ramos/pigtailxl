@@ -21,5 +21,7 @@ namespace NJCourts.Views
         void ShowWarningMessage(string msg);
 
         void StoppingProcess();
+
+        void UpdateCounty(County county);
     }
 }

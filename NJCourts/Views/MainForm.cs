@@ -103,7 +103,7 @@ namespace NJCourts
             counties.Sort(delegate (County c1, County c2) { return c1.Name.CompareTo(c2.Name); });
             foreach(County county in counties)
             {
-                dgvCounties.Rows.Add(county.Name, county.Code, county.Processed? "Done" : "");
+                dgvCounties.Rows.Add(county.Name, county.Code, county.Processed? "Processed" : "");
             }
         }
 
@@ -132,6 +132,26 @@ namespace NJCourts
         {
             btnStartStopProcess.Enabled = false;
             btnStartStopProcess.Text = "Stopping...";
+        }
+
+        /**
+         * Search the county in the grid and update it
+         */
+        public void UpdateCounty(County county)
+        {
+            foreach(DataGridViewRow row in dgvCounties.Rows)
+            {
+                if(row.Cells["CountyName"].Value == null)
+                {
+                    continue;
+                }
+                if (row.Cells["CountyName"].Value.ToString().Trim() == county.Name)
+                {
+                    row.Cells["CountyCode"].Value = county.Code.ToString();
+                    row.Cells["Processed"].Value = county.Processed? "Processed" : "";
+                    break;
+                }
+            }
         }
 
         /**
@@ -199,10 +219,14 @@ namespace NJCourts
          */ 
         private void ShowColoredTextMessage(string msg, Color color)
         {
-            Color oldColor = rtbMessageLog.SelectionColor;
-            rtbMessageLog.SelectionColor = color;
-            rtbMessageLog.AppendText(msg + Environment.NewLine);
-            rtbMessageLog.SelectionColor = oldColor;
+            this.BeginInvoke
+            (new MethodInvoker(()=>{
+                Color oldColor = rtbMessageLog.SelectionColor;
+                rtbMessageLog.SelectionColor = color;
+                rtbMessageLog.AppendText(msg + Environment.NewLine);
+                rtbMessageLog.SelectionColor = oldColor;
+            }));
+            
         }
 
     }
