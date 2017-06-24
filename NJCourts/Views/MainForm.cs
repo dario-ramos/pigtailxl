@@ -177,6 +177,37 @@ namespace NJCourts
         }
 
         /**
+         * Only allow editing filters when check is set
+         */
+        private void CbDateFilter_OnCheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                dtpDateFrom.Enabled = cbDateFilter.Checked;
+                dtpDateTo.Enabled = cbDateFilter.Checked;
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        /**
+         * Only allow editing filters when check is set
+         */
+        private void CbZipCodeFilters_OnCheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                rtbZipCodeFilters.ReadOnly = !cbZipCodeFilters.Checked;
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        /**
          * Print an error message
          */
         private void HandleError(Exception ex)

@@ -31,7 +31,6 @@ namespace NJCourts
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.rtbMessageLog = new ComponentFactory.Krypton.Toolkit.KryptonRichTextBox();
             this.rtbZipCodeFilters = new ComponentFactory.Krypton.Toolkit.KryptonRichTextBox();
             this.cbZipCodeFilters = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
@@ -39,6 +38,8 @@ namespace NJCourts
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.dtpDateTo = new ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker();
+            this.dtpDateFrom = new ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker();
             this.btnApplyFilters = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dgvCounties = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
@@ -48,8 +49,6 @@ namespace NJCourts
             this.label3 = new System.Windows.Forms.Label();
             this.kryptonManager1 = new ComponentFactory.Krypton.Toolkit.KryptonManager(this.components);
             this.btnStartStopProcess = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.dtpDateFrom = new ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker();
-            this.dtpDateTo = new ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCounties)).BeginInit();
@@ -79,6 +78,7 @@ namespace NJCourts
             this.cbZipCodeFilters.Size = new System.Drawing.Size(71, 20);
             this.cbZipCodeFilters.TabIndex = 2;
             this.cbZipCodeFilters.Values.Text = "Zip Filter";
+            this.cbZipCodeFilters.CheckedChanged += new System.EventHandler(this.CbZipCodeFilters_OnCheckedChanged);
             // 
             // cbDateFilter
             // 
@@ -87,6 +87,7 @@ namespace NJCourts
             this.cbDateFilter.Size = new System.Drawing.Size(79, 20);
             this.cbDateFilter.TabIndex = 4;
             this.cbDateFilter.Values.Text = "Date Filter";
+            this.cbDateFilter.CheckedChanged += new System.EventHandler(this.CbDateFilter_OnCheckedChanged);
             // 
             // label1
             // 
@@ -122,6 +123,26 @@ namespace NJCourts
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filters";
+            // 
+            // dtpDateTo
+            // 
+            this.dtpDateTo.Checked = false;
+            this.dtpDateTo.CustomNullText = " ";
+            this.dtpDateTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDateTo.Location = new System.Drawing.Point(125, 156);
+            this.dtpDateTo.Name = "dtpDateTo";
+            this.dtpDateTo.Size = new System.Drawing.Size(81, 21);
+            this.dtpDateTo.TabIndex = 11;
+            // 
+            // dtpDateFrom
+            // 
+            this.dtpDateFrom.Checked = false;
+            this.dtpDateFrom.CustomNullText = " ";
+            this.dtpDateFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDateFrom.Location = new System.Drawing.Point(20, 156);
+            this.dtpDateFrom.Name = "dtpDateFrom";
+            this.dtpDateFrom.Size = new System.Drawing.Size(81, 21);
+            this.dtpDateFrom.TabIndex = 10;
             // 
             // btnApplyFilters
             // 
@@ -196,28 +217,6 @@ namespace NJCourts
             this.btnStartStopProcess.TabIndex = 14;
             this.btnStartStopProcess.Values.Text = "Start Process";
             this.btnStartStopProcess.Click += new System.EventHandler(this.BtnStartStopProcess_OnClick);
-            // 
-            // dtpDateFrom
-            // 
-            this.dtpDateFrom.Checked = false;
-            this.dtpDateFrom.CustomNullText = " ";
-            this.dtpDateFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDateFrom.Location = new System.Drawing.Point(20, 156);
-            this.dtpDateFrom.Name = "dtpDateFrom";
-            this.dtpDateFrom.Size = new System.Drawing.Size(81, 21);
-            this.dtpDateFrom.TabIndex = 10;
-            this.dtpDateFrom.ValueNullable = ((object)(resources.GetObject("dtpDateFrom.ValueNullable")));
-            // 
-            // dtpDateTo
-            // 
-            this.dtpDateTo.Checked = false;
-            this.dtpDateTo.CustomNullText = " ";
-            this.dtpDateTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDateTo.Location = new System.Drawing.Point(125, 156);
-            this.dtpDateTo.Name = "dtpDateTo";
-            this.dtpDateTo.Size = new System.Drawing.Size(81, 21);
-            this.dtpDateTo.TabIndex = 11;
-            this.dtpDateTo.ValueNullable = ((object)(resources.GetObject("dtpDateTo.ValueNullable")));
             // 
             // MainForm
             // 
