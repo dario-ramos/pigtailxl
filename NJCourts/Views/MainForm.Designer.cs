@@ -31,14 +31,13 @@ namespace NJCourts
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.rtbMessageLog = new ComponentFactory.Krypton.Toolkit.KryptonRichTextBox();
             this.rtbZipCodeFilters = new ComponentFactory.Krypton.Toolkit.KryptonRichTextBox();
             this.cbZipCodeFilters = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.cbDateFilter = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
-            this.txtDateFiledFrom = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtDateFiledTo = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnApplyFilters = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -49,6 +48,8 @@ namespace NJCourts
             this.label3 = new System.Windows.Forms.Label();
             this.kryptonManager1 = new ComponentFactory.Krypton.Toolkit.KryptonManager(this.components);
             this.btnStartStopProcess = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.dtpDateFrom = new ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker();
+            this.dtpDateTo = new ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCounties)).BeginInit();
@@ -87,13 +88,6 @@ namespace NJCourts
             this.cbDateFilter.TabIndex = 4;
             this.cbDateFilter.Values.Text = "Date Filter";
             // 
-            // txtDateFiledFrom
-            // 
-            this.txtDateFiledFrom.Location = new System.Drawing.Point(17, 156);
-            this.txtDateFiledFrom.Name = "txtDateFiledFrom";
-            this.txtDateFiledFrom.Size = new System.Drawing.Size(117, 23);
-            this.txtDateFiledFrom.TabIndex = 5;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -106,27 +100,20 @@ namespace NJCourts
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(160, 137);
+            this.label2.Location = new System.Drawing.Point(123, 137);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(71, 13);
             this.label2.TabIndex = 8;
             this.label2.Text = "Date Filed To";
             // 
-            // txtDateFiledTo
-            // 
-            this.txtDateFiledTo.Location = new System.Drawing.Point(160, 156);
-            this.txtDateFiledTo.Name = "txtDateFiledTo";
-            this.txtDateFiledTo.Size = new System.Drawing.Size(117, 23);
-            this.txtDateFiledTo.TabIndex = 7;
-            // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.dtpDateTo);
+            this.groupBox1.Controls.Add(this.dtpDateFrom);
             this.groupBox1.Controls.Add(this.btnApplyFilters);
             this.groupBox1.Controls.Add(this.rtbZipCodeFilters);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.cbZipCodeFilters);
-            this.groupBox1.Controls.Add(this.txtDateFiledTo);
-            this.groupBox1.Controls.Add(this.txtDateFiledFrom);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.cbDateFilter);
             this.groupBox1.Location = new System.Drawing.Point(12, 279);
@@ -210,11 +197,33 @@ namespace NJCourts
             this.btnStartStopProcess.Values.Text = "Start Process";
             this.btnStartStopProcess.Click += new System.EventHandler(this.BtnStartStopProcess_OnClick);
             // 
+            // dtpDateFrom
+            // 
+            this.dtpDateFrom.Checked = false;
+            this.dtpDateFrom.CustomNullText = " ";
+            this.dtpDateFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDateFrom.Location = new System.Drawing.Point(20, 156);
+            this.dtpDateFrom.Name = "dtpDateFrom";
+            this.dtpDateFrom.Size = new System.Drawing.Size(81, 21);
+            this.dtpDateFrom.TabIndex = 10;
+            this.dtpDateFrom.ValueNullable = ((object)(resources.GetObject("dtpDateFrom.ValueNullable")));
+            // 
+            // dtpDateTo
+            // 
+            this.dtpDateTo.Checked = false;
+            this.dtpDateTo.CustomNullText = " ";
+            this.dtpDateTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDateTo.Location = new System.Drawing.Point(125, 156);
+            this.dtpDateTo.Name = "dtpDateTo";
+            this.dtpDateTo.Size = new System.Drawing.Size(81, 21);
+            this.dtpDateTo.TabIndex = 11;
+            this.dtpDateTo.ValueNullable = ((object)(resources.GetObject("dtpDateTo.ValueNullable")));
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(628, 643);
+            this.ClientSize = new System.Drawing.Size(631, 643);
             this.Controls.Add(this.btnStartStopProcess);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.groupBox2);
@@ -240,10 +249,8 @@ namespace NJCourts
         private KryptonRichTextBox rtbZipCodeFilters;
         private KryptonCheckBox cbZipCodeFilters;
         private KryptonCheckBox cbDateFilter;
-        private KryptonTextBox txtDateFiledFrom;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private KryptonTextBox txtDateFiledTo;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label3;
@@ -254,6 +261,8 @@ namespace NJCourts
         private System.Windows.Forms.DataGridViewTextBoxColumn CountyCode;
         private System.Windows.Forms.DataGridViewTextBoxColumn Processed;
         private KryptonButton btnApplyFilters;
+        private KryptonDateTimePicker dtpDateFrom;
+        private KryptonDateTimePicker dtpDateTo;
     }
 }
 

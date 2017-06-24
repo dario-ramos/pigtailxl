@@ -68,14 +68,13 @@ namespace NJCourts
             {
                 DateTime? dateFrom = null;
                 DateTime? dateTo = null;
-                DateTime read;
-                if (DateTime.TryParseExact(txtDateFiledFrom.Text, "dd/mm/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out read))
+                if (dtpDateFrom.Checked)
                 {
-                    dateFrom = read;
+                    dateFrom = dtpDateFrom.Value;
                 }
-                if (DateTime.TryParseExact(txtDateFiledTo.Text, "dd/mm/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out read))
+                if (dtpDateTo.Checked)
                 {
-                    dateTo = read;
+                    dateTo = dtpDateTo.Value;
                 }
                 return new Tuple<DateTime?, DateTime?>(dateFrom, dateTo);
             }
@@ -85,11 +84,11 @@ namespace NJCourts
                 var dateFiledTo = value.Item2;
                 if (dateFiledFrom.HasValue)
                 {
-                    txtDateFiledFrom.Text = dateFiledFrom.Value.ToString("dd/mm/yyyy");
+                    dtpDateFrom.Value = dateFiledFrom.Value;
                 }
                 if (dateFiledTo.HasValue)
                 {
-                    txtDateFiledTo.Text = dateFiledTo.Value.ToString("dd/mm/yyyy");
+                    dtpDateTo.Value = dateFiledTo.Value;
                 }
                 cbDateFilter.Checked = dateFiledFrom.HasValue && dateFiledTo.HasValue;
             }
