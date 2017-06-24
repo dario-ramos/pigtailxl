@@ -42,6 +42,7 @@ namespace NJCourts
             {
                 btnStartStopProcess.Text = value ? "Stop Process" : "Start Process";
                 btnStartStopProcess.Enabled = true;
+                btnApplyFilters.Enabled = !value;
             }
         }
 
