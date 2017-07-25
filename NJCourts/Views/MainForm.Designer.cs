@@ -127,8 +127,9 @@ namespace NJCourts
             // dtpDateTo
             // 
             this.dtpDateTo.Checked = false;
+            this.dtpDateTo.CustomFormat = "dd/MM/yyyy";
             this.dtpDateTo.CustomNullText = " ";
-            this.dtpDateTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDateTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpDateTo.Location = new System.Drawing.Point(125, 156);
             this.dtpDateTo.Name = "dtpDateTo";
             this.dtpDateTo.Size = new System.Drawing.Size(81, 21);
@@ -136,9 +137,11 @@ namespace NJCourts
             // 
             // dtpDateFrom
             // 
+            this.dtpDateFrom.CalendarTodayFormat = "dd/MM/yyyy";
             this.dtpDateFrom.Checked = false;
+            this.dtpDateFrom.CustomFormat = "dd/MM/yyyy";
             this.dtpDateFrom.CustomNullText = " ";
-            this.dtpDateFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDateFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpDateFrom.Location = new System.Drawing.Point(20, 156);
             this.dtpDateFrom.Name = "dtpDateFrom";
             this.dtpDateFrom.Size = new System.Drawing.Size(81, 21);

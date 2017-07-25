@@ -261,7 +261,7 @@ namespace NJCourts.Models
             if (dateStrings.Length >= 1)
             {
                 DateTime date;
-                if (DateTime.TryParseExact(dateStrings[0], "dd/mm/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                if (DateTime.TryParseExact(dateStrings[0], "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
                 {
                     if (DateFiledFrom == null)
                     {
@@ -276,7 +276,7 @@ namespace NJCourts.Models
             if (dateStrings.Length >= 2)
             {
                 DateTime date;
-                if (DateTime.TryParseExact(dateStrings[1], "dd/mm/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                if (DateTime.TryParseExact(dateStrings[1], "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
                 {
                     if (DateFiledTo == null)
                     {
@@ -315,8 +315,8 @@ namespace NJCourts.Models
 
         private void SaveDateFilter(Tuple<DateTime?, DateTime?> dateFilter)
         {
-            string dateFrom = dateFilter.Item1.HasValue ? dateFilter.Item1.Value.ToString("dd/mm/yyyy") : "";
-            string dateTo = dateFilter.Item2.HasValue ? dateFilter.Item2.Value.ToString("dd/mm/yyyy") : "";
+            string dateFrom = dateFilter.Item1.HasValue ? dateFilter.Item1.Value.ToString("dd/MM/yyyy") : "";
+            string dateTo = dateFilter.Item2.HasValue ? dateFilter.Item2.Value.ToString("dd/MM/yyyy") : "";
             string toSave = dateFrom + "," + dateTo;
             string dateFilterFilePath = Path.Combine(Configuration.InputDirectory, Configuration.DateFiltersFile);
             File.WriteAllText(dateFilterFilePath, toSave);
