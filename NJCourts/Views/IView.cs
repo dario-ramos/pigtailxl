@@ -10,6 +10,8 @@ namespace NJCourts.Views
 
         bool ProcessRunning { set; }
 
+        List<County> SelectedCounties { get; }
+
         List<int> ZipCodeFilters { get; set; }
 
         Tuple<DateTime?, DateTime?> DateFilter{ get; set; }

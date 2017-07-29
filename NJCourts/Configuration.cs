@@ -36,6 +36,14 @@ namespace NJCourts
             }
         }
 
+        public static string SelectedCountiesFile
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["SelectedCountiesFile"];
+            }
+        }
+
         public static string StopFilePath
         {
             get

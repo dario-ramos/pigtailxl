@@ -168,6 +168,7 @@ namespace NJCourts
             // 
             // dgvCounties
             // 
+            this.dgvCounties.AllowUserToAddRows = false;
             this.dgvCounties.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvCounties.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.CountyName,
@@ -259,12 +260,12 @@ namespace NJCourts
         private KryptonDataGridView dgvCounties;
         private ComponentFactory.Krypton.Toolkit.KryptonManager kryptonManager1;
         private KryptonButton btnStartStopProcess;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CountyName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CountyCode;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Processed;
         private KryptonButton btnApplyFilters;
         private KryptonDateTimePicker dtpDateFrom;
         private KryptonDateTimePicker dtpDateTo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CountyName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CountyCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Processed;
     }
 }
 

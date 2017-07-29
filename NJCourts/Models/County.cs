@@ -10,6 +10,8 @@ namespace NJCourts.Models
     {
         public bool Processed { get; set; }
 
+        public bool Selected { get; set; }
+
         public int Code { get; set; }
 
         public string Name { get; set; }

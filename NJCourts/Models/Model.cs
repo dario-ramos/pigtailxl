@@ -78,10 +78,11 @@ namespace NJCourts.Models
         /**
          * Save filters to files
          */
-        public void ApplyFilters(List<int> zipCodeFilters, Tuple<DateTime?, DateTime?> dateFilter)
+        public void ApplyFilters(List<int> zipCodeFilters, Tuple<DateTime?, DateTime?> dateFilter, List<County> selectedCounties)
         {
             SaveZipCodeFilters(zipCodeFilters);
             SaveDateFilter(dateFilter);
+            SaveSelectedCounties(selectedCounties);
         }
 
         /**
@@ -145,6 +146,7 @@ namespace NJCourts.Models
             try
             {
                 Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
+                var selectedCounties = ReadSelectedCounties();
                 lock (e)
                 {
                     if (e.ChangeType == WatcherChangeTypes.Changed)
@@ -155,7 +157,7 @@ namespace NJCourts.Models
                         string fileName = Path.GetFileNameWithoutExtension(e.FullPath);
                         if (!fileName.StartsWith("_"))
                         {
-                            County toUpdate = ReadCounty(e.FullPath);
+                            County toUpdate = ReadCounty(e.FullPath, selectedCounties);
                             if (toUpdate == null)
                             {
                                 return;
@@ -193,10 +195,11 @@ namespace NJCourts.Models
          */
         private void ReadCounties()
         {
-
+            var selectedCounties = ReadSelectedCounties();
+            //Read county files
             foreach (string filePath in Directory.EnumerateFiles(Configuration.InputDirectory))
             {
-                County county = ReadCounty(filePath);
+                County county = ReadCounty(filePath, selectedCounties);
                 if (county != null)
                 {
                     Counties.Add(county);
@@ -209,11 +212,11 @@ namespace NJCourts.Models
          * Read county information from a specific file
          * Check file last write time to discard duplicate events
          */
-        private County ReadCounty(string filePath)
+        private County ReadCounty(string filePath, HashSet<string> selectedCounties)
         {
             const string DONE_SUFFIX = "|Done";
             string fileName = Path.GetFileName(filePath);
-            if (fileName != Configuration.ZipCodeFiltersFile && fileName != Configuration.DateFiltersFile)
+            if (fileName != Configuration.ZipCodeFiltersFile && fileName != Configuration.DateFiltersFile && fileName != Configuration.SelectedCountiesFile)
             {
                 string county = "";
                 using (FileStream countyFileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -229,11 +232,13 @@ namespace NJCourts.Models
                 }
                 county = county.Replace(Environment.NewLine, "");
                 bool processed = county.EndsWith(DONE_SUFFIX);
+                string countyName = Path.GetFileNameWithoutExtension(fileName);
                 return new County
                 {
                     Code = processed ? int.Parse(county.Replace(DONE_SUFFIX, "")) : int.Parse(county),
-                    Name = Path.GetFileNameWithoutExtension(fileName),
-                    Processed = processed
+                    Name = countyName,
+                    Processed = processed,
+                    Selected = selectedCounties.Contains(countyName)
                 };
             }
             return null;
@@ -291,6 +296,17 @@ namespace NJCourts.Models
             DateFilterRead?.Invoke();
         }
 
+        private HashSet<string> ReadSelectedCounties()
+        {
+            string selectedCountiesFilePath = Path.Combine(Configuration.InputDirectory, Configuration.SelectedCountiesFile);
+            if (!File.Exists(selectedCountiesFilePath))
+            {
+                Warning?.Invoke("Selected counties file " + selectedCountiesFilePath + " does not exist, will be created empty");
+                File.Create(selectedCountiesFilePath);
+            }
+            return new HashSet<string>(File.ReadAllLines(selectedCountiesFilePath));
+        }
+
         /**
          * Read zip code filters from file. If file does not exist, create it empty.
          * If a non numeric zip is read, warn and continue. When all are read, notify
@@ -320,6 +336,12 @@ namespace NJCourts.Models
             string toSave = dateFrom + "," + dateTo;
             string dateFilterFilePath = Path.Combine(Configuration.InputDirectory, Configuration.DateFiltersFile);
             File.WriteAllText(dateFilterFilePath, toSave);
+        }
+
+        private void SaveSelectedCounties(List<County> selectedCounties)
+        {
+            string selectedCountiesFilePath = Path.Combine(Configuration.InputDirectory, Configuration.SelectedCountiesFile);
+            File.WriteAllLines(selectedCountiesFilePath, selectedCounties.Select(county => county.Name).ToArray() );
         }
 
         private void SaveZipCodeFilters(List<int> zipCodeFilters)

@@ -36,7 +36,7 @@ namespace NJCourts.Presenters
          */
         public void ApplyFilters()
         {
-            _model.ApplyFilters(_view.ZipCodeFilters, _view.DateFilter);
+            _model.ApplyFilters(_view.ZipCodeFilters, _view.DateFilter, _view.SelectedCounties);
         }
 
         /**
