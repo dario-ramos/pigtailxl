@@ -23,7 +23,6 @@ namespace NJCourts
         public MainForm()
         {
             InitializeComponent();
-            AddCountiesCheckboxColumn();
             Enabled = false;
             ProcessRunning = true;
             StoppingProcess();
@@ -178,18 +177,6 @@ namespace NJCourts
                     break;
                 }
             }
-        }
-
-        /**
-         * Add a checkbox column for selecting counties to save 
-         */
-        private void AddCountiesCheckboxColumn()
-        {
-            DataGridViewCheckBoxColumn checkBoxColumn = new DataGridViewCheckBoxColumn();
-            checkBoxColumn.HeaderText = "";
-            checkBoxColumn.Width = 30;
-            checkBoxColumn.Name = "countiesCheckBoxColumn";
-            dgvCounties.Columns.Insert(0, checkBoxColumn);
         }
 
         /**

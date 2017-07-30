@@ -31,6 +31,7 @@ namespace NJCourts
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.rtbMessageLog = new ComponentFactory.Krypton.Toolkit.KryptonRichTextBox();
             this.rtbZipCodeFilters = new ComponentFactory.Krypton.Toolkit.KryptonRichTextBox();
             this.cbZipCodeFilters = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
@@ -43,12 +44,13 @@ namespace NJCourts
             this.btnApplyFilters = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dgvCounties = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
-            this.CountyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CountyCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Processed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label3 = new System.Windows.Forms.Label();
             this.kryptonManager1 = new ComponentFactory.Krypton.Toolkit.KryptonManager(this.components);
             this.btnStartStopProcess = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.countiesCheckBoxColumn = new ComponentFactory.Krypton.Toolkit.KryptonDataGridViewCheckBoxColumn();
+            this.CountyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CountyCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Processed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCounties)).BeginInit();
@@ -171,6 +173,7 @@ namespace NJCourts
             this.dgvCounties.AllowUserToAddRows = false;
             this.dgvCounties.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvCounties.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.countiesCheckBoxColumn,
             this.CountyName,
             this.CountyCode,
             this.Processed});
@@ -178,27 +181,6 @@ namespace NJCourts
             this.dgvCounties.Name = "dgvCounties";
             this.dgvCounties.Size = new System.Drawing.Size(556, 225);
             this.dgvCounties.TabIndex = 0;
-            // 
-            // CountyName
-            // 
-            this.CountyName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.CountyName.HeaderText = "County Name";
-            this.CountyName.Name = "CountyName";
-            this.CountyName.ReadOnly = true;
-            // 
-            // CountyCode
-            // 
-            this.CountyCode.HeaderText = "County Code";
-            this.CountyCode.Name = "CountyCode";
-            this.CountyCode.ReadOnly = true;
-            this.CountyCode.Width = 150;
-            // 
-            // Processed
-            // 
-            this.Processed.HeaderText = "Processed";
-            this.Processed.Name = "Processed";
-            this.Processed.ReadOnly = true;
-            this.Processed.Width = 150;
             // 
             // label3
             // 
@@ -221,6 +203,39 @@ namespace NJCourts
             this.btnStartStopProcess.TabIndex = 14;
             this.btnStartStopProcess.Values.Text = "Start Process";
             this.btnStartStopProcess.Click += new System.EventHandler(this.BtnStartStopProcess_OnClick);
+            // 
+            // countiesCheckBoxColumn
+            // 
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.NullValue = false;
+            this.countiesCheckBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            this.countiesCheckBoxColumn.FalseValue = null;
+            this.countiesCheckBoxColumn.HeaderText = "";
+            this.countiesCheckBoxColumn.IndeterminateValue = null;
+            this.countiesCheckBoxColumn.Name = "countiesCheckBoxColumn";
+            this.countiesCheckBoxColumn.TrueValue = null;
+            this.countiesCheckBoxColumn.Width = 55;
+            // 
+            // CountyName
+            // 
+            this.CountyName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.CountyName.HeaderText = "County Name";
+            this.CountyName.Name = "CountyName";
+            this.CountyName.ReadOnly = true;
+            // 
+            // CountyCode
+            // 
+            this.CountyCode.HeaderText = "County Code";
+            this.CountyCode.Name = "CountyCode";
+            this.CountyCode.ReadOnly = true;
+            this.CountyCode.Width = 150;
+            // 
+            // Processed
+            // 
+            this.Processed.HeaderText = "Processed";
+            this.Processed.Name = "Processed";
+            this.Processed.ReadOnly = true;
+            this.Processed.Width = 150;
             // 
             // MainForm
             // 
@@ -263,6 +278,7 @@ namespace NJCourts
         private KryptonButton btnApplyFilters;
         private KryptonDateTimePicker dtpDateFrom;
         private KryptonDateTimePicker dtpDateTo;
+        private KryptonDataGridViewCheckBoxColumn countiesCheckBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn CountyName;
         private System.Windows.Forms.DataGridViewTextBoxColumn CountyCode;
         private System.Windows.Forms.DataGridViewTextBoxColumn Processed;
