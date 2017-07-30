@@ -12,7 +12,7 @@ namespace NJCourts.Views
 
         List<County> SelectedCounties { get; }
 
-        List<int> ZipCodeFilters { get; set; }
+        List<string> ZipCodeFilters { get; set; }
 
         Tuple<DateTime?, DateTime?> DateFilter{ get; set; }
 

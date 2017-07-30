@@ -71,11 +71,11 @@ namespace NJCourts
             }
         }
 
-        public List<int> ZipCodeFilters
+        public List<string> ZipCodeFilters
         {
             get
             {
-                return rtbZipCodeFilters.Text.Split(',').Select(Int32.Parse).ToList();
+                return rtbZipCodeFilters.Text.Split(',').ToList();
             }
             set
             {
@@ -135,6 +135,7 @@ namespace NJCourts
                     dgvCounties.Rows[dgvCounties.Rows.Count - 1].DefaultCellStyle.BackColor = Color.LightBlue;
                 }
             }
+            dgvCounties.Refresh();
         }
 
         /**

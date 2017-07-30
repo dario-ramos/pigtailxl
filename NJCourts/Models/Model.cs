@@ -34,7 +34,7 @@ namespace NJCourts.Models
             Counties = new List<County>();
             DateFiledFrom = null;
             DateFiledTo = null;
-            ZipCodeFilters = new List<int>();
+            ZipCodeFilters = new List<string>();
             _countiesWatcher = new FileSystemWatcher();
             _countiesWatcher.Path = Configuration.InputDirectory;
             _countiesWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
@@ -70,7 +70,7 @@ namespace NJCourts.Models
         /**
          * List of zip codes
          */
-        public List<int> ZipCodeFilters
+        public List<string> ZipCodeFilters
         {
             get; private set;
         }
@@ -78,7 +78,7 @@ namespace NJCourts.Models
         /**
          * Save filters to files
          */
-        public void ApplyFilters(List<int> zipCodeFilters, Tuple<DateTime?, DateTime?> dateFilter, List<County> selectedCounties)
+        public void ApplyFilters(List<string> zipCodeFilters, Tuple<DateTime?, DateTime?> dateFilter, List<County> selectedCounties)
         {
             SaveZipCodeFilters(zipCodeFilters);
             SaveDateFilter(dateFilter);
@@ -325,7 +325,7 @@ namespace NJCourts.Models
                 ZipCodeFiltersRead?.Invoke();
                 return;
             }
-            ZipCodeFilters = zipCodeFilters.Split(',').Select(Int32.Parse).ToList();
+            ZipCodeFilters = zipCodeFilters.Split(',').ToList();
             ZipCodeFiltersRead?.Invoke();
         }
 
@@ -344,7 +344,7 @@ namespace NJCourts.Models
             File.WriteAllLines(selectedCountiesFilePath, selectedCounties.Select(county => county.Name).ToArray() );
         }
 
-        private void SaveZipCodeFilters(List<int> zipCodeFilters)
+        private void SaveZipCodeFilters(List<string> zipCodeFilters)
         {
             string toSave = string.Join(",", zipCodeFilters);
             string zipCodeFiltersFilePath = Path.Combine(Configuration.InputDirectory, Configuration.ZipCodeFiltersFile);
