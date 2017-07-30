@@ -125,10 +125,15 @@ namespace NJCourts
          */
         public void SetCounties(List<County> counties)
         {
+            dgvCounties.Rows.Clear();
             counties.Sort(delegate (County c1, County c2) { return c1.Name.CompareTo(c2.Name); });
             foreach(County county in counties)
             {
                 dgvCounties.Rows.Add(county.Selected, county.Name, county.Code, county.Processed? "Processed" : "");
+                if (county.Selected)
+                {
+                    dgvCounties.Rows[dgvCounties.Rows.Count - 1].DefaultCellStyle.BackColor = Color.LightBlue;
+                }
             }
         }
 
@@ -260,6 +265,20 @@ namespace NJCourts
                 ((DataGridViewCheckBoxCell)Row.Cells["countiesCheckBoxColumn"]).Value =  ((KryptonCheckBox)sender).Checked;
             }
             dgvCounties.RefreshEdit();
+        }
+
+        private void DgvCounties_OnCellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            dgvCounties.EndEdit();
+        }
+
+        private void DgvCounties_OnCellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex != -1)
+            {
+                bool isChecked = (bool)dgvCounties.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                dgvCounties.Rows[e.RowIndex].DefaultCellStyle.BackColor = isChecked ? Color.LightBlue : dgvCounties.RowsDefaultCellStyle.BackColor;
+            }
         }
 
         /**

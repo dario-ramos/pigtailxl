@@ -44,13 +44,13 @@ namespace NJCourts
             this.btnApplyFilters = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dgvCounties = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
-            this.label3 = new System.Windows.Forms.Label();
-            this.kryptonManager1 = new ComponentFactory.Krypton.Toolkit.KryptonManager(this.components);
-            this.btnStartStopProcess = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.countiesCheckBoxColumn = new ComponentFactory.Krypton.Toolkit.KryptonDataGridViewCheckBoxColumn();
             this.CountyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CountyCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Processed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label3 = new System.Windows.Forms.Label();
+            this.kryptonManager1 = new ComponentFactory.Krypton.Toolkit.KryptonManager(this.components);
+            this.btnStartStopProcess = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCounties)).BeginInit();
@@ -181,28 +181,8 @@ namespace NJCourts
             this.dgvCounties.Name = "dgvCounties";
             this.dgvCounties.Size = new System.Drawing.Size(556, 225);
             this.dgvCounties.TabIndex = 0;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 506);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(71, 13);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "Message Log";
-            // 
-            // kryptonManager1
-            // 
-            this.kryptonManager1.GlobalPaletteMode = ComponentFactory.Krypton.Toolkit.PaletteModeManager.SparkleBlue;
-            // 
-            // btnStartStopProcess
-            // 
-            this.btnStartStopProcess.Location = new System.Drawing.Point(517, 491);
-            this.btnStartStopProcess.Name = "btnStartStopProcess";
-            this.btnStartStopProcess.Size = new System.Drawing.Size(90, 25);
-            this.btnStartStopProcess.TabIndex = 14;
-            this.btnStartStopProcess.Values.Text = "Start Process";
-            this.btnStartStopProcess.Click += new System.EventHandler(this.BtnStartStopProcess_OnClick);
+            this.dgvCounties.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DgvCounties_OnCellMouseUp);
+            this.dgvCounties.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvCounties_OnCellValueChanged);
             // 
             // countiesCheckBoxColumn
             // 
@@ -240,6 +220,28 @@ namespace NJCourts
             this.Processed.Name = "Processed";
             this.Processed.ReadOnly = true;
             this.Processed.Width = 124;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 506);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(71, 13);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Message Log";
+            // 
+            // kryptonManager1
+            // 
+            this.kryptonManager1.GlobalPaletteMode = ComponentFactory.Krypton.Toolkit.PaletteModeManager.SparkleBlue;
+            // 
+            // btnStartStopProcess
+            // 
+            this.btnStartStopProcess.Location = new System.Drawing.Point(517, 491);
+            this.btnStartStopProcess.Name = "btnStartStopProcess";
+            this.btnStartStopProcess.Size = new System.Drawing.Size(90, 25);
+            this.btnStartStopProcess.TabIndex = 14;
+            this.btnStartStopProcess.Values.Text = "Start Process";
+            this.btnStartStopProcess.Click += new System.EventHandler(this.BtnStartStopProcess_OnClick);
             // 
             // MainForm
             // 
