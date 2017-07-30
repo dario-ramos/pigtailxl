@@ -179,6 +179,26 @@ namespace NJCourts
             }
         }
 
+        private void AddCheckAllCheckbox()
+        {
+            KryptonDataGridViewCheckBoxColumn checkBoxColumn = (KryptonDataGridViewCheckBoxColumn)dgvCounties.Columns[0];
+            checkBoxColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //Create checkbox control
+            KryptonCheckBox checkboxHeader = new KryptonCheckBox();
+            checkboxHeader.Checked = false;
+            checkboxHeader.Name = "checkboxHeader";
+            checkboxHeader.Text = "";
+            checkboxHeader.Size = new Size(15, 15);
+            //Position it and center it inside its cell
+            Rectangle rect = dgvCounties.GetCellDisplayRectangle(0, -1, true);
+            rect.X = rect.Location.X + (rect.Width / 2) - checkboxHeader.Width / 2;
+            rect.Y = rect.Location.Y + rect.Height / 2 - checkboxHeader.Height / 2;
+            checkboxHeader.Location = rect.Location;
+            //Handle checked changed event and add to grid
+            checkboxHeader.CheckedChanged += new EventHandler(CheckBoxHeader_OnCheckedChanged);
+            dgvCounties.Controls.Add(checkboxHeader);
+        }
+
         /**
          * Delegate to presenter
          */
@@ -233,6 +253,15 @@ namespace NJCourts
             }
         }
 
+        private void CheckBoxHeader_OnCheckedChanged(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow Row in dgvCounties.Rows)
+            {
+                ((DataGridViewCheckBoxCell)Row.Cells["countiesCheckBoxColumn"]).Value =  ((KryptonCheckBox)sender).Checked;
+            }
+            dgvCounties.RefreshEdit();
+        }
+
         /**
          * Print an error message
          */
@@ -257,7 +286,9 @@ namespace NJCourts
             try
             {
                 _presenter = new Presenters.Presenter(this);
-            }catch(Exception ex)
+                AddCheckAllCheckbox();
+            }
+            catch(Exception ex)
             {
                 HandleError(ex);
             }

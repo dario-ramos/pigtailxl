@@ -210,6 +210,7 @@ namespace NJCourts
             dataGridViewCellStyle1.NullValue = false;
             this.countiesCheckBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
             this.countiesCheckBoxColumn.FalseValue = null;
+            this.countiesCheckBoxColumn.FillWeight = 111.6751F;
             this.countiesCheckBoxColumn.HeaderText = "";
             this.countiesCheckBoxColumn.IndeterminateValue = null;
             this.countiesCheckBoxColumn.Name = "countiesCheckBoxColumn";
@@ -219,23 +220,26 @@ namespace NJCourts
             // CountyName
             // 
             this.CountyName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.CountyName.FillWeight = 96.10829F;
             this.CountyName.HeaderText = "County Name";
             this.CountyName.Name = "CountyName";
             this.CountyName.ReadOnly = true;
             // 
             // CountyCode
             // 
+            this.CountyCode.FillWeight = 96.10829F;
             this.CountyCode.HeaderText = "County Code";
             this.CountyCode.Name = "CountyCode";
             this.CountyCode.ReadOnly = true;
-            this.CountyCode.Width = 150;
+            this.CountyCode.Width = 123;
             // 
             // Processed
             // 
+            this.Processed.FillWeight = 96.10829F;
             this.Processed.HeaderText = "Processed";
             this.Processed.Name = "Processed";
             this.Processed.ReadOnly = true;
-            this.Processed.Width = 150;
+            this.Processed.Width = 124;
             // 
             // MainForm
             // 
