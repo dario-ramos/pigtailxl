@@ -12,6 +12,14 @@ namespace NJCourts
             }
         }
 
+        public static string DateFiltersFormat
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["DateFiltersFormat"];
+            }
+        }
+
         public static string InputDirectory
         {
             get
