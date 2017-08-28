@@ -49,6 +49,16 @@ namespace NJCourts.Presenters
             _model.Init();
         }
 
+        public void SaveDateFilterState(bool enabled)
+        {
+            _model.SaveDateFilterState(enabled);
+        }
+
+        public void SaveZipCodeFilterState(bool enabled)
+        {
+            _model.SaveZipCodeFilterState(enabled);
+        }
+
         /**
          * Delegate to model
          */

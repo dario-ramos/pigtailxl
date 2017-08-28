@@ -34,7 +34,9 @@ namespace NJCourts
         {
             set
             {
+                cbDateFilter.CheckedChanged -= CbDateFilter_OnCheckedChanged;
                 cbDateFilter.Checked = value;
+                cbDateFilter.CheckedChanged += CbDateFilter_OnCheckedChanged;
             }
         }
 
@@ -60,7 +62,9 @@ namespace NJCourts
         {
             set
             {
+                cbZipCodeFilters.CheckedChanged -= CbZipCodeFilters_OnCheckedChanged;
                 cbZipCodeFilters.Checked = value;
+                cbZipCodeFilters.CheckedChanged += CbZipCodeFilters_OnCheckedChanged;
             }
         }
 
@@ -253,6 +257,7 @@ namespace NJCourts
             {
                 dtpDateFrom.Enabled = cbDateFilter.Checked;
                 dtpDateTo.Enabled = cbDateFilter.Checked;
+                _presenter.SaveDateFilterState(cbDateFilter.Checked);
             }
             catch (Exception ex)
             {
@@ -268,6 +273,7 @@ namespace NJCourts
             try
             {
                 rtbZipCodeFilters.ReadOnly = !cbZipCodeFilters.Checked;
+                _presenter.SaveZipCodeFilterState(cbZipCodeFilters.Checked);
             }
             catch (Exception ex)
             {

@@ -106,6 +106,16 @@ namespace NJCourts.Models
             StopProcess();
         }
 
+        public void SaveDateFilterState(bool enabled)
+        {
+            SaveBooleanSetting(Configuration.DateFilterStateFile, enabled);
+        }
+
+        public void SaveZipCodeFilterState(bool enabled)
+        {
+            SaveBooleanSetting(Configuration.ZipCodeFilterStateFile, enabled);
+        }
+
         /**
          * Start or stop process according to current state
          */
@@ -360,6 +370,15 @@ namespace NJCourts.Models
             }
             ZipCodeFilters = zipCodeFilters.Split(',').ToList();
             ZipCodeFiltersRead?.Invoke();
+        }
+
+        private void SaveBooleanSetting(string settingFileName, bool enabled)
+        {
+            string settingFilePath = Path.Combine(Configuration.InputDirectory, settingFileName);
+            using (StreamWriter file = new StreamWriter(settingFilePath, false))
+            {
+                file.WriteLine(enabled? "true" : "false");
+            }
         }
 
         private void SaveDateFilter(Tuple<DateTime?, DateTime?> dateFilter)
