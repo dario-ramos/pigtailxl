@@ -25,6 +25,8 @@ namespace NJCourts
             InitializeComponent();
             Enabled = false;
             ProcessRunning = true;
+            dtpDateFrom.CustomFormat = Configuration.DateFiltersFormat;
+            dtpDateTo.CustomFormat = Configuration.DateFiltersFormat;
             StoppingProcess();
         }
 
