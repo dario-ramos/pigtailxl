@@ -28,6 +28,14 @@ namespace NJCourts
             StoppingProcess();
         }
 
+        public bool DateFilterEnabled
+        {
+            set
+            {
+                cbDateFilter.Checked = value;
+            }
+        }
+
         public bool FiltersEnabled
         {
             set
@@ -43,6 +51,14 @@ namespace NJCourts
                 btnStartStopProcess.Text = value ? "Stop Process" : "Start Process";
                 btnStartStopProcess.Enabled = true;
                 btnApplyFilters.Enabled = !value;
+            }
+        }
+
+        public bool ZipCodeFilterEnabled
+        {
+            set
+            {
+                cbZipCodeFilters.Checked = value;
             }
         }
 
@@ -80,7 +96,6 @@ namespace NJCourts
             set
             {
                 rtbZipCodeFilters.Text = string.Join(",", value);
-                cbZipCodeFilters.Checked = value.Count > 0;
             }
         }
 
@@ -116,7 +131,6 @@ namespace NJCourts
                 {
                     dtpDateTo.Value = dateFiledTo.Value;
                 }
-                cbDateFilter.Checked = dateFiledFrom.HasValue && dateFiledTo.HasValue;
             }
         }
 

@@ -12,6 +12,14 @@ namespace NJCourts
             }
         }
 
+        public static string DateFilterStateFile
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["DateFiltersStateFile"];
+            }
+        }
+
         public static string InputDirectory
         {
             get
@@ -49,6 +57,14 @@ namespace NJCourts
             get
             {
                 return ConfigurationManager.AppSettings["StopFilePath"];
+            }
+        }
+
+        public static string ZipCodeFilterStateFile
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["ZipCodeFilterStateFile"];
             }
         }
 

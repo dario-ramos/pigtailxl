@@ -23,12 +23,14 @@ namespace NJCourts.Presenters
             _model.CountiesRead += OnCountiesRead;
             _model.CountyUpdated += OnCountyUpdated;
             _model.DateFilterRead += OnDateFilterRead;
+            _model.DateFilterStateRead += OnDateFilterStateRead;
             _model.Error += OnError;
             _model.ProcessStarted += OnProcessStarted;
             _model.ProcessStopped += OnProcessStopped;
             _model.StoppingProcess += OnStoppingProcess;
             _model.Warning += OnWarning;
             _model.ZipCodeFiltersRead += OnZipCodesRead;
+            _model.ZipCodeFilterStateRead += OnZipCodeFilterStateRead;
         }
 
         /**
@@ -87,6 +89,11 @@ namespace NJCourts.Presenters
             _view.DateFilter = new Tuple<DateTime?, DateTime?>(_model.DateFiledFrom, _model.DateFiledTo);
         }
 
+        private void OnDateFilterStateRead(bool enabled)
+        {
+            _view.DateFilterEnabled = enabled;
+        }
+
         /**
          * When the model reports an error, show it in the view
          */
@@ -127,6 +134,11 @@ namespace NJCourts.Presenters
         private void OnWarning(string msg)
         {
             _view.ShowWarningMessage(msg);
+        }
+
+        private void OnZipCodeFilterStateRead(bool enabled)
+        {
+            _view.ZipCodeFilterEnabled = enabled;
         }
 
         /**

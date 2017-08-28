@@ -6,9 +6,13 @@ namespace NJCourts.Views
 {
     public interface IView
     {
+        bool DateFilterEnabled { set; }
+
         bool FiltersEnabled { set; }
 
         bool ProcessRunning { set; }
+
+        bool ZipCodeFilterEnabled { set;  }
 
         List<County> SelectedCounties { get; }
 
