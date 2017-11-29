@@ -1,24 +1,19 @@
 ﻿using NJCourts.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace NJCourts.Views
 {
     public interface IView
     {
-        bool DateFilterEnabled { set; }
-
         bool FiltersEnabled { set; }
 
         bool ProcessRunning { set; }
 
-        bool ZipCodeFilterEnabled { set;  }
-
         List<County> SelectedCounties { get; }
 
-        List<string> ZipCodeFilters { get; set; }
-
-        Tuple<DateTime?, DateTime?> DateFilter{ get; set; }
+        void LoadVenueFilter(List<string> venues);
 
         void SetCounties(List<County> counties);
 
@@ -29,5 +24,7 @@ namespace NJCourts.Views
         void StoppingProcess();
 
         void UpdateCounty(County county);
+
+        void UpdateDatabaseData(DataTable data);
     }
 }

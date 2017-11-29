@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -12,40 +12,47 @@ namespace NJCourts.Models
      */
     public class Model
     {
-        public event Action CountiesRead;
-        public event Action DateFilterRead;
+        public event Action DatabaseDataRead;
+        public event Action FileCountiesRead;
+        public event Action FileDateFilterRead;
+        public event Action FileZipCodeFiltersRead;
         public event Action ProcessStarted;
         public event Action ProcessStopped;
         public event Action StoppingProcess;
-        public event Action ZipCodeFiltersRead;
-        public event Action<bool> DateFilterStateRead;
-        public event Action<bool> ZipCodeFilterStateRead;
-        public event Action<County> CountyUpdated;
+        public event Action<bool> FileDateFilterStateRead;
+        public event Action<bool> FileZipCodeFilterStateRead;
+        public event Action<County> CountyFileUpdated;
         public event Action<string> Error;
         public event Action<string> Warning;
 
         private bool _processRunning;
-        private DateTime _lastRead = DateTime.MinValue;
-        private FileSystemWatcher _countiesWatcher;
+        private DatabaseDataHandler _databaseDataHandler;
+        private FileDataHandler _fileDataHandler;
 
         /**
          * Constructor
          */
         public Model()
         {
-            Counties = new List<County>();
-            DateFiledFrom = null;
-            DateFiledTo = null;
-            ZipCodeFilters = new List<string>();
-            _countiesWatcher = new FileSystemWatcher();
-            _countiesWatcher.Path = Configuration.InputDirectory;
-            _countiesWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                                            | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-            // Only watch text files.
-            _countiesWatcher.Filter = "*.txt";
-            _countiesWatcher.Changed += OnCountyFileChanged;
-            _countiesWatcher.EnableRaisingEvents = true;
-            _lastRead = DateTime.MinValue;
+            _fileDataHandler = new FileDataHandler();
+            _fileDataHandler.CountyUpdated += OnCountyFileUpdated;
+            _fileDataHandler.CountiesRead += OnFileCountiesRead;
+            _fileDataHandler.DateFiltersRead += OnFileDateFilterRead;
+            _fileDataHandler.DateFilterStateRead += OnFileDateFilterStateRead;
+            _fileDataHandler.Error += OnFileHandlerError;
+            _fileDataHandler.Warning += OnFileHandlerWarning;
+            _fileDataHandler.ZipCodeFiltersRead += OnFileZipCodeFiltersRead;
+            _fileDataHandler.ZipCodeFilterStateRead += OnFileZipCodeFilterStateRead;
+            _databaseDataHandler = new DatabaseDataHandler();
+            _databaseDataHandler.DataLoaded += OnDatabaseDataLoaded;
+        }
+
+        public DataTable DatabaseData
+        {
+            get
+            {
+                return _databaseDataHandler.Data;
+            }
         }
 
         /**
@@ -53,7 +60,10 @@ namespace NJCourts.Models
          */
         public DateTime? DateFiledFrom
         {
-            get; private set;
+            get
+            {
+                return _fileDataHandler.DateFiledFrom;
+            }
         }
 
         /**
@@ -61,30 +71,58 @@ namespace NJCourts.Models
          */
         public DateTime? DateFiledTo
         {
-            get; private set;
+            get
+            {
+                return _fileDataHandler.DateFiledTo;
+            }
         }
 
-        public List<County> Counties
+        public List<County> CountiesFromFiles
         {
-            get; private set;
+            get
+            {
+                return _fileDataHandler.Counties;
+            }
+        }
+
+        public List<string> Venues
+        {
+            get
+            {
+                return _databaseDataHandler.Venues;
+            }
         }
 
         /**
          * List of zip codes
          */
-        public List<string> ZipCodeFilters
+        public List<string> ZipCodeFiltersFromFile
         {
-            get; private set;
+            get
+            {
+                return _fileDataHandler.ZipCodeFilters;
+            }
+        }
+
+        public string Filter
+        {
+            get
+            {
+                return _databaseDataHandler.Filter;
+            }
         }
 
         /**
          * Save filters to files
          */
-        public void ApplyFilters(List<string> zipCodeFilters, Tuple<DateTime?, DateTime?> dateFilter, List<County> selectedCounties)
+        public void ApplyFiltersFromFiles(List<County> selectedCounties)
         {
-            SaveZipCodeFilters(zipCodeFilters);
-            SaveDateFilter(dateFilter);
-            SaveSelectedCounties(selectedCounties);
+            _fileDataHandler.ApplyFilters(selectedCounties);
+        }
+
+        public void Export()
+        {
+            _databaseDataHandler.Export();
         }
 
         /**
@@ -93,27 +131,51 @@ namespace NJCourts.Models
          */
         public void Init()
         {
-            if (!Directory.Exists(Configuration.InputDirectory))
-            {
-                Error?.Invoke("Input directory " + Configuration.InputDirectory + " does not exist");
-                return;
-            }
-            ReadZipCodeFilterState();
-            ReadZipCodeFilters();
-            ReadDateFilterState();
-            ReadDateFilter();
-            ReadCounties();
+            _fileDataHandler.ReadData();
+            _databaseDataHandler.ReadData();
             StopProcess();
         }
 
-        public void SaveDateFilterState(bool enabled)
+        public void SaveFileDateFilterState(bool enabled)
         {
-            SaveBooleanSetting(Configuration.DateFilterStateFile, enabled);
+            _fileDataHandler.SaveDateFilterState(enabled);
         }
 
-        public void SaveZipCodeFilterState(bool enabled)
+        public void SaveFileZipCodeFilterState(bool enabled)
         {
-            SaveBooleanSetting(Configuration.ZipCodeFilterStateFile, enabled);
+            _fileDataHandler.SaveZipCodeFilterState(enabled);
+        }
+
+        /// <summary>
+        /// Configuring a comparison-type filter without applying it
+        /// </summary>
+        /// <param name="fieldName">Database field to compare</param>
+        /// <param name="comparison">Comparison to perform</param>
+        /// <param name="value1">First value to compare</param>
+        /// <param name="value2">Second value to compare; only used for RANGE comparisons</param>
+        public void SetFilterParemeters(string fieldName, Constants.Comparison comparison, string value1, string value2)
+        {
+            _databaseDataHandler.SetFilterParameters(fieldName, comparison, value1, value2);
+        }
+
+        /// <summary>
+        /// Configure a multivalue filter (fieldName in (value1, value2, ...valueN) sql claise)
+        /// </summary>
+        /// <param name="fieldName">Database field to filter on</param>
+        /// <param name="fieldValues">List of values; a row will match the filter if it contains any of these</param>
+        public void SetFilterParemeters(string fieldName, List<string> fieldValues)
+        {
+            _databaseDataHandler.SetFilterParameters(fieldName, fieldValues);
+        }
+
+        /// <summary>
+        /// Configure a text search field
+        /// </summary>
+        /// <param name="fieldName">Database field to filter on</param>
+        /// <param name="fieldValue">If the field contains this text, it will match the filter</param>
+        public void SetFilterParemeters(string fieldName, string fieldValue)
+        {
+            _databaseDataHandler.SetFilterParameters(fieldName, fieldValue);
         }
 
         /**
@@ -138,12 +200,12 @@ namespace NJCourts.Models
         {
             StoppingProcess?.Invoke();
             Process[] allProcesses = Process.GetProcesses();
-            Process[] processes = Process.GetProcessesByName(Configuration.ProcessName);
+            Process[] processes = Process.GetProcessesByName(Configuration.GetSetting(Configuration.PROCESS_NAME));
             foreach (Process p in processes)
             {
-                if (!File.Exists(Configuration.StopFilePath))
+                if (!File.Exists(Configuration.GetSetting(Configuration.STOP_FILE_PATH)))
                 {
-                    var stopFile = File.Create(Configuration.StopFilePath);
+                    var stopFile = File.Create(Configuration.GetSetting(Configuration.STOP_FILE_PATH));
                     stopFile.Close();
                 }
                 p.WaitForExit();
@@ -152,255 +214,57 @@ namespace NJCourts.Models
             ProcessStopped?.Invoke();
         }
 
-        /**
-         * Read county information from a specific file
-         * Check file last write time to discard duplicate events
-         */
-        private County ReadCounty(string filePath, HashSet<string> selectedCounties)
+        private void OnCountyFileUpdated(County county)
         {
-            const string DONE_SUFFIX = "|Done";
-            string fileName = Path.GetFileName(filePath);
-            if (fileName != Configuration.ZipCodeFiltersFile && fileName != Configuration.DateFiltersFile && !fileName.StartsWith("_"))
-            {
-                string county = "";
-                using (FileStream countyFileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                {
-                    using (StreamReader countyFileReader = new StreamReader(countyFileStream))
-                    {
-                        county = countyFileReader.ReadToEnd();
-                    }
-                }
-                if (string.IsNullOrWhiteSpace(county))
-                {
-                    return null;
-                }
-                county = county.Replace(Environment.NewLine, "");
-                bool processed = county.EndsWith(DONE_SUFFIX);
-                string countyName = Path.GetFileNameWithoutExtension(fileName);
-                return new County
-                {
-                    Code = processed ? int.Parse(county.Replace(DONE_SUFFIX, "")) : int.Parse(county),
-                    Name = countyName,
-                    Processed = processed,
-                    Selected = selectedCounties.Contains(countyName)
-                };
-            }
-            return null;
+            CountyFileUpdated?.Invoke(county);
         }
 
-        private HashSet<string> ReadSelectedCounties()
+        private void OnDatabaseDataLoaded()
         {
-            string selectedCountiesFilePath = Path.Combine(Configuration.InputDirectory, Configuration.SelectedCountiesFile);
-            if (!File.Exists(selectedCountiesFilePath))
-            {
-                Warning?.Invoke("Selected counties file " + selectedCountiesFilePath + " does not exist, will be created empty");
-                File.Create(selectedCountiesFilePath);
-            }
-            return new HashSet<string>(File.ReadAllLines(selectedCountiesFilePath));
+            DatabaseDataRead?.Invoke();
         }
 
-        /**
-         * Event handler for when a file's contents change
-         * */
-        private void OnCountyFileChanged(object source, FileSystemEventArgs e)
+        private void OnFileCountiesRead()
         {
-            try
-            {
-                Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
-                var selectedCounties = ReadSelectedCounties();
-                lock (e)
-                {
-                    if (e.ChangeType == WatcherChangeTypes.Changed)
-                    {
-                        var now = DateTime.Now;
-                        var lastWriteTime = File.GetLastWriteTime(e.FullPath);
+            FileCountiesRead?.Invoke();
+        }
 
-                        string fileName = Path.GetFileNameWithoutExtension(e.FullPath);
-                        if (!fileName.StartsWith("_"))
-                        {
-                            County toUpdate = ReadCounty(e.FullPath, selectedCounties);
-                            if (toUpdate == null)
-                            {
-                                return;
-                            }
-                            foreach (var county in Counties)
-                            {
-                                if (county.Name == toUpdate.Name)
-                                {
-                                    county.Code = toUpdate.Code;
-                                    county.Processed = toUpdate.Processed;
-                                    CountyUpdated?.Invoke(county);
-                                }
-                            }
-                        }
-                        // do something...
-                        _lastRead = lastWriteTime;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Error?.Invoke(ex.Message);
-            }
+        private void OnFileDateFilterRead()
+        {
+            FileDateFilterRead?.Invoke();
+        }
+
+        private void OnFileDateFilterStateRead(bool enabled)
+        {
+            FileDateFilterStateRead?.Invoke(enabled);
+        }
+
+        private void OnFileHandlerError(string msg)
+        {
+            Error?.Invoke(msg);
+        }
+
+        private void OnFileHandlerWarning(string msg)
+        {
+            Warning?.Invoke(msg);
+        }
+
+        private void OnFileZipCodeFiltersRead()
+        {
+            FileZipCodeFiltersRead?.Invoke();
+        }
+
+        private void OnFileZipCodeFilterStateRead(bool enabled)
+        {
+            FileZipCodeFilterStateRead?.Invoke(enabled);
         }
 
         private void StartProcess()
         {
-            Process.Start(Configuration.ProcessPath);
+            Process.Start(Configuration.GetSetting(Configuration.PROCESS_PATH));
             ProcessStarted?.Invoke();
             _processRunning = true;
         }
 
-        private void ReadBooleanSetting(string settingFileName, Action<bool> callback)
-        {
-            string settingFilePath = Path.Combine(Configuration.InputDirectory, settingFileName);
-            if (!File.Exists(settingFilePath))
-            {
-                Warning?.Invoke("Setting file " + settingFilePath + " does not exist, will be created with false value");
-                using (StreamWriter file = new StreamWriter(settingFilePath, false))
-                {
-                    file.WriteLine("false");
-                }
-                callback?.Invoke(false);
-            }
-            else
-            {
-                string state = File.ReadAllText(settingFilePath);
-                callback?.Invoke(state.Trim() == "true");
-            }
-        }
-
-        /**
-         * Read all county files
-         */
-        private void ReadCounties()
-        {
-            var selectedCounties = ReadSelectedCounties();
-            //Read county files
-            foreach (string filePath in Directory.EnumerateFiles(Configuration.InputDirectory))
-            {
-                County county = ReadCounty(filePath, selectedCounties);
-                if (county != null)
-                {
-                    Counties.Add(county);
-                }
-            }
-            CountiesRead?.Invoke();
-        }
-
-        /**
-         * Read date filter from file. If file does not exist, create it empty.
-         * If an invalid date is read, warn and continue. When two are read, notify
-         */
-        private void ReadDateFilter()
-        {
-            string dateFilterFilePath = Path.Combine(Configuration.InputDirectory, Configuration.DateFiltersFile);
-            if (!File.Exists(dateFilterFilePath))
-            {
-                Warning?.Invoke("Date filters file " + dateFilterFilePath + " does not exist, will be created empty");
-                File.Create(dateFilterFilePath);
-            }
-            string s = File.ReadAllText(dateFilterFilePath);
-            if (string.IsNullOrWhiteSpace(s))
-            {
-                DateFilterRead?.Invoke();
-                return;
-            }
-            string[] dateStrings = s.Split(',');
-            if (dateStrings.Length >= 1)
-            {
-                DateTime date;
-                if (DateTime.TryParseExact(dateStrings[0], Configuration.DateFiltersFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
-                {
-                    if (DateFiledFrom == null)
-                    {
-                        DateFiledFrom = date;
-                    }
-                }
-                else
-                {
-                    Warning?.Invoke("Invalid from date " + dateStrings[0]);
-                }
-            }
-            if (dateStrings.Length >= 2)
-            {
-                DateTime date;
-                if (DateTime.TryParseExact(dateStrings[1], Configuration.DateFiltersFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
-                {
-                    if (DateFiledTo == null)
-                    {
-                        DateFiledTo = date;
-                    }
-                }
-                else
-                {
-                    Warning?.Invoke("Invalid to date " + dateStrings[1]);
-                }
-            }
-            DateFilterRead?.Invoke();
-        }
-
-        private void ReadDateFilterState()
-        {
-            ReadBooleanSetting(Configuration.DateFilterStateFile, DateFilterStateRead);
-        }
-
-        private void ReadZipCodeFilterState()
-        {
-            ReadBooleanSetting(Configuration.ZipCodeFilterStateFile, ZipCodeFilterStateRead);
-        }
-
-        /**
-         * Read zip code filters from file. If file does not exist, create it empty.
-         * If a non numeric zip is read, warn and continue. When all are read, notify
-         */
-        private void ReadZipCodeFilters()
-        {
-            string zipCodeFiltersFilePath = Path.Combine(Configuration.InputDirectory, Configuration.ZipCodeFiltersFile);
-            if (!File.Exists(zipCodeFiltersFilePath))
-            {
-                Warning?.Invoke("Zip file " + zipCodeFiltersFilePath + " does not exist, will be created empty");
-                File.Create(zipCodeFiltersFilePath);
-            }
-            string zipCodeFilters = File.ReadAllText(zipCodeFiltersFilePath);
-            if (string.IsNullOrWhiteSpace(zipCodeFilters))
-            {
-                ZipCodeFiltersRead?.Invoke();
-                return;
-            }
-            ZipCodeFilters = zipCodeFilters.Split(',').ToList();
-            ZipCodeFiltersRead?.Invoke();
-        }
-
-        private void SaveBooleanSetting(string settingFileName, bool enabled)
-        {
-            string settingFilePath = Path.Combine(Configuration.InputDirectory, settingFileName);
-            using (StreamWriter file = new StreamWriter(settingFilePath, false))
-            {
-                file.WriteLine(enabled? "true" : "false");
-            }
-        }
-
-        private void SaveDateFilter(Tuple<DateTime?, DateTime?> dateFilter)
-        {
-            string dateFrom = dateFilter.Item1.HasValue ? dateFilter.Item1.Value.ToString(Configuration.DateFiltersFormat) : "";
-            string dateTo = dateFilter.Item2.HasValue ? dateFilter.Item2.Value.ToString(Configuration.DateFiltersFormat) : "";
-            string toSave = dateFrom + "," + dateTo;
-            string dateFilterFilePath = Path.Combine(Configuration.InputDirectory, Configuration.DateFiltersFile);
-            File.WriteAllText(dateFilterFilePath, toSave);
-        }
-
-        private void SaveSelectedCounties(List<County> selectedCounties)
-        {
-            string selectedCountiesFilePath = Path.Combine(Configuration.InputDirectory, Configuration.SelectedCountiesFile);
-            File.WriteAllLines(selectedCountiesFilePath, selectedCounties.Select(county => county.Name).ToArray() );
-        }
-
-        private void SaveZipCodeFilters(List<string> zipCodeFilters)
-        {
-            string toSave = string.Join(",", zipCodeFilters);
-            string zipCodeFiltersFilePath = Path.Combine(Configuration.InputDirectory, Configuration.ZipCodeFiltersFile);
-            File.WriteAllText(zipCodeFiltersFilePath, toSave);
-        }
     }
 }

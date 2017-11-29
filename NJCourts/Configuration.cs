@@ -4,84 +4,22 @@ namespace NJCourts
 {
     public static class Configuration
     {
-        public static string DateFiltersFile
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["DateFiltersFile"];
-            }
-        }
+        public const string CONNECTION_STRING = "ConnectionString";
+        public const string DATE_FILTERS_FILE = "DateFiltersFile";
+        public const string DATE_FILTERS_FORMAT = "DateFiltersFormat";
+        public const string DATE_FILTERS_STATE_FILE = "DateFiltersStateFile";
+        public const string EXCEL_EXPORT_DIR = "ExcelExportDir";
+        public const string INPUT_DIRECTORY = "InputDirectory";
+        public const string PROCESS_NAME = "ProcessName";
+        public const string PROCESS_PATH = "ProcessPath";
+        public const string SELECTED_COUNTIES_FILE = "SelectedCountiesFile";
+        public const string STOP_FILE_PATH = "StopFilePath";
+        public const string ZIP_CODE_FILTER_STATE_FILE = "ZipCodeFilterStateFile";
+        public const string ZIP_CODE_FILTERS_FILE = "ZipCodeFiltersFile";
 
-        public static string DateFiltersFormat
+        public static string GetSetting(string settingName)
         {
-            get
-            {
-                return ConfigurationManager.AppSettings["DateFiltersFormat"];
-            }
-        }
-
-        public static string DateFilterStateFile
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["DateFiltersStateFile"];
-            }
-        }
-
-        public static string InputDirectory
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["InputDirectory"];
-            }
-        }
-
-        public static string ProcessName
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["ProcessName"];
-            }
-        }
-
-        public static string ProcessPath
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["ProcessPath"];
-            }
-        }
-
-        public static string SelectedCountiesFile
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["SelectedCountiesFile"];
-            }
-        }
-
-        public static string StopFilePath
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["StopFilePath"];
-            }
-        }
-
-        public static string ZipCodeFilterStateFile
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["ZipCodeFilterStateFile"];
-            }
-        }
-
-        public static string ZipCodeFiltersFile
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["ZipCodeFiltersFile"];
-            }
+            return ConfigurationManager.AppSettings[settingName];
         }
     }
 }

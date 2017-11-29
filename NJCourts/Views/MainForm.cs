@@ -7,6 +7,7 @@ using NJCourts.Models;
 using ComponentFactory.Krypton.Toolkit;
 using System.Linq;
 using System.Globalization;
+using System.Data;
 
 namespace NJCourts
 {
@@ -25,19 +26,7 @@ namespace NJCourts
             InitializeComponent();
             Enabled = false;
             ProcessRunning = true;
-            dtpDateFrom.CustomFormat = Configuration.DateFiltersFormat;
-            dtpDateTo.CustomFormat = Configuration.DateFiltersFormat;
             StoppingProcess();
-        }
-
-        public bool DateFilterEnabled
-        {
-            set
-            {
-                cbDateFilter.CheckedChanged -= CbDateFilter_OnCheckedChanged;
-                cbDateFilter.Checked = value;
-                cbDateFilter.CheckedChanged += CbDateFilter_OnCheckedChanged;
-            }
         }
 
         public bool FiltersEnabled
@@ -55,16 +44,6 @@ namespace NJCourts
                 btnStartStopProcess.Text = value ? "Stop Process" : "Start Process";
                 btnStartStopProcess.Enabled = true;
                 btnApplyFilters.Enabled = !value;
-            }
-        }
-
-        public bool ZipCodeFilterEnabled
-        {
-            set
-            {
-                cbZipCodeFilters.CheckedChanged -= CbZipCodeFilters_OnCheckedChanged;
-                cbZipCodeFilters.Checked = value;
-                cbZipCodeFilters.CheckedChanged += CbZipCodeFilters_OnCheckedChanged;
             }
         }
 
@@ -93,51 +72,13 @@ namespace NJCourts
             }
         }
 
-        public List<string> ZipCodeFilters
-        {
-            get
-            {
-                return rtbZipCodeFilters.Text.Split(',').ToList();
-            }
-            set
-            {
-                rtbZipCodeFilters.Text = string.Join(",", value);
-            }
-        }
-
         /**
-         * Only set filter checkbox as checked if both dates are set
-         * From: Item1, To: Item2
+         * Load all possible venue values
          */
-        public Tuple<DateTime?, DateTime?> DateFilter
+        public void LoadVenueFilter(List<string> venues)
         {
-            get
-            {
-                DateTime? dateFrom = null;
-                DateTime? dateTo = null;
-                if (dtpDateFrom.Checked)
-                {
-                    dateFrom = dtpDateFrom.Value;
-                }
-                if (dtpDateTo.Checked)
-                {
-                    dateTo = dtpDateTo.Value;
-                }
-                return new Tuple<DateTime?, DateTime?>(dateFrom, dateTo);
-            }
-            set
-            {
-                var dateFiledFrom = value.Item1;
-                var dateFiledTo = value.Item2;
-                if (dateFiledFrom.HasValue)
-                {
-                    dtpDateFrom.Value = dateFiledFrom.Value;
-                }
-                if (dateFiledTo.HasValue)
-                {
-                    dtpDateTo.Value = dateFiledTo.Value;
-                }
-            }
+            cmbVenueFilter.Items.Clear();
+            cmbVenueFilter.Items.AddRange(venues.ToArray());
         }
 
         /**
@@ -205,6 +146,19 @@ namespace NJCourts
             }
         }
 
+        public void UpdateDatabaseData(DataTable data)
+        {
+            var dgvCourts = GetCourtsDgv();
+            var bSource = new BindingSource();
+            bSource.DataSource = data;
+            dgvCourts.DataSource = bSource;
+        }
+
+        private KryptonDataGridView GetCourtsDgv()
+        {
+            return (KryptonDataGridView)tabControl1.TabPages[1].Controls.Find("dgvCourts", true).First();
+        }
+
         private void AddCheckAllCheckbox()
         {
             KryptonDataGridViewCheckBoxColumn checkBoxColumn = (KryptonDataGridViewCheckBoxColumn)dgvCounties.Columns[0];
@@ -233,6 +187,18 @@ namespace NJCourts
             _presenter.ApplyFilters();
         }
 
+        private void BtnExport_OnClick(object sender, EventArgs e)
+        {
+            _presenter.Export();
+        }
+
+        private void BtnFilter_OnClick(object sender, EventArgs e)
+        {
+            KryptonDataGridView dgvCourts = GetCourtsDgv();
+            BindingSource bSource = (BindingSource)dgvCourts.DataSource;
+            bSource.Filter = _presenter.Filter;
+        }
+
         /**
          * Delegate to presenter
          */
@@ -248,39 +214,6 @@ namespace NJCourts
             }
         }
 
-        /**
-         * Only allow editing filters when check is set
-         */
-        private void CbDateFilter_OnCheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                dtpDateFrom.Enabled = cbDateFilter.Checked;
-                dtpDateTo.Enabled = cbDateFilter.Checked;
-                _presenter.SaveDateFilterState(cbDateFilter.Checked);
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-            }
-        }
-
-        /**
-         * Only allow editing filters when check is set
-         */
-        private void CbZipCodeFilters_OnCheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                rtbZipCodeFilters.ReadOnly = !cbZipCodeFilters.Checked;
-                _presenter.SaveZipCodeFilterState(cbZipCodeFilters.Checked);
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-            }
-        }
-
         private void CheckBoxHeader_OnCheckedChanged(object sender, EventArgs e)
         {
             foreach (DataGridViewRow Row in dgvCounties.Rows)
@@ -288,6 +221,25 @@ namespace NJCourts
                 ((DataGridViewCheckBoxCell)Row.Cells["countiesCheckBoxColumn"]).Value =  ((KryptonCheckBox)sender).Checked;
             }
             dgvCounties.RefreshEdit();
+        }
+
+        private void CmbCaseFiledDateComparison_OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            dtpCaseFiledDate2.Enabled = (Constants.ComparisonFromString((string)cmbCaseFiledDateComparison.SelectedItem) == Constants.Comparison.RANGE);
+            OnCaseFiledDateFilterChanged();
+        }
+
+        private void CmbDemandAmountComparison_OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtDemandAmountValue2.Enabled = (Constants.ComparisonFromString((string)cmbDemandAmountComparison.SelectedItem) == Constants.Comparison.RANGE);
+            OnDemandAmountFilterChanged();
+        }
+
+        private void CmbVenueFilter_OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            var venueCombo = (KryptonComboBox)sender;
+            string selectedVenue = (string) venueCombo.SelectedItem;
+            _presenter.SetFilterParameters(Constants.FieldNames.VENUE, selectedVenue);
         }
 
         private void DgvCounties_OnCellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
@@ -302,6 +254,16 @@ namespace NJCourts
                 bool isChecked = (bool)dgvCounties.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
                 dgvCounties.Rows[e.RowIndex].DefaultCellStyle.BackColor = isChecked ? Color.LightBlue : dgvCounties.RowsDefaultCellStyle.BackColor;
             }
+        }
+
+        private void DtpCaseFiledDate1_OnValueChanged(object sender, EventArgs e)
+        {
+            OnCaseFiledDateFilterChanged();
+        }
+
+        private void DtpCaseFiledDate2_OnValueChanged(object sender, EventArgs e)
+        {
+            OnCaseFiledDateFilterChanged();
         }
 
         /**
@@ -351,9 +313,25 @@ namespace NJCourts
             }
         }
 
+        private void OnCaseFiledDateFilterChanged()
+        {
+            Constants.Comparison comparison = Constants.ComparisonFromString((string)cmbCaseFiledDateComparison.SelectedItem);
+            string value1 = dtpCaseFiledDate1.Text;
+            string value2 = dtpCaseFiledDate2.Text;
+            _presenter.SetFilterParameters(Constants.FieldNames.CASE_FILED_DATE, comparison, value1, value2);
+        }
+
+        private void OnDemandAmountFilterChanged()
+        {
+            Constants.Comparison comparison = Constants.ComparisonFromString((string) cmbDemandAmountComparison.SelectedItem);
+            string value1 = txtDemandAmountValue1.Text;
+            string value2 = txtDemandAmountValue2.Text;
+            _presenter.SetFilterParameters(Constants.FieldNames.DEMAND_AMOUNT, comparison, value1, value2);
+        }
+
         /**
          * Selection color is restored after printing
-         */ 
+         */
         private void ShowColoredTextMessage(string msg, Color color)
         {
             this.BeginInvoke
@@ -364,6 +342,52 @@ namespace NJCourts
                 rtbMessageLog.SelectionColor = oldColor;
             }));
             
+        }
+
+        private void TxtCaseStatusFilter_OnTextChanged(object sender, EventArgs e)
+        {
+            UpdateFilterTextField(sender, Constants.FieldNames.CASE_STATUS);
+        }
+
+        private void TxtCityFilter_OnTextChanged(object sender, EventArgs e)
+        {
+            UpdateFilterTextField(sender, Constants.FieldNames.CITY);
+        }
+
+        private void TxtDemandAmountValue1_OnTextChanged(object sender, EventArgs e)
+        {
+            OnDemandAmountFilterChanged();
+        }
+
+        private void TxtDemandAmountValue2_OnTextChanged(object sender, EventArgs e)
+        {
+            OnDemandAmountFilterChanged();
+        }
+
+        private void TxtDocketValueFilter_OnTextChanged(object sender, EventArgs e)
+        {
+            UpdateFilterTextField(sender, Constants.FieldNames.DOCKET_VALUE);
+        }
+
+        private void TxtStateFilter_OnTextChanged(object sender, EventArgs e)
+        {
+            UpdateFilterTextField(sender, Constants.FieldNames.STATE);
+        }
+
+        private void TxtZipFilter_OnTextChanged(object sender, EventArgs e)
+        {
+            KryptonTextBox textControl = (KryptonTextBox)sender;
+            List<string> zips = textControl.Text.Split(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR).ToList();
+            _presenter.SetFilterParameters(Constants.FieldNames.ZIP, zips);
+        }
+
+        private void UpdateFilterTextField(object sender, string fieldName)
+        {
+            KryptonTextBox textControl = (KryptonTextBox)sender;
+            string textToSearch = textControl.Text;
+            //var dgvCourts = GetCourtsDgv();
+            //BindingSource bSource = (BindingSource)dgvCourts.DataSource;
+            _presenter.SetFilterParameters(fieldName, textToSearch);
         }
 
     }

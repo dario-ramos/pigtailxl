@@ -1,6 +1,7 @@
 ﻿using NJCourts.Models;
 using NJCourts.Views;
 using System;
+using System.Collections.Generic;
 
 namespace NJCourts.Presenters
 {
@@ -20,17 +21,22 @@ namespace NJCourts.Presenters
         {
             _model = new Model();
             _view = view;
-            _model.CountiesRead += OnCountiesRead;
-            _model.CountyUpdated += OnCountyUpdated;
-            _model.DateFilterRead += OnDateFilterRead;
-            _model.DateFilterStateRead += OnDateFilterStateRead;
+            _model.CountyFileUpdated += OnCountyUpdated;
+            _model.DatabaseDataRead += OnDatabaseDataRead;
             _model.Error += OnError;
+            _model.FileCountiesRead += OnCountiesRead;
             _model.ProcessStarted += OnProcessStarted;
             _model.ProcessStopped += OnProcessStopped;
             _model.StoppingProcess += OnStoppingProcess;
             _model.Warning += OnWarning;
-            _model.ZipCodeFiltersRead += OnZipCodesRead;
-            _model.ZipCodeFilterStateRead += OnZipCodeFilterStateRead;
+        }
+
+        public string Filter
+        {
+            get
+            {
+                return _model.Filter;
+            }
         }
 
         /**
@@ -38,7 +44,12 @@ namespace NJCourts.Presenters
          */
         public void ApplyFilters()
         {
-            _model.ApplyFilters(_view.ZipCodeFilters, _view.DateFilter, _view.SelectedCounties);
+            _model.ApplyFiltersFromFiles(_view.SelectedCounties);
+        }
+
+        public void Export()
+        {
+            _model.Export();
         }
 
         /**
@@ -51,12 +62,27 @@ namespace NJCourts.Presenters
 
         public void SaveDateFilterState(bool enabled)
         {
-            _model.SaveDateFilterState(enabled);
+            _model.SaveFileDateFilterState(enabled);
         }
 
         public void SaveZipCodeFilterState(bool enabled)
         {
-            _model.SaveZipCodeFilterState(enabled);
+            _model.SaveFileZipCodeFilterState(enabled);
+        }
+
+        public void SetFilterParameters(string fieldName, Constants.Comparison comparison, string value1, string value2)
+        {
+            _model.SetFilterParemeters(fieldName, comparison, value1, value2);
+        }
+
+        public void SetFilterParameters(string fieldName, List<string> fieldValues)
+        {
+            _model.SetFilterParemeters(fieldName, fieldValues);
+        }
+
+        public void SetFilterParameters(string fieldName, string fieldValue)
+        {
+            _model.SetFilterParemeters(fieldName, fieldValue);
         }
 
         /**
@@ -80,7 +106,7 @@ namespace NJCourts.Presenters
          */
         private void OnCountiesRead()
         {
-            _view.SetCounties(_model.Counties);
+            _view.SetCounties(_model.CountiesFromFiles);
         }
 
         /**
@@ -92,16 +118,12 @@ namespace NJCourts.Presenters
         }
 
         /**
-         * When the model is done reading the date filter, show it in the view
+         * When data is read, send it to view 
          */
-        private void OnDateFilterRead()
+        private void OnDatabaseDataRead()
         {
-            _view.DateFilter = new Tuple<DateTime?, DateTime?>(_model.DateFiledFrom, _model.DateFiledTo);
-        }
-
-        private void OnDateFilterStateRead(bool enabled)
-        {
-            _view.DateFilterEnabled = enabled;
+            _view.UpdateDatabaseData(_model.DatabaseData);
+            _view.LoadVenueFilter(_model.Venues);
         }
 
         /**
@@ -144,19 +166,6 @@ namespace NJCourts.Presenters
         private void OnWarning(string msg)
         {
             _view.ShowWarningMessage(msg);
-        }
-
-        private void OnZipCodeFilterStateRead(bool enabled)
-        {
-            _view.ZipCodeFilterEnabled = enabled;
-        }
-
-        /**
-         * When the model is done reading all zip code filters, show them in the view
-         */
-        private void OnZipCodesRead()
-        {
-            _view.ZipCodeFilters = _model.ZipCodeFilters;
         }
 
     }
