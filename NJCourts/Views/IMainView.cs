@@ -5,15 +5,13 @@ using System.Data;
 
 namespace NJCourts.Views
 {
-    public interface IView
+    public interface IMainView
     {
         bool FiltersEnabled { set; }
 
         bool ProcessRunning { set; }
 
         List<County> SelectedCounties { get; }
-
-        void LoadVenueFilter(List<string> venues);
 
         void SetCounties(List<County> counties);
 
@@ -25,6 +23,5 @@ namespace NJCourts.Views
 
         void UpdateCounty(County county);
 
-        void UpdateDatabaseData(DataTable data);
     }
 }

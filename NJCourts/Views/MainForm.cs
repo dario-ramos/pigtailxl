@@ -14,9 +14,9 @@ namespace NJCourts
     /**
      * Application main and only form
      */
-    public partial class MainForm : KryptonForm, IView
+    public partial class MainForm : KryptonForm, IMainView
     {
-        private Presenters.Presenter _presenter;
+        private Presenters.MainPresenter _presenter;
 
         /**
          * Constructor: Initializes view 
@@ -70,15 +70,6 @@ namespace NJCourts
                 }
                 return selectedCounties;
             }
-        }
-
-        /**
-         * Load all possible venue values
-         */
-        public void LoadVenueFilter(List<string> venues)
-        {
-            cmbVenueFilter.Items.Clear();
-            cmbVenueFilter.Items.AddRange(venues.ToArray());
         }
 
         /**
@@ -146,19 +137,6 @@ namespace NJCourts
             }
         }
 
-        public void UpdateDatabaseData(DataTable data)
-        {
-            var dgvCourts = GetCourtsDgv();
-            var bSource = new BindingSource();
-            bSource.DataSource = data;
-            dgvCourts.DataSource = bSource;
-        }
-
-        private KryptonDataGridView GetCourtsDgv()
-        {
-            return (KryptonDataGridView)tabControl1.TabPages[1].Controls.Find("dgvCourts", true).First();
-        }
-
         private void AddCheckAllCheckbox()
         {
             KryptonDataGridViewCheckBoxColumn checkBoxColumn = (KryptonDataGridViewCheckBoxColumn)dgvCounties.Columns[0];
@@ -187,16 +165,10 @@ namespace NJCourts
             _presenter.ApplyFilters();
         }
 
-        private void BtnExport_OnClick(object sender, EventArgs e)
+        private void BtnOpenCourtsDB_OnClick(object sender, EventArgs e)
         {
-            _presenter.Export();
-        }
-
-        private void BtnFilter_OnClick(object sender, EventArgs e)
-        {
-            KryptonDataGridView dgvCourts = GetCourtsDgv();
-            BindingSource bSource = (BindingSource)dgvCourts.DataSource;
-            bSource.Filter = _presenter.Filter;
+            var courtsForm = new CourtsForm();
+            courtsForm.Show();
         }
 
         /**
@@ -223,24 +195,6 @@ namespace NJCourts
             dgvCounties.RefreshEdit();
         }
 
-        private void CmbCaseFiledDateComparison_OnSelectedIndexChanged(object sender, EventArgs e)
-        {
-            dtpCaseFiledDate2.Enabled = (Constants.ComparisonFromString((string)cmbCaseFiledDateComparison.SelectedItem) == Constants.Comparison.RANGE);
-            OnCaseFiledDateFilterChanged();
-        }
-
-        private void CmbDemandAmountComparison_OnSelectedIndexChanged(object sender, EventArgs e)
-        {
-            txtDemandAmountValue2.Enabled = (Constants.ComparisonFromString((string)cmbDemandAmountComparison.SelectedItem) == Constants.Comparison.RANGE);
-            OnDemandAmountFilterChanged();
-        }
-
-        private void CmbVenueFilter_OnSelectedIndexChanged(object sender, EventArgs e)
-        {
-            var venueCombo = (KryptonComboBox)sender;
-            string selectedVenue = (string) venueCombo.SelectedItem;
-            _presenter.SetFilterParameters(Constants.FieldNames.VENUE, selectedVenue);
-        }
 
         private void DgvCounties_OnCellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -254,16 +208,6 @@ namespace NJCourts
                 bool isChecked = (bool)dgvCounties.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
                 dgvCounties.Rows[e.RowIndex].DefaultCellStyle.BackColor = isChecked ? Color.LightBlue : dgvCounties.RowsDefaultCellStyle.BackColor;
             }
-        }
-
-        private void DtpCaseFiledDate1_OnValueChanged(object sender, EventArgs e)
-        {
-            OnCaseFiledDateFilterChanged();
-        }
-
-        private void DtpCaseFiledDate2_OnValueChanged(object sender, EventArgs e)
-        {
-            OnCaseFiledDateFilterChanged();
         }
 
         /**
@@ -289,7 +233,7 @@ namespace NJCourts
         {
             try
             {
-                _presenter = new Presenters.Presenter(this);
+                _presenter = new Presenters.MainPresenter(this);
                 AddCheckAllCheckbox();
             }
             catch(Exception ex)
@@ -298,13 +242,12 @@ namespace NJCourts
             }
         }
 
-        /**
-         * As soon as the window is visible, init everything
-         */
         private void MainForm_OnShown(object sender, EventArgs e)
         {
             try
             {
+                //As soon as the window is visible, init 
+                //This is done this way to avoid exceptions in constructors
                 _presenter.Init();
             }
             catch (Exception ex)
@@ -313,81 +256,17 @@ namespace NJCourts
             }
         }
 
-        private void OnCaseFiledDateFilterChanged()
-        {
-            Constants.Comparison comparison = Constants.ComparisonFromString((string)cmbCaseFiledDateComparison.SelectedItem);
-            string value1 = dtpCaseFiledDate1.Text;
-            string value2 = dtpCaseFiledDate2.Text;
-            _presenter.SetFilterParameters(Constants.FieldNames.CASE_FILED_DATE, comparison, value1, value2);
-        }
-
-        private void OnDemandAmountFilterChanged()
-        {
-            Constants.Comparison comparison = Constants.ComparisonFromString((string) cmbDemandAmountComparison.SelectedItem);
-            string value1 = txtDemandAmountValue1.Text;
-            string value2 = txtDemandAmountValue2.Text;
-            _presenter.SetFilterParameters(Constants.FieldNames.DEMAND_AMOUNT, comparison, value1, value2);
-        }
-
-        /**
-         * Selection color is restored after printing
-         */
         private void ShowColoredTextMessage(string msg, Color color)
         {
             this.BeginInvoke
             (new MethodInvoker(()=>{
+                //Selection color is restored after printing
                 Color oldColor = rtbMessageLog.SelectionColor;
                 rtbMessageLog.SelectionColor = color;
                 rtbMessageLog.AppendText(msg + Environment.NewLine);
                 rtbMessageLog.SelectionColor = oldColor;
             }));
             
-        }
-
-        private void TxtCaseStatusFilter_OnTextChanged(object sender, EventArgs e)
-        {
-            UpdateFilterTextField(sender, Constants.FieldNames.CASE_STATUS);
-        }
-
-        private void TxtCityFilter_OnTextChanged(object sender, EventArgs e)
-        {
-            UpdateFilterTextField(sender, Constants.FieldNames.CITY);
-        }
-
-        private void TxtDemandAmountValue1_OnTextChanged(object sender, EventArgs e)
-        {
-            OnDemandAmountFilterChanged();
-        }
-
-        private void TxtDemandAmountValue2_OnTextChanged(object sender, EventArgs e)
-        {
-            OnDemandAmountFilterChanged();
-        }
-
-        private void TxtDocketValueFilter_OnTextChanged(object sender, EventArgs e)
-        {
-            UpdateFilterTextField(sender, Constants.FieldNames.DOCKET_VALUE);
-        }
-
-        private void TxtStateFilter_OnTextChanged(object sender, EventArgs e)
-        {
-            UpdateFilterTextField(sender, Constants.FieldNames.STATE);
-        }
-
-        private void TxtZipFilter_OnTextChanged(object sender, EventArgs e)
-        {
-            KryptonTextBox textControl = (KryptonTextBox)sender;
-            List<string> zips = textControl.Text.Split(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR).ToList();
-            _presenter.SetFilterParameters(Constants.FieldNames.ZIP, zips);
-        }
-
-        private void UpdateFilterTextField(object sender, string fieldName)
-        {
-            KryptonTextBox textControl = (KryptonTextBox)sender;
-            string textToSearch = textControl.Text;
-            //var dgvCourts = GetCourtsDgv();
-            //BindingSource bSource = (BindingSource)dgvCourts.DataSource;
-            _presenter.SetFilterParameters(fieldName, textToSearch);
         }
 
     }

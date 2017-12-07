@@ -10,9 +10,8 @@ namespace NJCourts.Models
     /**
      * Contains all the business logic
      */
-    public class Model
+    public class MainModel
     {
-        public event Action DatabaseDataRead;
         public event Action FileCountiesRead;
         public event Action FileDateFilterRead;
         public event Action FileZipCodeFiltersRead;
@@ -26,13 +25,12 @@ namespace NJCourts.Models
         public event Action<string> Warning;
 
         private bool _processRunning;
-        private DatabaseDataHandler _databaseDataHandler;
         private FileDataHandler _fileDataHandler;
 
         /**
          * Constructor
          */
-        public Model()
+        public MainModel()
         {
             _fileDataHandler = new FileDataHandler();
             _fileDataHandler.CountyUpdated += OnCountyFileUpdated;
@@ -43,16 +41,6 @@ namespace NJCourts.Models
             _fileDataHandler.Warning += OnFileHandlerWarning;
             _fileDataHandler.ZipCodeFiltersRead += OnFileZipCodeFiltersRead;
             _fileDataHandler.ZipCodeFilterStateRead += OnFileZipCodeFilterStateRead;
-            _databaseDataHandler = new DatabaseDataHandler();
-            _databaseDataHandler.DataLoaded += OnDatabaseDataLoaded;
-        }
-
-        public DataTable DatabaseData
-        {
-            get
-            {
-                return _databaseDataHandler.Data;
-            }
         }
 
         /**
@@ -85,14 +73,6 @@ namespace NJCourts.Models
             }
         }
 
-        public List<string> Venues
-        {
-            get
-            {
-                return _databaseDataHandler.Venues;
-            }
-        }
-
         /**
          * List of zip codes
          */
@@ -104,14 +84,6 @@ namespace NJCourts.Models
             }
         }
 
-        public string Filter
-        {
-            get
-            {
-                return _databaseDataHandler.Filter;
-            }
-        }
-
         /**
          * Save filters to files
          */
@@ -120,19 +92,14 @@ namespace NJCourts.Models
             _fileDataHandler.ApplyFilters(selectedCounties);
         }
 
-        public void Export()
-        {
-            _databaseDataHandler.Export();
-        }
-
         /**
          * Check if input directory exists 
          * Then, read all files
          */
         public void Init()
         {
+            _fileDataHandler.Init();
             _fileDataHandler.ReadData();
-            _databaseDataHandler.ReadData();
             StopProcess();
         }
 
@@ -144,38 +111,6 @@ namespace NJCourts.Models
         public void SaveFileZipCodeFilterState(bool enabled)
         {
             _fileDataHandler.SaveZipCodeFilterState(enabled);
-        }
-
-        /// <summary>
-        /// Configuring a comparison-type filter without applying it
-        /// </summary>
-        /// <param name="fieldName">Database field to compare</param>
-        /// <param name="comparison">Comparison to perform</param>
-        /// <param name="value1">First value to compare</param>
-        /// <param name="value2">Second value to compare; only used for RANGE comparisons</param>
-        public void SetFilterParemeters(string fieldName, Constants.Comparison comparison, string value1, string value2)
-        {
-            _databaseDataHandler.SetFilterParameters(fieldName, comparison, value1, value2);
-        }
-
-        /// <summary>
-        /// Configure a multivalue filter (fieldName in (value1, value2, ...valueN) sql claise)
-        /// </summary>
-        /// <param name="fieldName">Database field to filter on</param>
-        /// <param name="fieldValues">List of values; a row will match the filter if it contains any of these</param>
-        public void SetFilterParemeters(string fieldName, List<string> fieldValues)
-        {
-            _databaseDataHandler.SetFilterParameters(fieldName, fieldValues);
-        }
-
-        /// <summary>
-        /// Configure a text search field
-        /// </summary>
-        /// <param name="fieldName">Database field to filter on</param>
-        /// <param name="fieldValue">If the field contains this text, it will match the filter</param>
-        public void SetFilterParemeters(string fieldName, string fieldValue)
-        {
-            _databaseDataHandler.SetFilterParameters(fieldName, fieldValue);
         }
 
         /**
@@ -217,11 +152,6 @@ namespace NJCourts.Models
         private void OnCountyFileUpdated(County county)
         {
             CountyFileUpdated?.Invoke(county);
-        }
-
-        private void OnDatabaseDataLoaded()
-        {
-            DatabaseDataRead?.Invoke();
         }
 
         private void OnFileCountiesRead()

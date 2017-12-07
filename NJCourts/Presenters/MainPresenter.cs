@@ -9,20 +9,19 @@ namespace NJCourts.Presenters
      * The presenter called by the view, changes the model, and when those changes are complete, 
      * the presenter is notified via events so it can update the view
      */
-    public class Presenter
+    public class MainPresenter
     {
-        private IView _view;
-        private Model _model;
+        private IMainView _view;
+        private MainModel _model;
 
         /**
          * Create model and set all event handlers
          */ 
-        public Presenter(IView view)
+        public MainPresenter(IMainView view)
         {
-            _model = new Model();
+            _model = new MainModel();
             _view = view;
             _model.CountyFileUpdated += OnCountyUpdated;
-            _model.DatabaseDataRead += OnDatabaseDataRead;
             _model.Error += OnError;
             _model.FileCountiesRead += OnCountiesRead;
             _model.ProcessStarted += OnProcessStarted;
@@ -31,25 +30,12 @@ namespace NJCourts.Presenters
             _model.Warning += OnWarning;
         }
 
-        public string Filter
-        {
-            get
-            {
-                return _model.Filter;
-            }
-        }
-
         /**
          * Grab data from view and send to model
          */
         public void ApplyFilters()
         {
             _model.ApplyFiltersFromFiles(_view.SelectedCounties);
-        }
-
-        public void Export()
-        {
-            _model.Export();
         }
 
         /**
@@ -68,21 +54,6 @@ namespace NJCourts.Presenters
         public void SaveZipCodeFilterState(bool enabled)
         {
             _model.SaveFileZipCodeFilterState(enabled);
-        }
-
-        public void SetFilterParameters(string fieldName, Constants.Comparison comparison, string value1, string value2)
-        {
-            _model.SetFilterParemeters(fieldName, comparison, value1, value2);
-        }
-
-        public void SetFilterParameters(string fieldName, List<string> fieldValues)
-        {
-            _model.SetFilterParemeters(fieldName, fieldValues);
-        }
-
-        public void SetFilterParameters(string fieldName, string fieldValue)
-        {
-            _model.SetFilterParemeters(fieldName, fieldValue);
         }
 
         /**
@@ -115,15 +86,6 @@ namespace NJCourts.Presenters
         private void OnCountyUpdated(County county)
         {
             _view.UpdateCounty(county);
-        }
-
-        /**
-         * When data is read, send it to view 
-         */
-        private void OnDatabaseDataRead()
-        {
-            _view.UpdateDatabaseData(_model.DatabaseData);
-            _view.LoadVenueFilter(_model.Venues);
         }
 
         /**

@@ -26,15 +26,7 @@ namespace NJCourts.Models
             DateFiledTo = null;
             ZipCodeFilters = new List<string>();
             _lastRead = DateTime.MinValue;
-            //Counties file watcher
             _countiesWatcher = new FileSystemWatcher();
-            _countiesWatcher.Path = Configuration.GetSetting(Configuration.INPUT_DIRECTORY);
-            _countiesWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                                            | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-            // Only watch text files.
-            _countiesWatcher.Filter = "*.txt";
-            _countiesWatcher.Changed += OnCountyFileChanged;
-            _countiesWatcher.EnableRaisingEvents = true;
         }
 
         public DateTime? DateFiledFrom
@@ -64,6 +56,18 @@ namespace NJCourts.Models
         public void ApplyFilters(List<County> selectedCounties)
         {
             SaveSelectedCounties(selectedCounties);
+        }
+
+        public void Init()
+        {
+            //Counties file watcher
+            _countiesWatcher.Path = Configuration.GetSetting(Configuration.INPUT_DIRECTORY);
+            _countiesWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                                            | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+            // Only watch text files.
+            _countiesWatcher.Filter = "*.txt";
+            _countiesWatcher.Changed += OnCountyFileChanged;
+            _countiesWatcher.EnableRaisingEvents = true;
         }
 
         public void ReadData()
