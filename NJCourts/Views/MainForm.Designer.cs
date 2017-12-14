@@ -57,7 +57,7 @@ namespace NJCourts
             // 
             // btnApplyFilters
             // 
-            this.btnApplyFilters.Location = new System.Drawing.Point(173, 585);
+            this.btnApplyFilters.Location = new System.Drawing.Point(96, 582);
             this.btnApplyFilters.Name = "btnApplyFilters";
             this.btnApplyFilters.Size = new System.Drawing.Size(106, 33);
             this.btnApplyFilters.TabIndex = 9;
@@ -123,9 +123,9 @@ namespace NJCourts
             // 
             // btnStartStopProcess
             // 
-            this.btnStartStopProcess.Location = new System.Drawing.Point(1701, 667);
+            this.btnStartStopProcess.Location = new System.Drawing.Point(254, 582);
             this.btnStartStopProcess.Name = "btnStartStopProcess";
-            this.btnStartStopProcess.Size = new System.Drawing.Size(90, 35);
+            this.btnStartStopProcess.Size = new System.Drawing.Size(109, 35);
             this.btnStartStopProcess.TabIndex = 14;
             this.btnStartStopProcess.Values.Text = "Start Process";
             this.btnStartStopProcess.Click += new System.EventHandler(this.BtnStartStopProcess_OnClick);
@@ -140,7 +140,7 @@ namespace NJCourts
             // 
             // btnOpenCourtsDB
             // 
-            this.btnOpenCourtsDB.Location = new System.Drawing.Point(343, 585);
+            this.btnOpenCourtsDB.Location = new System.Drawing.Point(423, 582);
             this.btnOpenCourtsDB.Name = "btnOpenCourtsDB";
             this.btnOpenCourtsDB.Size = new System.Drawing.Size(120, 33);
             this.btnOpenCourtsDB.TabIndex = 19;

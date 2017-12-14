@@ -24,33 +24,33 @@ namespace NJCourts.Models
         public DatabaseDataHandler()
         {
             Data = new DataTable();
-            _filterTemplate = Constants.FieldNames.VENUE + " like '%" + Constants.FieldNames.VENUE + "%' and " + 
-                              Constants.FieldNames.CASE_STATUS + " like '%" + Constants.FieldNames.CASE_STATUS + "%' and " +
-                              Constants.FieldNames.CITY + " like '%" + Constants.FieldNames.CITY + "%' and " +
-                              Constants.FieldNames.DOCKET_VALUE + " like '%" + Constants.FieldNames.DOCKET_VALUE + "%' and " +
-                              Constants.FieldNames.STATE + " like '%" + Constants.FieldNames.STATE + "%' and " +
-                              Constants.Placeholders.DEMAND_AMOUNT_COMPARISON + " and " + 
+            _filterTemplate = "[" + Constants.DisplayFieldNames.VENUE + "] like '%" + Constants.DisplayFieldNames.VENUE + "%' and " +
+                              "[" + Constants.DisplayFieldNames.CASE_STATUS + "] like '%" + Constants.DisplayFieldNames.CASE_STATUS + "%' and " +
+                              "[" + Constants.DisplayFieldNames.DEBTOR_CITY + "] like '%" + Constants.DisplayFieldNames.DEBTOR_CITY + "%' and " +
+                              "[" + Constants.DisplayFieldNames.DOCKET_VALUE + "] like '%" + Constants.DisplayFieldNames.DOCKET_VALUE + "%' and " +
+                              "[" + Constants.DisplayFieldNames.DEBTOR_STATE + "] like '%" + Constants.DisplayFieldNames.DEBTOR_STATE + "%' and " +
+                              Constants.Placeholders.DEMAND_AMOUNT_COMPARISON + " and " +
                               Constants.Placeholders.CASE_FILED_DATE_COMPARISON + " and " +
                               Constants.Placeholders.ZIP_COMPARISON;
             _textFilterValues = new Dictionary<string, string>();
-            _textFilterValues[Constants.FieldNames.CASE_STATUS] = "";
-            _textFilterValues[Constants.FieldNames.CITY] = "";
-            _textFilterValues[Constants.FieldNames.DOCKET_VALUE] = "";
-            _textFilterValues[Constants.FieldNames.STATE] = "";
-            _textFilterValues[Constants.FieldNames.VENUE] = "";
+            _textFilterValues[Constants.DisplayFieldNames.CASE_STATUS] = "";
+            _textFilterValues[Constants.DisplayFieldNames.DEBTOR_CITY] = "";
+            _textFilterValues[Constants.DisplayFieldNames.DOCKET_VALUE] = "";
+            _textFilterValues[Constants.DisplayFieldNames.DEBTOR_STATE] = "";
+            _textFilterValues[Constants.DisplayFieldNames.VENUE] = "";
             _comparisonFilterValues = new Dictionary<string, ComparisonFilter>();
-            _comparisonFilterValues[Constants.FieldNames.DEMAND_AMOUNT] = new ComparisonFilter
+            _comparisonFilterValues[Constants.DisplayFieldNames.DEMAND_AMOUNT] = new ComparisonFilter
             {
                 Placeholder = Constants.Placeholders.DEMAND_AMOUNT_COMPARISON,
                 Value = "true"
             };
-            _comparisonFilterValues[Constants.FieldNames.CASE_FILED_DATE] = new ComparisonFilter
+            _comparisonFilterValues[Constants.DisplayFieldNames.CASE_FILED_DATE] = new ComparisonFilter
             {
                 Placeholder = Constants.Placeholders.CASE_FILED_DATE_COMPARISON,
                 Value = "true"
             };
             _multivalueFilterValues = new Dictionary<string, ComparisonFilter>();
-            _multivalueFilterValues[Constants.FieldNames.ZIP] = new ComparisonFilter
+            _multivalueFilterValues[Constants.DisplayFieldNames.DEBTOR_ZIP] = new ComparisonFilter
             {
                 Placeholder = Constants.Placeholders.ZIP_COMPARISON,
                 Value = "true"
@@ -68,9 +68,9 @@ namespace NJCourts.Models
             get
             {
                 return Data.AsEnumerable()
-                    .GroupBy( row => row[Constants.FieldNames.VENUE] )
+                    .GroupBy( row => row[Constants.DisplayFieldNames.VENUE] )
                     .Select( group => group.First() )
-                    .Select( row => (string) row[Constants.FieldNames.VENUE] )
+                    .Select( row => (string) row[Constants.DisplayFieldNames.VENUE] )
                     .OrderBy(row => row).ToList();
             }
         }
@@ -107,13 +107,13 @@ namespace NJCourts.Models
             else if(comparison != Constants.Comparison.RANGE)
             {
                 ComparisonFilter comparisonFilter = _comparisonFilterValues[fieldName];
-                comparisonFilter.Value = fieldName + " " + comparison.ComparisonToString() + " '" + value1 + "'";
+                comparisonFilter.Value = "[" + fieldName + "] " + comparison.ComparisonToString() + " '" + value1 + "'";
                 _comparisonFilterValues[fieldName] = comparisonFilter;
             }else
             {
                 ComparisonFilter comparisonFilter = _comparisonFilterValues[fieldName];
-                comparisonFilter.Value = "(" + fieldName + " " + Constants.Comparison.GREATER.ComparisonToString() + " '" + value1 + "' and " +
-                                         fieldName + " " + Constants.Comparison.LOWER.ComparisonToString() + " '" + value2 + "')";
+                comparisonFilter.Value = "([" + fieldName + "] " + Constants.Comparison.GREATER.ComparisonToString() + " '" + value1 + "' and [" +
+                                         fieldName + "] " + Constants.Comparison.LOWER.ComparisonToString() + " '" + value2 + "')";
                 _comparisonFilterValues[fieldName] = comparisonFilter;
             }
         }
@@ -123,7 +123,7 @@ namespace NJCourts.Models
             ComparisonFilter comparisonFilter = _multivalueFilterValues[fieldName];
             if (fieldValues.Count > 0 && !string.IsNullOrWhiteSpace(fieldValues[0]))
             {
-                comparisonFilter.Value = "(" + fieldName + " in (";
+                comparisonFilter.Value = "([" + fieldName + "] in (";
                 foreach(string value in fieldValues)
                 {
                     comparisonFilter.Value += "'" + value + "'" + Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR;

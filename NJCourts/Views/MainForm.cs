@@ -171,16 +171,13 @@ namespace NJCourts
             courtsForm.Show();
         }
 
-        /**
-         * Delegate to presenter
-         */
         private void BtnStartStopProcess_OnClick(object sender, EventArgs e)
         {
             try
             {
                 _presenter.StartStopProcess();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 HandleError(ex);
             }

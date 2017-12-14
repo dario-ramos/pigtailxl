@@ -16,6 +16,8 @@ namespace NJCourts.Views
         public CourtsForm()
         {
             InitializeComponent();
+            gbCaseFiledDate.BackColor = Color.Azure;
+            gbCaseFiledDate.ForeColor = Color.Azure;
         }
 
         /// <summary>
@@ -71,7 +73,7 @@ namespace NJCourts.Views
         {
             var venueCombo = (KryptonComboBox)sender;
             string selectedVenue = (string)venueCombo.SelectedItem;
-            _presenter.SetFilterParameters(Constants.FieldNames.VENUE, selectedVenue);
+            _presenter.SetFilterParameters(Constants.DisplayFieldNames.VENUE, selectedVenue);
         }
 
         private void CourtsForm_OnLoad(object sender, System.EventArgs e)
@@ -111,7 +113,7 @@ namespace NJCourts.Views
             Constants.Comparison comparison = Constants.ComparisonFromString((string)cmbCaseFiledDateComparison.SelectedItem);
             string value1 = dtpCaseFiledDate1.Text;
             string value2 = dtpCaseFiledDate2.Text;
-            _presenter.SetFilterParameters(Constants.FieldNames.CASE_FILED_DATE, comparison, value1, value2);
+            _presenter.SetFilterParameters(Constants.DisplayFieldNames.CASE_FILED_DATE, comparison, value1, value2);
         }
 
         private void OnDemandAmountFilterChanged()
@@ -119,7 +121,7 @@ namespace NJCourts.Views
             Constants.Comparison comparison = Constants.ComparisonFromString((string)cmbDemandAmountComparison.SelectedItem);
             string value1 = txtDemandAmountValue1.Text;
             string value2 = txtDemandAmountValue2.Text;
-            _presenter.SetFilterParameters(Constants.FieldNames.DEMAND_AMOUNT, comparison, value1, value2);
+            _presenter.SetFilterParameters(Constants.DisplayFieldNames.DEMAND_AMOUNT, comparison, value1, value2);
         }
 
         private void ShowColoredTextMessage(string msg, Color color)
@@ -136,7 +138,7 @@ namespace NJCourts.Views
 
         private void TxtCaseStatusFilter_OnTextChanged(object sender, EventArgs e)
         {
-            UpdateFilterTextField(sender, Constants.FieldNames.CASE_STATUS);
+            UpdateFilterTextField(sender, Constants.DisplayFieldNames.CASE_STATUS);
         }
 
         private void TxtDemandAmountValue1_OnTextChanged(object sender, EventArgs e)
@@ -151,24 +153,24 @@ namespace NJCourts.Views
 
         private void TxtCityFilter_OnTextChanged(object sender, EventArgs e)
         {
-            UpdateFilterTextField(sender, Constants.FieldNames.CITY);
+            UpdateFilterTextField(sender, Constants.DisplayFieldNames.DEBTOR_CITY);
         }
 
         private void TxtDocketValueFilter_OnTextChanged(object sender, EventArgs e)
         {
-            UpdateFilterTextField(sender, Constants.FieldNames.DOCKET_VALUE);
+            UpdateFilterTextField(sender, Constants.DisplayFieldNames.DOCKET_VALUE);
         }
 
         private void TxtStateFilter_OnTextChanged(object sender, EventArgs e)
         {
-            UpdateFilterTextField(sender, Constants.FieldNames.STATE);
+            UpdateFilterTextField(sender, Constants.DisplayFieldNames.DEBTOR_STATE);
         }
 
         private void TxtZipFilter_OnTextChanged(object sender, EventArgs e)
         {
             KryptonTextBox textControl = (KryptonTextBox)sender;
             List<string> zips = textControl.Text.Split(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR).ToList();
-            _presenter.SetFilterParameters(Constants.FieldNames.ZIP, zips);
+            _presenter.SetFilterParameters(Constants.DisplayFieldNames.DEBTOR_ZIP, zips);
         }
 
         private void UpdateFilterTextField(object sender, string fieldName)

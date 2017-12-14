@@ -102,6 +102,23 @@ namespace NJCourts.Models
 
         private void OnDatabaseDataLoaded()
         {
+            DataTable data = _databaseDataHandler.Data;
+            data.Columns[Constants.FieldNames.CASE_FILED_DATE].ColumnName = Constants.DisplayFieldNames.CASE_FILED_DATE;
+            data.Columns[Constants.FieldNames.CASE_STATUS].ColumnName = Constants.DisplayFieldNames.CASE_STATUS;
+            data.Columns[Constants.FieldNames.CASE_TYPE].ColumnName = Constants.DisplayFieldNames.CASE_TYPE;
+            data.Columns[Constants.FieldNames.CASE_TITLE].ColumnName = Constants.DisplayFieldNames.CASE_TITLE;
+            data.Columns[Constants.FieldNames.COURT].ColumnName = Constants.DisplayFieldNames.COURT;
+            data.Columns[Constants.FieldNames.DATE_TIME_OF_CREATION].ColumnName = Constants.DisplayFieldNames.DATE_TIME_OF_CREATION;
+            data.Columns[Constants.FieldNames.DEBTOR_CITY].ColumnName = Constants.DisplayFieldNames.DEBTOR_CITY;
+            data.Columns[Constants.FieldNames.DEBTOR_FIRST_NAME].ColumnName = Constants.DisplayFieldNames.DEBTOR_FIRST_NAME;
+            data.Columns[Constants.FieldNames.DEBTOR_LAST_NAME].ColumnName = Constants.DisplayFieldNames.DEBTOR_LAST_NAME;
+            data.Columns[Constants.FieldNames.DEBTOR_STATE].ColumnName = Constants.DisplayFieldNames.DEBTOR_STATE;
+            data.Columns[Constants.FieldNames.DEBTOR_STREET].ColumnName = Constants.DisplayFieldNames.DEBTOR_STREET;
+            data.Columns[Constants.FieldNames.DEBTOR_ZIP].ColumnName = Constants.DisplayFieldNames.DEBTOR_ZIP;
+            data.Columns[Constants.FieldNames.DEMAND_AMOUNT].ColumnName = Constants.DisplayFieldNames.DEMAND_AMOUNT;
+            data.Columns[Constants.FieldNames.DOCKET_VALUE].ColumnName = Constants.DisplayFieldNames.DOCKET_VALUE;
+            data.Columns[Constants.FieldNames.ID].ColumnName = Constants.DisplayFieldNames.ID;
+            data.Columns[Constants.FieldNames.VENUE].ColumnName = Constants.DisplayFieldNames.VENUE;
             CourtsDataRead?.Invoke();
         }
     }
