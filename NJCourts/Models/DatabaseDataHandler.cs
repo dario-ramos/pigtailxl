@@ -98,7 +98,7 @@ namespace NJCourts.Models
 
         public void SetFilterParameters(string fieldName, Constants.Comparison comparison, string value1, string value2)
         {
-            if (string.IsNullOrWhiteSpace(value1) || (comparison == Constants.Comparison.RANGE && string.IsNullOrWhiteSpace(value2)))
+            if (string.IsNullOrWhiteSpace(value1) || comparison == Constants.Comparison.NONE || (comparison == Constants.Comparison.RANGE && string.IsNullOrWhiteSpace(value2)))
             {
                 ComparisonFilter comparisonFilter = _comparisonFilterValues[fieldName];
                 comparisonFilter.Value = "true";
@@ -109,7 +109,8 @@ namespace NJCourts.Models
                 ComparisonFilter comparisonFilter = _comparisonFilterValues[fieldName];
                 comparisonFilter.Value = "[" + fieldName + "] " + comparison.ComparisonToString() + " '" + value1 + "'";
                 _comparisonFilterValues[fieldName] = comparisonFilter;
-            }else
+            }
+            else
             {
                 ComparisonFilter comparisonFilter = _comparisonFilterValues[fieldName];
                 comparisonFilter.Value = "([" + fieldName + "] " + Constants.Comparison.GREATER.ComparisonToString() + " '" + value1 + "' and [" +
@@ -123,14 +124,15 @@ namespace NJCourts.Models
             ComparisonFilter comparisonFilter = _multivalueFilterValues[fieldName];
             if (fieldValues.Count > 0 && !string.IsNullOrWhiteSpace(fieldValues[0]))
             {
-                comparisonFilter.Value = "([" + fieldName + "] in (";
-                foreach(string value in fieldValues)
+                comparisonFilter.Value = "(";
+                foreach (string value in fieldValues)
                 {
-                    comparisonFilter.Value += "'" + value + "'" + Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR;
+                    comparisonFilter.Value += "[" + fieldName + "] like '" + value + "%' or";
                 }
-                comparisonFilter.Value.TrimEnd(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR);
-                comparisonFilter.Value += "))";
-            }else
+                comparisonFilter.Value = comparisonFilter.Value.Substring(0, comparisonFilter.Value.Length - 3); //Remove last 'or'
+                comparisonFilter.Value += ")";
+            }
+            else
             {
                 comparisonFilter.Value = "true";
             }

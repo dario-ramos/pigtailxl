@@ -33,7 +33,7 @@ namespace NJCourts.Presenters
         /**
          * Grab data from view and send to model
          */
-        public void ApplyFilters()
+        public void ApplyFiltersFromFiles()
         {
             _model.ApplyFiltersFromFiles(_view.SelectedCounties);
         }

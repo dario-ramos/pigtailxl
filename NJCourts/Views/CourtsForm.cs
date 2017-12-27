@@ -44,6 +44,7 @@ namespace NJCourts.Views
             var bSource = new BindingSource();
             bSource.DataSource = data;
             dgvCourts.DataSource = bSource;
+            dgvCourts.Sort(dgvCourts.Columns[Constants.DisplayFieldNames.DATE_TIME_OF_CREATION], System.ComponentModel.ListSortDirection.Descending);
         }
 
         private void BtnExport_OnClick(object sender, EventArgs e)
@@ -65,7 +66,9 @@ namespace NJCourts.Views
 
         private void CmbDemandAmountComparison_OnSelectedIndexChanged(object sender, EventArgs e)
         {
-            txtDemandAmountValue2.Enabled = (Constants.ComparisonFromString((string)cmbDemandAmountComparison.SelectedItem) == Constants.Comparison.RANGE);
+            Constants.Comparison comparison = Constants.ComparisonFromString((string)cmbDemandAmountComparison.SelectedItem);
+            txtDemandAmountValue1.Enabled = comparison != Constants.Comparison.NONE;
+            txtDemandAmountValue2.Enabled = comparison == Constants.Comparison.RANGE;
             OnDemandAmountFilterChanged();
         }
 
@@ -111,6 +114,8 @@ namespace NJCourts.Views
         private void OnCaseFiledDateFilterChanged()
         {
             Constants.Comparison comparison = Constants.ComparisonFromString((string)cmbCaseFiledDateComparison.SelectedItem);
+            dtpCaseFiledDate1.Enabled = comparison != Constants.Comparison.NONE;
+            dtpCaseFiledDate2.Enabled = comparison == Constants.Comparison.RANGE;
             string value1 = dtpCaseFiledDate1.Text;
             string value2 = dtpCaseFiledDate2.Text;
             _presenter.SetFilterParameters(Constants.DisplayFieldNames.CASE_FILED_DATE, comparison, value1, value2);
@@ -128,11 +133,7 @@ namespace NJCourts.Views
         {
             this.BeginInvoke
             (new MethodInvoker(() => {
-                //Selection color is restored after printing
-                Color oldColor = rtbMessageLog.SelectionColor;
-                rtbMessageLog.SelectionColor = color;
-                rtbMessageLog.AppendText(msg + Environment.NewLine);
-                rtbMessageLog.SelectionColor = oldColor;
+                MessageBox.Show(msg);
             }));
         }
 
@@ -168,8 +169,8 @@ namespace NJCourts.Views
 
         private void TxtZipFilter_OnTextChanged(object sender, EventArgs e)
         {
-            KryptonTextBox textControl = (KryptonTextBox)sender;
-            List<string> zips = textControl.Text.Split(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR).ToList();
+            KryptonRichTextBox textControl = (KryptonRichTextBox)sender;
+            List<string> zips = textControl.Text.Split(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR).Select(s => s.Trim()).ToList();
             _presenter.SetFilterParameters(Constants.DisplayFieldNames.DEBTOR_ZIP, zips);
         }
 
@@ -177,8 +178,6 @@ namespace NJCourts.Views
         {
             KryptonTextBox textControl = (KryptonTextBox)sender;
             string textToSearch = textControl.Text;
-            //var dgvCourts = GetCourtsDgv();
-            //BindingSource bSource = (BindingSource)dgvCourts.DataSource;
             _presenter.SetFilterParameters(fieldName, textToSearch);
         }
 

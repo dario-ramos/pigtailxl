@@ -15,6 +15,7 @@ namespace NJCourts.Models
             GREATER_OR_EQUAL,
             LOWER,
             LOWER_OR_EQUAL,
+            NONE,
             RANGE
         }
 
@@ -23,6 +24,10 @@ namespace NJCourts.Models
             if(c == "=")
             {
                 return Comparison.EQUAL;
+            }
+            else if (c == "NONE")
+            {
+                return Comparison.NONE;
             }
             else if(c == ">")
             {
@@ -44,7 +49,7 @@ namespace NJCourts.Models
                 return Comparison.RANGE;
             }else
             {
-                throw new InvalidCastException("Unknown comparison string: " + c);
+                throw new InvalidCastException("Unknown comparison string: " + c == null? "null" : c);
             }
         }
 
@@ -57,6 +62,7 @@ namespace NJCourts.Models
                 case Comparison.GREATER_OR_EQUAL: return ">=";
                 case Comparison.LOWER: return "<";
                 case Comparison.LOWER_OR_EQUAL: return "<=";
+                case Comparison.NONE: return "NONE";
                 case Comparison.RANGE: return "RANGE";
                 default: throw new InvalidCastException("Unknown comparison enum: " + c.ToString());
             }

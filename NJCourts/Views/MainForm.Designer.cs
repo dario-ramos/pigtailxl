@@ -33,7 +33,6 @@ namespace NJCourts
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.rtbMessageLog = new ComponentFactory.Krypton.Toolkit.KryptonRichTextBox();
-            this.btnApplyFilters = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.dgvCounties = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
             this.countiesCheckBoxColumn = new ComponentFactory.Krypton.Toolkit.KryptonDataGridViewCheckBoxColumn();
             this.CountyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,15 +53,6 @@ namespace NJCourts
             this.rtbMessageLog.Size = new System.Drawing.Size(593, 76);
             this.rtbMessageLog.TabIndex = 0;
             this.rtbMessageLog.Text = "";
-            // 
-            // btnApplyFilters
-            // 
-            this.btnApplyFilters.Location = new System.Drawing.Point(96, 582);
-            this.btnApplyFilters.Name = "btnApplyFilters";
-            this.btnApplyFilters.Size = new System.Drawing.Size(106, 33);
-            this.btnApplyFilters.TabIndex = 9;
-            this.btnApplyFilters.Values.Text = "Apply";
-            this.btnApplyFilters.Click += new System.EventHandler(this.BtnApplyFilters_OnClick);
             // 
             // dgvCounties
             // 
@@ -123,7 +113,7 @@ namespace NJCourts
             // 
             // btnStartStopProcess
             // 
-            this.btnStartStopProcess.Location = new System.Drawing.Point(254, 582);
+            this.btnStartStopProcess.Location = new System.Drawing.Point(162, 582);
             this.btnStartStopProcess.Name = "btnStartStopProcess";
             this.btnStartStopProcess.Size = new System.Drawing.Size(109, 35);
             this.btnStartStopProcess.TabIndex = 14;
@@ -140,7 +130,7 @@ namespace NJCourts
             // 
             // btnOpenCourtsDB
             // 
-            this.btnOpenCourtsDB.Location = new System.Drawing.Point(423, 582);
+            this.btnOpenCourtsDB.Location = new System.Drawing.Point(338, 583);
             this.btnOpenCourtsDB.Name = "btnOpenCourtsDB";
             this.btnOpenCourtsDB.Size = new System.Drawing.Size(120, 33);
             this.btnOpenCourtsDB.TabIndex = 19;
@@ -154,7 +144,6 @@ namespace NJCourts
             this.ClientSize = new System.Drawing.Size(625, 733);
             this.Controls.Add(this.btnOpenCourtsDB);
             this.Controls.Add(this.kryptonLabel1);
-            this.Controls.Add(this.btnApplyFilters);
             this.Controls.Add(this.dgvCounties);
             this.Controls.Add(this.btnStartStopProcess);
             this.Controls.Add(this.rtbMessageLog);
@@ -175,7 +164,6 @@ namespace NJCourts
         private KryptonDataGridView dgvCounties;
         private ComponentFactory.Krypton.Toolkit.KryptonManager kryptonManager1;
         private KryptonButton btnStartStopProcess;
-        private KryptonButton btnApplyFilters;
         private KryptonDataGridViewCheckBoxColumn countiesCheckBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn CountyName;
         private System.Windows.Forms.DataGridViewTextBoxColumn CountyCode;

@@ -39,11 +39,14 @@ namespace NJCourts
 
         public bool ProcessRunning
         {
+            get
+            {
+                return btnStartStopProcess.Text == "Stop Process";
+            }
             set
             {
                 btnStartStopProcess.Text = value ? "Stop Process" : "Start Process";
                 btnStartStopProcess.Enabled = true;
-                btnApplyFilters.Enabled = !value;
             }
         }
 
@@ -157,14 +160,6 @@ namespace NJCourts
             dgvCounties.Controls.Add(checkboxHeader);
         }
 
-        /**
-         * Delegate to presenter
-         */
-        private void BtnApplyFilters_OnClick(object sender, EventArgs e)
-        {
-            _presenter.ApplyFilters();
-        }
-
         private void BtnOpenCourtsDB_OnClick(object sender, EventArgs e)
         {
             var courtsForm = new CourtsForm();
@@ -175,6 +170,10 @@ namespace NJCourts
         {
             try
             {
+                if (!ProcessRunning)
+                {
+                    _presenter.ApplyFiltersFromFiles();
+                }
                 _presenter.StartStopProcess();
             }
             catch (Exception ex)
