@@ -12,6 +12,7 @@ namespace NJCourts.Models
      */
     public class MainModel
     {
+        public event Action DocketYearRead;
         public event Action FileCountiesRead;
         public event Action FileDateFilterRead;
         public event Action FileZipCodeFiltersRead;
@@ -37,6 +38,7 @@ namespace NJCourts.Models
             _fileDataHandler.CountiesRead += OnFileCountiesRead;
             _fileDataHandler.DateFiltersRead += OnFileDateFilterRead;
             _fileDataHandler.DateFilterStateRead += OnFileDateFilterStateRead;
+            _fileDataHandler.DocketYearRead += OnDocketYearRead;
             _fileDataHandler.Error += OnFileHandlerError;
             _fileDataHandler.Warning += OnFileHandlerWarning;
             _fileDataHandler.ZipCodeFiltersRead += OnFileZipCodeFiltersRead;
@@ -62,6 +64,14 @@ namespace NJCourts.Models
             get
             {
                 return _fileDataHandler.DateFiledTo;
+            }
+        }
+
+        public int DocketYear
+        {
+            get
+            {
+                return _fileDataHandler.DocketYear;
             }
         }
 
@@ -116,7 +126,7 @@ namespace NJCourts.Models
         /**
          * Start or stop process according to current state
          */
-        public void StartStopProcess()
+        public void StartStopProcess(int docketYear)
         {
             if (_processRunning)
             {
@@ -124,6 +134,7 @@ namespace NJCourts.Models
             }
             else
             {
+                _fileDataHandler.SaveDocketYear(docketYear);
                 StartProcess();
             }
         }
@@ -152,6 +163,11 @@ namespace NJCourts.Models
         private void OnCountyFileUpdated(County county)
         {
             CountyFileUpdated?.Invoke(county);
+        }
+
+        private void OnDocketYearRead()
+        {
+            DocketYearRead?.Invoke();
         }
 
         private void OnFileCountiesRead()

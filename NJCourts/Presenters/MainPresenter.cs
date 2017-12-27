@@ -22,6 +22,7 @@ namespace NJCourts.Presenters
             _model = new MainModel();
             _view = view;
             _model.CountyFileUpdated += OnCountyUpdated;
+            _model.DocketYearRead += OnDocketYearRead;
             _model.Error += OnError;
             _model.FileCountiesRead += OnCountiesRead;
             _model.ProcessStarted += OnProcessStarted;
@@ -59,9 +60,9 @@ namespace NJCourts.Presenters
         /**
          * Delegate to model
          */
-        public void StartStopProcess()
+        public void StartStopProcess(int docketYear)
         {
-            _model.StartStopProcess();
+            _model.StartStopProcess(docketYear);
         }
 
         /**
@@ -86,6 +87,14 @@ namespace NJCourts.Presenters
         private void OnCountyUpdated(County county)
         {
             _view.UpdateCounty(county);
+        }
+
+        /**
+         * When docket year read, show it in the view
+         */
+        private void OnDocketYearRead()
+        {
+            _view.SetDocketYear(_model.DocketYear);
         }
 
         /**

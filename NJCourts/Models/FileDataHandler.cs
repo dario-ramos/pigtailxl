@@ -10,6 +10,7 @@ namespace NJCourts.Models
     {
         public event Action CountiesRead;
         public event Action DateFiltersRead;
+        public event Action DocketYearRead;
         public event Action ZipCodeFiltersRead;
         public event Action<bool> DateFilterStateRead;
         public event Action<bool> ZipCodeFilterStateRead;
@@ -36,6 +37,12 @@ namespace NJCourts.Models
         }
 
         public DateTime? DateFiledTo
+        {
+            get;
+            private set;
+        }
+
+        public int DocketYear
         {
             get;
             private set;
@@ -81,12 +88,22 @@ namespace NJCourts.Models
             ReadZipCodeFilters();
             ReadDateFilterState();
             ReadDateFilter();
+            ReadDocketYear();
             ReadCounties();
         }
 
         public void SaveDateFilterState(bool enabled)
         {
             SaveBooleanSetting(Configuration.GetSetting(Configuration.DATE_FILTERS_STATE_FILE), enabled);
+        }
+
+        public void SaveDocketYear(int docketYear)
+        {
+            string settingFilePath = Path.Combine(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), Configuration.GetSetting(Configuration.DOCKET_YEAR_FILE));
+            using (StreamWriter file = new StreamWriter(settingFilePath, false))
+            {
+                file.WriteLine(docketYear);
+            }
         }
 
         public void SaveZipCodeFilterState(bool enabled)
@@ -259,6 +276,24 @@ namespace NJCourts.Models
         private void ReadDateFilterState()
         {
             ReadBooleanSetting(Configuration.GetSetting(Configuration.DATE_FILTERS_STATE_FILE), DateFilterStateRead);
+        }
+
+        private void ReadDocketYear()
+        {
+            string docketYearFilePath = Path.Combine(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), Configuration.GetSetting(Configuration.DOCKET_YEAR_FILE));
+            if (!File.Exists(docketYearFilePath))
+            {
+                Warning?.Invoke("Docket year file " + docketYearFilePath + " does not exist, will be created empty");
+                File.Create(docketYearFilePath).Close();
+            }
+            string s = File.ReadAllText(docketYearFilePath);
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                DocketYearRead?.Invoke();
+                return;
+            }
+            DocketYear = int.Parse(s);
+            DocketYearRead?.Invoke();
         }
 
         private HashSet<string> ReadSelectedCounties()

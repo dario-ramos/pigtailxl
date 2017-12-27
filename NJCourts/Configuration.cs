@@ -8,6 +8,7 @@ namespace NJCourts
         public const string DATE_FILTERS_FILE = "DateFiltersFile";
         public const string DATE_FILTERS_FORMAT = "DateFiltersFormat";
         public const string DATE_FILTERS_STATE_FILE = "DateFiltersStateFile";
+        public const string DOCKET_YEAR_FILE = "DocketYearFile";
         public const string EXCEL_EXPORT_DIR = "ExcelExportDir";
         public const string INPUT_DIRECTORY = "InputDirectory";
         public const string PROCESS_NAME = "ProcessName";

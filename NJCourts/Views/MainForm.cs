@@ -93,6 +93,11 @@ namespace NJCourts
             dgvCounties.Refresh();
         }
 
+        public void SetDocketYear(int docketYear)
+        {
+            txtDocketYear.Text = docketYear.ToString();
+        }
+
         /**
          * Display an error message. It's appended, so older ones are kept
          * Save current color, set to red, print and restore
@@ -170,11 +175,17 @@ namespace NJCourts
         {
             try
             {
+                int docketYear = 0;
+                if (!int.TryParse(txtDocketYear.Text, out docketYear))
+                {
+                    MessageBox.Show("Cannot start process without a docket year");
+                    return;
+                }
                 if (!ProcessRunning)
                 {
                     _presenter.ApplyFiltersFromFiles();
                 }
-                _presenter.StartStopProcess();
+                _presenter.StartStopProcess(docketYear);
             }
             catch (Exception ex)
             {

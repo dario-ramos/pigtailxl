@@ -42,6 +42,8 @@ namespace NJCourts
             this.btnStartStopProcess = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.btnOpenCourtsDB = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.txtDocketYear = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
+            this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCounties)).BeginInit();
             this.SuspendLayout();
             // 
@@ -113,7 +115,7 @@ namespace NJCourts
             // 
             // btnStartStopProcess
             // 
-            this.btnStartStopProcess.Location = new System.Drawing.Point(162, 582);
+            this.btnStartStopProcess.Location = new System.Drawing.Point(16, 580);
             this.btnStartStopProcess.Name = "btnStartStopProcess";
             this.btnStartStopProcess.Size = new System.Drawing.Size(109, 35);
             this.btnStartStopProcess.TabIndex = 14;
@@ -130,18 +132,35 @@ namespace NJCourts
             // 
             // btnOpenCourtsDB
             // 
-            this.btnOpenCourtsDB.Location = new System.Drawing.Point(338, 583);
+            this.btnOpenCourtsDB.Location = new System.Drawing.Point(235, 582);
             this.btnOpenCourtsDB.Name = "btnOpenCourtsDB";
             this.btnOpenCourtsDB.Size = new System.Drawing.Size(120, 33);
             this.btnOpenCourtsDB.TabIndex = 19;
             this.btnOpenCourtsDB.Values.Text = "Open Database";
             this.btnOpenCourtsDB.Click += new System.EventHandler(this.BtnOpenCourtsDB_OnClick);
             // 
+            // txtDocketYear
+            // 
+            this.txtDocketYear.Location = new System.Drawing.Point(491, 585);
+            this.txtDocketYear.Name = "txtDocketYear";
+            this.txtDocketYear.Size = new System.Drawing.Size(114, 23);
+            this.txtDocketYear.TabIndex = 20;
+            // 
+            // kryptonLabel2
+            // 
+            this.kryptonLabel2.Location = new System.Drawing.Point(409, 585);
+            this.kryptonLabel2.Name = "kryptonLabel2";
+            this.kryptonLabel2.Size = new System.Drawing.Size(76, 20);
+            this.kryptonLabel2.TabIndex = 21;
+            this.kryptonLabel2.Values.Text = "Docket Year";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(625, 733);
+            this.Controls.Add(this.kryptonLabel2);
+            this.Controls.Add(this.txtDocketYear);
             this.Controls.Add(this.btnOpenCourtsDB);
             this.Controls.Add(this.kryptonLabel1);
             this.Controls.Add(this.dgvCounties);
@@ -170,6 +189,8 @@ namespace NJCourts
         private System.Windows.Forms.DataGridViewTextBoxColumn Processed;
         private KryptonLabel kryptonLabel1;
         private KryptonButton btnOpenCourtsDB;
+        private KryptonTextBox txtDocketYear;
+        private KryptonLabel kryptonLabel2;
     }
 }
 

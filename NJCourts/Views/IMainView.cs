@@ -15,6 +15,8 @@ namespace NJCourts.Views
 
         void SetCounties(List<County> counties);
 
+        void SetDocketYear(int docketYear);
+
         void ShowErrorMessage(string errorMsg);
 
         void ShowWarningMessage(string msg);
