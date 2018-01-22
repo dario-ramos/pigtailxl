@@ -51,6 +51,9 @@ namespace NJCourts.Views
         {
             using (SaveFileDialog dialog = new SaveFileDialog())
             {
+                dialog.Filter = "Excel Files (*.xlsx)|*.xlsx";
+                dialog.DefaultExt = "xlsx";
+                dialog.AddExtension = true;
                 dialog.RestoreDirectory = true;
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
