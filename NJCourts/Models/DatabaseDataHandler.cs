@@ -83,12 +83,11 @@ namespace NJCourts.Models
             }
         }
 
-        public void Export()
+        public void Export(string exportedFilePath)
         {
-            string timeStamp = DateTime.Now.ToString("MMddyyyyHHmmss");
             DataView filteredData = new DataView(Data);
             filteredData.RowFilter = UpdateFilter();
-            filteredData.ToTable().ExportToExcel(Path.Combine(Configuration.GetSetting(Configuration.EXCEL_EXPORT_DIR), timeStamp + "_Exported.xlsx"));
+            filteredData.ToTable().ExportToExcel(exportedFilePath);
         }
 
         public void SetFilterParameters(string fieldName, string fieldValue)

@@ -24,9 +24,9 @@ namespace NJCourts.Presenters
             }
         }
 
-        public void Export()
+        public void Export(string exportedFilePath)
         {
-            _model.Export();
+            _model.Export(exportedFilePath);
         }
 
         public void Init()

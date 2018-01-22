@@ -55,9 +55,9 @@ namespace NJCourts.Models
         /// <summary>
         /// Export courts data to an external source
         /// </summary>
-        public void Export()
+        public void Export(string exportedFilePath)
         {
-            _databaseDataHandler.Export();
+            _databaseDataHandler.Export(exportedFilePath);
         }
 
         /// <summary>

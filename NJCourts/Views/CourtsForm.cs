@@ -49,7 +49,14 @@ namespace NJCourts.Views
 
         private void BtnExport_OnClick(object sender, EventArgs e)
         {
-            _presenter.Export();
+            using (SaveFileDialog dialog = new SaveFileDialog())
+            {
+                dialog.RestoreDirectory = true;
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    _presenter.Export(dialog.FileName);
+                }
+            }
         }
 
         private void BtnFilter_OnClick(object sender, EventArgs e)
