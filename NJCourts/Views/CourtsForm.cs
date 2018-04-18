@@ -116,7 +116,7 @@ namespace NJCourts.Views
 
         private void BtnSaveZipList_OnClick(object sender, EventArgs e)
         {
-            _presenter.SaveZipList((string)cmbPredefinedZipLists.SelectedItem, txtZipFilter.Text);
+            _presenter.SaveZipList((string)cmbPredefinedZipLists.Text, txtZipFilter.Text);
         }
 
         private void CmbCaseFiledDateComparison_OnSelectedIndexChanged(object sender, EventArgs e)
@@ -250,9 +250,5 @@ namespace NJCourts.Views
             _presenter.SetFilterParameters(fieldName, textToSearch);
         }
 
-        private void CourtsForm_OnFormClosed(object sender, FormClosedEventArgs e)
-        {
-            _presenter.SaveCurrentZipList();
-        }
     }
 }

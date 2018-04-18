@@ -29,6 +29,7 @@ namespace NJCourts.Presenters
             {
                 _model.CurrentZipList = value;
                 _view.UpdateZipFilter(_model.CurrentZipListValues);
+                _model.SaveCurrentZipList();
             }
         }
 
@@ -68,11 +69,6 @@ namespace NJCourts.Presenters
             UpdateZipLists();
         }
 
-        public void SaveCurrentZipList()
-        {
-            _model.SaveCurrentZipList();
-        }
-
         /// <summary>
         /// Save zip list for later selection
         /// </summary>
@@ -83,6 +79,7 @@ namespace NJCourts.Presenters
             string[] zipCodes = zipList.Split(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR);
             _model.SaveZipList(listName, zipCodes);
             UpdateZipLists();
+            _model.SaveCurrentZipList();
         }
 
         /// <summary>

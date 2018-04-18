@@ -401,7 +401,6 @@
             // cmbPredefinedZipLists
             // 
             this.cmbPredefinedZipLists.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmbPredefinedZipLists.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPredefinedZipLists.DropDownWidth = 121;
             this.cmbPredefinedZipLists.Location = new System.Drawing.Point(261, 17);
             this.cmbPredefinedZipLists.Margin = new System.Windows.Forms.Padding(4);
@@ -421,7 +420,6 @@
             this.Name = "CourtsForm";
             this.Text = "NJCourts - Database view";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CourtsForm_OnFormClosed);
             this.Load += new System.EventHandler(this.CourtsForm_OnLoad);
             this.Shown += new System.EventHandler(this.CourtsForm_OnShown);
             ((System.ComponentModel.ISupportInitialize)(this.dgvCourts)).EndInit();

@@ -17,7 +17,7 @@ namespace NJCourts.Models
         public event Action<string> Error;
         public event Action<string> Warning;
 
-        private const string ZIP_LIST_NAME_PREFIX = "_ZCL_";
+        private const string ZIP_LISTS_SUBFOLDER = "ZipLists";
         private DateTime _lastRead;
         private Dictionary<string, List<string>> _zipCodeLists;
         private FileSystemWatcher _countiesWatcher;
@@ -165,11 +165,7 @@ namespace NJCourts.Models
 
         public void SaveZipCodeList(string listName, IEnumerable<string> zipCodes)
         {
-            if (listName.Equals(Constants.Placeholders.NEW_ZIP_LIST)) //New list
-            {
-                listName = ZIP_LIST_NAME_PREFIX + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-            }
-            string listFilePath = Path.Combine(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), listName + ".txt");
+            string listFilePath = Path.Combine(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), ZIP_LISTS_SUBFOLDER, listName + ".txt");
             File.WriteAllText(listFilePath, string.Join(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR.ToString(), zipCodes));
             _zipCodeLists[Path.GetFileNameWithoutExtension(listFilePath)] = zipCodes.ToList();
             CurrentZipList = listName;
@@ -399,7 +395,8 @@ namespace NJCourts.Models
 
         private void ReadZipCodeLists()
         {
-            IEnumerable<string> zipListFiles = Directory.EnumerateFiles(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), ZIP_LIST_NAME_PREFIX + "*.txt");
+            string zipListDir = Path.Combine(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), ZIP_LISTS_SUBFOLDER);
+            IEnumerable<string> zipListFiles = Directory.EnumerateFiles(zipListDir, "*.txt");
             foreach(string zipListName in zipListFiles)
             {
                 string zips = File.ReadAllText(zipListName);
