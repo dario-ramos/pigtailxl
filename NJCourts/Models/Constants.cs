@@ -113,6 +113,7 @@ namespace NJCourts.Models
             public const char MULTIVALUE_FILTER_SEPARATOR = ',';
             public const string CASE_FILED_DATE_COMPARISON = "___njcCaseFiledDateComparison___";
             public const string DEMAND_AMOUNT_COMPARISON = "___njcDemandAmountComparison___";
+            public const string NEW_ZIP_LIST = "New List...";
             public const string ZIP_COMPARISON = "___njcZipComparison___";
         }
 

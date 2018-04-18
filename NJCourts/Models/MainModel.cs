@@ -31,9 +31,9 @@ namespace NJCourts.Models
         /**
          * Constructor
          */
-        public MainModel()
+        public MainModel(FileDataHandler fileDataHandler)
         {
-            _fileDataHandler = new FileDataHandler();
+            _fileDataHandler = fileDataHandler;
             _fileDataHandler.CountyUpdated += OnCountyFileUpdated;
             _fileDataHandler.CountiesRead += OnFileCountiesRead;
             _fileDataHandler.DateFiltersRead += OnFileDateFilterRead;
@@ -41,7 +41,6 @@ namespace NJCourts.Models
             _fileDataHandler.DocketYearRead += OnDocketYearRead;
             _fileDataHandler.Error += OnFileHandlerError;
             _fileDataHandler.Warning += OnFileHandlerWarning;
-            _fileDataHandler.ZipCodeFiltersRead += OnFileZipCodeFiltersRead;
             _fileDataHandler.ZipCodeFilterStateRead += OnFileZipCodeFilterStateRead;
         }
 
@@ -67,6 +66,14 @@ namespace NJCourts.Models
             }
         }
 
+        public FileDataHandler FileDataHandler
+        {
+            get
+            {
+                return _fileDataHandler;
+            }
+        }
+
         public int DocketYear
         {
             get
@@ -83,9 +90,9 @@ namespace NJCourts.Models
             }
         }
 
-        /**
-         * List of zip codes
-         */
+        /// <summary>
+        /// Currently selected zip filters
+        /// </summary>
         public List<string> ZipCodeFiltersFromFile
         {
             get

@@ -167,7 +167,7 @@ namespace NJCourts
 
         private void BtnOpenCourtsDB_OnClick(object sender, EventArgs e)
         {
-            var courtsForm = new CourtsForm();
+            var courtsForm = new CourtsForm(_presenter.FileDataHandler);
             courtsForm.Show();
         }
 
@@ -240,7 +240,7 @@ namespace NJCourts
         {
             try
             {
-                _presenter = new Presenters.MainPresenter(this);
+                _presenter = new Presenters.MainPresenter(this, new FileDataHandler());
                 AddCheckAllCheckbox();
             }
             catch(Exception ex)

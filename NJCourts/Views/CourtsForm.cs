@@ -12,12 +12,32 @@ namespace NJCourts.Views
     public partial class CourtsForm : KryptonForm, ICourtsView
     {
         private Presenters.CourtsPresenter _presenter;
+        private FileDataHandler _fileDataHandler;
 
-        public CourtsForm()
+        public CourtsForm(FileDataHandler fileDataHandler)
         {
             InitializeComponent();
             gbCaseFiledDate.BackColor = Color.Azure;
             gbCaseFiledDate.ForeColor = Color.Azure;
+            _fileDataHandler = fileDataHandler;
+        }
+
+        /// <summary>
+        /// If new value exists, select list. Otherwise, default to "New List" placeholder
+        /// </summary>
+        public string CurrentZipList
+        {
+            set
+            {
+                if (cmbPredefinedZipLists.Items.Contains(value))
+                {
+                    cmbPredefinedZipLists.SelectedItem = value;
+                }
+                else
+                {
+                    cmbPredefinedZipLists.SelectedItem = Constants.Placeholders.NEW_ZIP_LIST;
+                }
+            }
         }
 
         /// <summary>
@@ -30,21 +50,47 @@ namespace NJCourts.Views
             cmbVenueFilter.Items.AddRange(venues.ToArray());
         }
 
-        /**
-         * Display an error message. It's appended, so older ones are kept
-         * Save current color, set to red, print and restore
-         */
+        /// <summary>
+        /// Display an error message. It's appended, so older ones are kept
+        /// Save current color, set to red, print and restore
+        /// </summary>
+        /// <param name="errorMsg">Plain text error message</param>
         public void ShowErrorMessage(string errorMsg)
         {
             ShowColoredTextMessage(errorMsg, Color.Red);
         }
 
+        /// <summary>
+        /// Render courts data, applying filters and sorting
+        /// </summary>
+        /// <param name="data">Court data rows</param>
         public void UpdateCourtsData(DataTable data)
         {
             var bSource = new BindingSource();
             bSource.DataSource = data;
             dgvCourts.DataSource = bSource;
             dgvCourts.Sort(dgvCourts.Columns[Constants.DisplayFieldNames.DATE_TIME_OF_CREATION], System.ComponentModel.ListSortDirection.Descending);
+        }
+
+        public void UpdateZipFilter(List<string> zipValues)
+        {
+            txtZipFilter.Clear();
+            txtZipFilter.Text = string.Join(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR.ToString(), zipValues.ToArray());
+        }
+
+        /// <summary>
+        /// Update zip lists by name
+        /// </summary>
+        /// <param name="zipListNames">List names</param>
+        public void UpdateZipLists(IEnumerable<string> zipListNames)
+        {
+            cmbPredefinedZipLists.Items.Clear();
+            cmbPredefinedZipLists.Items.AddRange(zipListNames.ToArray());
+        }
+
+        private void BtnDeleteZipList_OnClick(object sender, EventArgs e)
+        {
+            _presenter.DeleteCurrentZipList();
         }
 
         private void BtnExport_OnClick(object sender, EventArgs e)
@@ -68,6 +114,11 @@ namespace NJCourts.Views
             bSource.Filter = _presenter.Filter;
         }
 
+        private void BtnSaveZipList_OnClick(object sender, EventArgs e)
+        {
+            _presenter.SaveZipList((string)cmbPredefinedZipLists.SelectedItem, txtZipFilter.Text);
+        }
+
         private void CmbCaseFiledDateComparison_OnSelectedIndexChanged(object sender, EventArgs e)
         {
             dtpCaseFiledDate2.Enabled = (Constants.ComparisonFromString((string)cmbCaseFiledDateComparison.SelectedItem) == Constants.Comparison.RANGE);
@@ -82,6 +133,14 @@ namespace NJCourts.Views
             OnDemandAmountFilterChanged();
         }
 
+        private void CmbPredefinedZipLists_OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            var zipListCombo = (KryptonComboBox)sender;
+            string selectedZipList = (string)zipListCombo.SelectedItem;
+            _presenter.CurrentZipList = selectedZipList;
+            btnDeleteZipList.Enabled = ! selectedZipList.Equals(Constants.Placeholders.NEW_ZIP_LIST);
+        }
+
         private void CmbVenueFilter_OnSelectedIndexChanged(object sender, EventArgs e)
         {
             var venueCombo = (KryptonComboBox)sender;
@@ -91,7 +150,7 @@ namespace NJCourts.Views
 
         private void CourtsForm_OnLoad(object sender, System.EventArgs e)
         {
-            _presenter = new Presenters.CourtsPresenter(this);
+            _presenter = new Presenters.CourtsPresenter(this, _fileDataHandler);
         }
 
         private void CourtsForm_OnShown(object sender, System.EventArgs e)
@@ -106,12 +165,12 @@ namespace NJCourts.Views
             }
         }
 
-        private void dtpCaseFiledDate1_ValueChanged(object sender, EventArgs e)
+        private void DtpCaseFiledDate1_ValueChanged(object sender, EventArgs e)
         {
             OnCaseFiledDateFilterChanged();
         }
 
-        private void dtpCaseFiledDate2_ValueChanged(object sender, EventArgs e)
+        private void DtpCaseFiledDate2_ValueChanged(object sender, EventArgs e)
         {
             OnCaseFiledDateFilterChanged();
         }
@@ -191,5 +250,9 @@ namespace NJCourts.Views
             _presenter.SetFilterParameters(fieldName, textToSearch);
         }
 
+        private void CourtsForm_OnFormClosed(object sender, FormClosedEventArgs e)
+        {
+            _presenter.SaveCurrentZipList();
+        }
     }
 }

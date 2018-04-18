@@ -53,6 +53,9 @@
             this.txtStateFilter = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.txtZipFilter = new ComponentFactory.Krypton.Toolkit.KryptonRichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnDeleteZipList = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnSaveZipList = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.cmbPredefinedZipLists = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCourts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gbCaseFiledDate)).BeginInit();
@@ -67,6 +70,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbDemandAmountComparison)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbVenueFilter)).BeginInit();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbPredefinedZipLists)).BeginInit();
             this.SuspendLayout();
             // 
             // dgvCourts
@@ -74,10 +78,10 @@
             this.dgvCourts.AllowUserToAddRows = false;
             this.dgvCourts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgvCourts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvCourts.Dock = System.Windows.Forms.DockStyle.Top;
             this.dgvCourts.Location = new System.Drawing.Point(0, 0);
+            this.dgvCourts.Margin = new System.Windows.Forms.Padding(4);
             this.dgvCourts.Name = "dgvCourts";
-            this.dgvCourts.Size = new System.Drawing.Size(1809, 729);
+            this.dgvCourts.Size = new System.Drawing.Size(2412, 897);
             this.dgvCourts.TabIndex = 2;
             // 
             // kryptonComboBox1
@@ -85,24 +89,26 @@
             this.kryptonComboBox1.DropDownWidth = 121;
             this.kryptonComboBox1.Location = new System.Drawing.Point(0, 0);
             this.kryptonComboBox1.Name = "kryptonComboBox1";
-            this.kryptonComboBox1.Size = new System.Drawing.Size(121, 21);
+            this.kryptonComboBox1.Size = new System.Drawing.Size(121, 25);
             this.kryptonComboBox1.TabIndex = 0;
             // 
             // kryptonLabel5
             // 
             this.kryptonLabel5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.kryptonLabel5.Location = new System.Drawing.Point(932, 137);
+            this.kryptonLabel5.Location = new System.Drawing.Point(1243, 170);
+            this.kryptonLabel5.Margin = new System.Windows.Forms.Padding(4);
             this.kryptonLabel5.Name = "kryptonLabel5";
-            this.kryptonLabel5.Size = new System.Drawing.Size(83, 20);
+            this.kryptonLabel5.Size = new System.Drawing.Size(102, 24);
             this.kryptonLabel5.TabIndex = 23;
             this.kryptonLabel5.Values.Text = "Docket Value";
             // 
             // txtDocketValueFilter
             // 
             this.txtDocketValueFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtDocketValueFilter.Location = new System.Drawing.Point(932, 158);
+            this.txtDocketValueFilter.Location = new System.Drawing.Point(1243, 194);
+            this.txtDocketValueFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtDocketValueFilter.Name = "txtDocketValueFilter";
-            this.txtDocketValueFilter.Size = new System.Drawing.Size(166, 23);
+            this.txtDocketValueFilter.Size = new System.Drawing.Size(221, 27);
             this.txtDocketValueFilter.TabIndex = 22;
             this.txtDocketValueFilter.TextChanged += new System.EventHandler(this.TxtDocketValueFilter_OnTextChanged);
             // 
@@ -113,7 +119,8 @@
             this.gbCaseFiledDate.CaptionStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
             this.gbCaseFiledDate.GroupBackStyle = ComponentFactory.Krypton.Toolkit.PaletteBackStyle.ButtonLowProfile;
             this.gbCaseFiledDate.GroupBorderStyle = ComponentFactory.Krypton.Toolkit.PaletteBorderStyle.GridHeaderColumnList;
-            this.gbCaseFiledDate.Location = new System.Drawing.Point(4, 14);
+            this.gbCaseFiledDate.Location = new System.Drawing.Point(5, 17);
+            this.gbCaseFiledDate.Margin = new System.Windows.Forms.Padding(4);
             this.gbCaseFiledDate.Name = "gbCaseFiledDate";
             // 
             // gbCaseFiledDate.Panel
@@ -121,7 +128,7 @@
             this.gbCaseFiledDate.Panel.Controls.Add(this.dtpCaseFiledDate2);
             this.gbCaseFiledDate.Panel.Controls.Add(this.dtpCaseFiledDate1);
             this.gbCaseFiledDate.Panel.Controls.Add(this.cmbCaseFiledDateComparison);
-            this.gbCaseFiledDate.Size = new System.Drawing.Size(102, 119);
+            this.gbCaseFiledDate.Size = new System.Drawing.Size(136, 146);
             this.gbCaseFiledDate.TabIndex = 21;
             this.gbCaseFiledDate.Values.Heading = "Case Filed Date";
             // 
@@ -129,21 +136,23 @@
             // 
             this.dtpCaseFiledDate2.Enabled = false;
             this.dtpCaseFiledDate2.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpCaseFiledDate2.Location = new System.Drawing.Point(3, 62);
+            this.dtpCaseFiledDate2.Location = new System.Drawing.Point(4, 76);
+            this.dtpCaseFiledDate2.Margin = new System.Windows.Forms.Padding(4);
             this.dtpCaseFiledDate2.Name = "dtpCaseFiledDate2";
-            this.dtpCaseFiledDate2.Size = new System.Drawing.Size(93, 21);
+            this.dtpCaseFiledDate2.Size = new System.Drawing.Size(124, 25);
             this.dtpCaseFiledDate2.TabIndex = 2;
-            this.dtpCaseFiledDate2.ValueChanged += new System.EventHandler(this.dtpCaseFiledDate2_ValueChanged);
+            this.dtpCaseFiledDate2.ValueChanged += new System.EventHandler(this.DtpCaseFiledDate2_ValueChanged);
             // 
             // dtpCaseFiledDate1
             // 
             this.dtpCaseFiledDate1.Enabled = false;
             this.dtpCaseFiledDate1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpCaseFiledDate1.Location = new System.Drawing.Point(3, 35);
+            this.dtpCaseFiledDate1.Location = new System.Drawing.Point(4, 43);
+            this.dtpCaseFiledDate1.Margin = new System.Windows.Forms.Padding(4);
             this.dtpCaseFiledDate1.Name = "dtpCaseFiledDate1";
-            this.dtpCaseFiledDate1.Size = new System.Drawing.Size(93, 21);
+            this.dtpCaseFiledDate1.Size = new System.Drawing.Size(124, 25);
             this.dtpCaseFiledDate1.TabIndex = 1;
-            this.dtpCaseFiledDate1.ValueChanged += new System.EventHandler(this.dtpCaseFiledDate1_ValueChanged);
+            this.dtpCaseFiledDate1.ValueChanged += new System.EventHandler(this.DtpCaseFiledDate1_ValueChanged);
             // 
             // cmbCaseFiledDateComparison
             // 
@@ -154,9 +163,10 @@
             "<=",
             ">=",
             "RANGE"});
-            this.cmbCaseFiledDateComparison.Location = new System.Drawing.Point(3, 7);
+            this.cmbCaseFiledDateComparison.Location = new System.Drawing.Point(4, 9);
+            this.cmbCaseFiledDateComparison.Margin = new System.Windows.Forms.Padding(4);
             this.cmbCaseFiledDateComparison.Name = "cmbCaseFiledDateComparison";
-            this.cmbCaseFiledDateComparison.Size = new System.Drawing.Size(93, 21);
+            this.cmbCaseFiledDateComparison.Size = new System.Drawing.Size(124, 25);
             this.cmbCaseFiledDateComparison.TabIndex = 0;
             this.cmbCaseFiledDateComparison.SelectedIndexChanged += new System.EventHandler(this.CmbCaseFiledDateComparison_OnSelectedIndexChanged);
             // 
@@ -167,7 +177,8 @@
             this.gbDemandAmountFilter.CaptionStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
             this.gbDemandAmountFilter.GroupBackStyle = ComponentFactory.Krypton.Toolkit.PaletteBackStyle.ButtonLowProfile;
             this.gbDemandAmountFilter.GroupBorderStyle = ComponentFactory.Krypton.Toolkit.PaletteBorderStyle.GridHeaderColumnList;
-            this.gbDemandAmountFilter.Location = new System.Drawing.Point(709, 139);
+            this.gbDemandAmountFilter.Location = new System.Drawing.Point(945, 171);
+            this.gbDemandAmountFilter.Margin = new System.Windows.Forms.Padding(4);
             this.gbDemandAmountFilter.Name = "gbDemandAmountFilter";
             // 
             // gbDemandAmountFilter.Panel
@@ -175,25 +186,27 @@
             this.gbDemandAmountFilter.Panel.Controls.Add(this.txtDemandAmountValue2);
             this.gbDemandAmountFilter.Panel.Controls.Add(this.txtDemandAmountValue1);
             this.gbDemandAmountFilter.Panel.Controls.Add(this.cmbDemandAmountComparison);
-            this.gbDemandAmountFilter.Size = new System.Drawing.Size(173, 110);
+            this.gbDemandAmountFilter.Size = new System.Drawing.Size(231, 135);
             this.gbDemandAmountFilter.TabIndex = 20;
             this.gbDemandAmountFilter.Values.Heading = "Demand Amount";
             // 
             // txtDemandAmountValue2
             // 
             this.txtDemandAmountValue2.Enabled = false;
-            this.txtDemandAmountValue2.Location = new System.Drawing.Point(3, 59);
+            this.txtDemandAmountValue2.Location = new System.Drawing.Point(4, 73);
+            this.txtDemandAmountValue2.Margin = new System.Windows.Forms.Padding(4);
             this.txtDemandAmountValue2.Name = "txtDemandAmountValue2";
-            this.txtDemandAmountValue2.Size = new System.Drawing.Size(165, 23);
+            this.txtDemandAmountValue2.Size = new System.Drawing.Size(220, 27);
             this.txtDemandAmountValue2.TabIndex = 2;
             this.txtDemandAmountValue2.TextChanged += new System.EventHandler(this.TxtDemandAmountValue2_OnTextChanged);
             // 
             // txtDemandAmountValue1
             // 
             this.txtDemandAmountValue1.Enabled = false;
-            this.txtDemandAmountValue1.Location = new System.Drawing.Point(3, 30);
+            this.txtDemandAmountValue1.Location = new System.Drawing.Point(4, 37);
+            this.txtDemandAmountValue1.Margin = new System.Windows.Forms.Padding(4);
             this.txtDemandAmountValue1.Name = "txtDemandAmountValue1";
-            this.txtDemandAmountValue1.Size = new System.Drawing.Size(165, 23);
+            this.txtDemandAmountValue1.Size = new System.Drawing.Size(220, 27);
             this.txtDemandAmountValue1.TabIndex = 1;
             this.txtDemandAmountValue1.TextChanged += new System.EventHandler(this.TxtDemandAmountValue1_OnTextChanged);
             // 
@@ -206,54 +219,60 @@
             "<=",
             ">=",
             "RANGE"});
-            this.cmbDemandAmountComparison.Location = new System.Drawing.Point(3, 3);
+            this.cmbDemandAmountComparison.Location = new System.Drawing.Point(4, 4);
+            this.cmbDemandAmountComparison.Margin = new System.Windows.Forms.Padding(4);
             this.cmbDemandAmountComparison.Name = "cmbDemandAmountComparison";
-            this.cmbDemandAmountComparison.Size = new System.Drawing.Size(165, 21);
+            this.cmbDemandAmountComparison.Size = new System.Drawing.Size(220, 25);
             this.cmbDemandAmountComparison.TabIndex = 0;
             this.cmbDemandAmountComparison.SelectedIndexChanged += new System.EventHandler(this.CmbDemandAmountComparison_OnSelectedIndexChanged);
             // 
             // kryptonLabel3
             // 
             this.kryptonLabel3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.kryptonLabel3.Location = new System.Drawing.Point(1189, 139);
+            this.kryptonLabel3.Location = new System.Drawing.Point(1585, 172);
+            this.kryptonLabel3.Margin = new System.Windows.Forms.Padding(4);
             this.kryptonLabel3.Name = "kryptonLabel3";
-            this.kryptonLabel3.Size = new System.Drawing.Size(31, 20);
+            this.kryptonLabel3.Size = new System.Drawing.Size(38, 24);
             this.kryptonLabel3.TabIndex = 19;
             this.kryptonLabel3.Values.Text = "City";
             // 
             // kryptonLabel2
             // 
             this.kryptonLabel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.kryptonLabel2.Location = new System.Drawing.Point(448, 139);
+            this.kryptonLabel2.Location = new System.Drawing.Point(597, 172);
+            this.kryptonLabel2.Margin = new System.Windows.Forms.Padding(4);
             this.kryptonLabel2.Name = "kryptonLabel2";
-            this.kryptonLabel2.Size = new System.Drawing.Size(73, 20);
+            this.kryptonLabel2.Size = new System.Drawing.Size(90, 24);
             this.kryptonLabel2.TabIndex = 18;
             this.kryptonLabel2.Values.Text = "Case Status";
             // 
             // kryptonLabel1
             // 
             this.kryptonLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.kryptonLabel1.Location = new System.Drawing.Point(149, 139);
+            this.kryptonLabel1.Location = new System.Drawing.Point(199, 172);
+            this.kryptonLabel1.Margin = new System.Windows.Forms.Padding(4);
             this.kryptonLabel1.Name = "kryptonLabel1";
-            this.kryptonLabel1.Size = new System.Drawing.Size(45, 20);
+            this.kryptonLabel1.Size = new System.Drawing.Size(55, 24);
             this.kryptonLabel1.TabIndex = 17;
             this.kryptonLabel1.Values.Text = "Venue";
             // 
             // txtCityFilter
             // 
             this.txtCityFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtCityFilter.Location = new System.Drawing.Point(1189, 160);
+            this.txtCityFilter.Location = new System.Drawing.Point(1585, 197);
+            this.txtCityFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtCityFilter.Name = "txtCityFilter";
-            this.txtCityFilter.Size = new System.Drawing.Size(168, 23);
+            this.txtCityFilter.Size = new System.Drawing.Size(224, 27);
             this.txtCityFilter.TabIndex = 16;
             this.txtCityFilter.TextChanged += new System.EventHandler(this.TxtCityFilter_OnTextChanged);
             // 
             // txtCaseStatusFilter
             // 
             this.txtCaseStatusFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtCaseStatusFilter.Location = new System.Drawing.Point(448, 160);
+            this.txtCaseStatusFilter.Location = new System.Drawing.Point(597, 197);
+            this.txtCaseStatusFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtCaseStatusFilter.Name = "txtCaseStatusFilter";
-            this.txtCaseStatusFilter.Size = new System.Drawing.Size(172, 23);
+            this.txtCaseStatusFilter.Size = new System.Drawing.Size(229, 27);
             this.txtCaseStatusFilter.TabIndex = 15;
             this.txtCaseStatusFilter.TextChanged += new System.EventHandler(this.TxtCaseStatusFilter_OnTextChanged);
             // 
@@ -261,18 +280,20 @@
             // 
             this.cmbVenueFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cmbVenueFilter.DropDownWidth = 121;
-            this.cmbVenueFilter.Location = new System.Drawing.Point(153, 160);
+            this.cmbVenueFilter.Location = new System.Drawing.Point(204, 197);
+            this.cmbVenueFilter.Margin = new System.Windows.Forms.Padding(4);
             this.cmbVenueFilter.Name = "cmbVenueFilter";
-            this.cmbVenueFilter.Size = new System.Drawing.Size(179, 21);
+            this.cmbVenueFilter.Size = new System.Drawing.Size(239, 25);
             this.cmbVenueFilter.TabIndex = 14;
             this.cmbVenueFilter.SelectedIndexChanged += new System.EventHandler(this.CmbVenueFilter_OnSelectedIndexChanged);
             // 
             // btnExport
             // 
             this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnExport.Location = new System.Drawing.Point(1666, 80);
+            this.btnExport.Location = new System.Drawing.Point(2221, 98);
+            this.btnExport.Margin = new System.Windows.Forms.Padding(4);
             this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(116, 25);
+            this.btnExport.Size = new System.Drawing.Size(155, 31);
             this.btnExport.TabIndex = 29;
             this.btnExport.Values.Text = "Export";
             this.btnExport.Click += new System.EventHandler(this.BtnExport_OnClick);
@@ -280,9 +301,10 @@
             // btnFilter
             // 
             this.btnFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnFilter.Location = new System.Drawing.Point(1666, 37);
+            this.btnFilter.Location = new System.Drawing.Point(2221, 46);
+            this.btnFilter.Margin = new System.Windows.Forms.Padding(4);
             this.btnFilter.Name = "btnFilter";
-            this.btnFilter.Size = new System.Drawing.Size(116, 25);
+            this.btnFilter.Size = new System.Drawing.Size(155, 31);
             this.btnFilter.TabIndex = 28;
             this.btnFilter.Values.Text = "Filter";
             this.btnFilter.Click += new System.EventHandler(this.BtnFilter_OnClick);
@@ -290,42 +312,49 @@
             // kryptonLabel6
             // 
             this.kryptonLabel6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.kryptonLabel6.Location = new System.Drawing.Point(153, 13);
+            this.kryptonLabel6.Location = new System.Drawing.Point(204, 17);
+            this.kryptonLabel6.Margin = new System.Windows.Forms.Padding(4);
             this.kryptonLabel6.Name = "kryptonLabel6";
-            this.kryptonLabel6.Size = new System.Drawing.Size(41, 20);
+            this.kryptonLabel6.Size = new System.Drawing.Size(49, 24);
             this.kryptonLabel6.TabIndex = 27;
             this.kryptonLabel6.Values.Text = "Zip(s)";
             // 
             // kryptonLabel4
             // 
             this.kryptonLabel4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.kryptonLabel4.Location = new System.Drawing.Point(1453, 139);
+            this.kryptonLabel4.Location = new System.Drawing.Point(1937, 172);
+            this.kryptonLabel4.Margin = new System.Windows.Forms.Padding(4);
             this.kryptonLabel4.Name = "kryptonLabel4";
-            this.kryptonLabel4.Size = new System.Drawing.Size(38, 20);
+            this.kryptonLabel4.Size = new System.Drawing.Size(46, 24);
             this.kryptonLabel4.TabIndex = 25;
             this.kryptonLabel4.Values.Text = "State";
             // 
             // txtStateFilter
             // 
             this.txtStateFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtStateFilter.Location = new System.Drawing.Point(1453, 160);
+            this.txtStateFilter.Location = new System.Drawing.Point(1937, 197);
+            this.txtStateFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtStateFilter.Name = "txtStateFilter";
-            this.txtStateFilter.Size = new System.Drawing.Size(177, 23);
+            this.txtStateFilter.Size = new System.Drawing.Size(236, 27);
             this.txtStateFilter.TabIndex = 24;
             this.txtStateFilter.TextChanged += new System.EventHandler(this.TxtStateFilter_OnTextChanged);
             // 
             // txtZipFilter
             // 
             this.txtZipFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtZipFilter.Location = new System.Drawing.Point(153, 37);
+            this.txtZipFilter.Location = new System.Drawing.Point(204, 48);
+            this.txtZipFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtZipFilter.Name = "txtZipFilter";
-            this.txtZipFilter.Size = new System.Drawing.Size(1477, 96);
+            this.txtZipFilter.Size = new System.Drawing.Size(1969, 118);
             this.txtZipFilter.TabIndex = 32;
             this.txtZipFilter.Text = "";
             this.txtZipFilter.TextChanged += new System.EventHandler(this.TxtZipFilter_OnTextChanged);
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.btnDeleteZipList);
+            this.panel1.Controls.Add(this.btnSaveZipList);
+            this.panel1.Controls.Add(this.cmbPredefinedZipLists);
             this.panel1.Controls.Add(this.txtZipFilter);
             this.panel1.Controls.Add(this.cmbVenueFilter);
             this.panel1.Controls.Add(this.txtCaseStatusFilter);
@@ -343,21 +372,56 @@
             this.panel1.Controls.Add(this.kryptonLabel5);
             this.panel1.Controls.Add(this.txtDocketValueFilter);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 729);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1809, 261);
+            this.panel1.Size = new System.Drawing.Size(1924, 321);
             this.panel1.TabIndex = 33;
+            // 
+            // btnDeleteZipList
+            // 
+            this.btnDeleteZipList.Location = new System.Drawing.Point(661, 15);
+            this.btnDeleteZipList.Margin = new System.Windows.Forms.Padding(4);
+            this.btnDeleteZipList.Name = "btnDeleteZipList";
+            this.btnDeleteZipList.Size = new System.Drawing.Size(145, 29);
+            this.btnDeleteZipList.TabIndex = 35;
+            this.btnDeleteZipList.Values.Text = "Delete List";
+            this.btnDeleteZipList.Click += new System.EventHandler(this.BtnDeleteZipList_OnClick);
+            // 
+            // btnSaveZipList
+            // 
+            this.btnSaveZipList.Location = new System.Drawing.Point(508, 15);
+            this.btnSaveZipList.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSaveZipList.Name = "btnSaveZipList";
+            this.btnSaveZipList.Size = new System.Drawing.Size(145, 29);
+            this.btnSaveZipList.TabIndex = 34;
+            this.btnSaveZipList.Values.Text = "Save List";
+            this.btnSaveZipList.Click += new System.EventHandler(this.BtnSaveZipList_OnClick);
+            // 
+            // cmbPredefinedZipLists
+            // 
+            this.cmbPredefinedZipLists.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cmbPredefinedZipLists.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPredefinedZipLists.DropDownWidth = 121;
+            this.cmbPredefinedZipLists.Location = new System.Drawing.Point(261, 17);
+            this.cmbPredefinedZipLists.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbPredefinedZipLists.Name = "cmbPredefinedZipLists";
+            this.cmbPredefinedZipLists.Size = new System.Drawing.Size(239, 25);
+            this.cmbPredefinedZipLists.TabIndex = 33;
+            this.cmbPredefinedZipLists.SelectedIndexChanged += new System.EventHandler(this.CmbPredefinedZipLists_OnSelectedIndexChanged);
             // 
             // CourtsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1809, 729);
+            this.ClientSize = new System.Drawing.Size(1924, 897);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.dgvCourts);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "CourtsForm";
             this.Text = "NJCourts - Database view";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CourtsForm_OnFormClosed);
             this.Load += new System.EventHandler(this.CourtsForm_OnLoad);
             this.Shown += new System.EventHandler(this.CourtsForm_OnShown);
             ((System.ComponentModel.ISupportInitialize)(this.dgvCourts)).EndInit();
@@ -376,6 +440,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbVenueFilter)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbPredefinedZipLists)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -407,5 +472,8 @@
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox txtStateFilter;
         private ComponentFactory.Krypton.Toolkit.KryptonRichTextBox txtZipFilter;
         private System.Windows.Forms.Panel panel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonComboBox cmbPredefinedZipLists;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnDeleteZipList;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnSaveZipList;
     }
 }

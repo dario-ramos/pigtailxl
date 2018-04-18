@@ -17,9 +17,9 @@ namespace NJCourts.Presenters
         /**
          * Create model and set all event handlers
          */ 
-        public MainPresenter(IMainView view)
+        public MainPresenter(IMainView view, FileDataHandler fileDataHandler)
         {
-            _model = new MainModel();
+            _model = new MainModel(fileDataHandler);
             _view = view;
             _model.CountyFileUpdated += OnCountyUpdated;
             _model.DocketYearRead += OnDocketYearRead;
@@ -29,6 +29,14 @@ namespace NJCourts.Presenters
             _model.ProcessStopped += OnProcessStopped;
             _model.StoppingProcess += OnStoppingProcess;
             _model.Warning += OnWarning;
+        }
+
+        public FileDataHandler FileDataHandler
+        {
+            get
+            {
+                return _model.FileDataHandler;
+            }
         }
 
         /**

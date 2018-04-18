@@ -12,11 +12,13 @@ namespace NJCourts.Models
         public event Action CourtsDataRead;
 
         private DatabaseDataHandler _databaseDataHandler;
+        private FileDataHandler _fileDataHandler;
 
-        public CourtsModel()
+        public CourtsModel(FileDataHandler fileDataHandler)
         {
             _databaseDataHandler = new DatabaseDataHandler();
             _databaseDataHandler.DataLoaded += OnDatabaseDataLoaded;
+            _fileDataHandler = fileDataHandler;
         }
 
         /// <summary>
@@ -42,6 +44,40 @@ namespace NJCourts.Models
         }
 
         /// <summary>
+        /// All zip list names
+        /// </summary>
+        public List<string> ZipListNames
+        {
+            get
+            {
+                return _fileDataHandler.ZipListNames;
+            }
+        }
+
+        /// <summary>
+        /// Set the current zip list by its name
+        /// </summary>
+        public string CurrentZipList
+        {
+            get
+            {
+                return _fileDataHandler.CurrentZipList;
+            }
+            set
+            {
+                _fileDataHandler.CurrentZipList = value;
+            }
+        }
+
+        public List<string> CurrentZipListValues
+        {
+            get
+            {
+                return _fileDataHandler.CurrentZipListValues;
+            }
+        }
+
+        /// <summary>
         /// Current data filter (as a SQL where clause)
         /// </summary>
         public string Filter
@@ -50,6 +86,11 @@ namespace NJCourts.Models
             {
                 return _databaseDataHandler.Filter;
             }
+        }
+
+        public void DeleteCurrentZipList()
+        {
+            _fileDataHandler.DeleteCurrentZipList();
         }
 
         /// <summary>
@@ -66,6 +107,21 @@ namespace NJCourts.Models
         public void Init()
         {
             _databaseDataHandler.ReadData();
+        }
+
+        public void SaveCurrentZipList()
+        {
+            _fileDataHandler.SaveCurrentZipList();
+        }
+
+        /// <summary>
+        /// Create or update zip list
+        /// </summary>
+        /// <param name="listName">If list already exists, its values will be overwritten</param>
+        /// <param name="zipCodes">The new zip code list values</param>
+        public void SaveZipList(string listName, IEnumerable<string> zipCodes)
+        {
+            _fileDataHandler.SaveZipCodeList(listName, zipCodes);
         }
 
         /// <summary>

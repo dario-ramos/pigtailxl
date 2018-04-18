@@ -6,26 +6,30 @@ using System.Linq;
 
 namespace NJCourts.Models
 {
-    internal class FileDataHandler
+    public class FileDataHandler
     {
         public event Action CountiesRead;
         public event Action DateFiltersRead;
         public event Action DocketYearRead;
-        public event Action ZipCodeFiltersRead;
         public event Action<bool> DateFilterStateRead;
         public event Action<bool> ZipCodeFilterStateRead;
         public event Action<County> CountyUpdated;
         public event Action<string> Error;
         public event Action<string> Warning;
+
+        private const string ZIP_LIST_NAME_PREFIX = "_ZCL_";
         private DateTime _lastRead;
+        private Dictionary<string, List<string>> _zipCodeLists;
         private FileSystemWatcher _countiesWatcher;
+        private string _currentZipListName;
 
         public FileDataHandler()
         {
             Counties = new List<County>();
             DateFiledFrom = null;
             DateFiledTo = null;
-            ZipCodeFilters = new List<string>();
+            _zipCodeLists = new Dictionary<string, List<string>>();
+            _zipCodeLists[Constants.Placeholders.NEW_ZIP_LIST] = new List<string>();
             _lastRead = DateTime.MinValue;
             _countiesWatcher = new FileSystemWatcher();
         }
@@ -54,15 +58,57 @@ namespace NJCourts.Models
             private set;
         }
 
+        public List<string> CurrentZipListValues
+        {
+            get
+            {
+                return _zipCodeLists[_currentZipListName];
+            }
+        }
+
         public List<string> ZipCodeFilters
         {
-            get;
-            private set;
+            get
+            {
+                return _zipCodeLists[_currentZipListName];
+            }
+        }
+
+        public List<string> ZipListNames
+        {
+            get
+            {
+                return _zipCodeLists.Keys.ToList();
+            }
+        }
+
+        public string CurrentZipList
+        {
+            get
+            {
+                return _currentZipListName;
+            }
+            set
+            {
+                _currentZipListName = value;
+            }
         }
 
         public void ApplyFilters(List<County> selectedCounties)
         {
             SaveSelectedCounties(selectedCounties);
+        }
+
+        public void DeleteCurrentZipList()
+        {
+            if (CurrentZipList.Equals(Constants.Placeholders.NEW_ZIP_LIST))
+            {
+                return;
+            }
+            string fileToDelete = Path.Combine(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), CurrentZipList + ".txt");
+            _zipCodeLists.Remove(CurrentZipList);
+            File.Delete(fileToDelete);
+            CurrentZipList = Constants.Placeholders.NEW_ZIP_LIST;
         }
 
         public void Init()
@@ -92,6 +138,12 @@ namespace NJCourts.Models
             ReadCounties();
         }
 
+        public void SaveCurrentZipList()
+        {
+            string zipCodeFiltersFilePath = Path.Combine(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), Configuration.GetSetting(Configuration.ZIP_CODE_FILTERS_FILE));
+            File.WriteAllText(zipCodeFiltersFilePath, CurrentZipList);
+        }
+
         public void SaveDateFilterState(bool enabled)
         {
             SaveBooleanSetting(Configuration.GetSetting(Configuration.DATE_FILTERS_STATE_FILE), enabled);
@@ -109,6 +161,18 @@ namespace NJCourts.Models
         public void SaveZipCodeFilterState(bool enabled)
         {
             SaveBooleanSetting(Configuration.GetSetting(Configuration.ZIP_CODE_FILTER_STATE_FILE), enabled);
+        }
+
+        public void SaveZipCodeList(string listName, IEnumerable<string> zipCodes)
+        {
+            if (listName.Equals(Constants.Placeholders.NEW_ZIP_LIST)) //New list
+            {
+                listName = ZIP_LIST_NAME_PREFIX + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+            }
+            string listFilePath = Path.Combine(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), listName + ".txt");
+            File.WriteAllText(listFilePath, string.Join(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR.ToString(), zipCodes));
+            _zipCodeLists[Path.GetFileNameWithoutExtension(listFilePath)] = zipCodes.ToList();
+            CurrentZipList = listName;
         }
 
         private DateTime? ParseDate(string dateString, string dateVariableName)
@@ -307,12 +371,13 @@ namespace NJCourts.Models
             return new HashSet<string>(File.ReadAllLines(selectedCountiesFilePath));
         }
 
-        /**
-         * Read zip code filters from file. If file does not exist, create it empty.
-         * If a non numeric zip is read, warn and continue. When all are read, notify
-         */
+        ///<summary>
+        /// Read zip code filters from file. If file does not exist, create it empty.
+        /// If a non numeric zip is read, warn and continue
+        ///</summary>
         private void ReadZipCodeFilters()
         {
+            ReadZipCodeLists();
             string zipCodeFiltersFilePath = Path.Combine(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), Configuration.GetSetting(Configuration.ZIP_CODE_FILTERS_FILE));
             if (!File.Exists(zipCodeFiltersFilePath))
             {
@@ -322,16 +387,24 @@ namespace NJCourts.Models
             string zipCodeFilters = File.ReadAllText(zipCodeFiltersFilePath);
             if (string.IsNullOrWhiteSpace(zipCodeFilters))
             {
-                ZipCodeFiltersRead?.Invoke();
                 return;
             }
-            ZipCodeFilters = zipCodeFilters.Split(',').ToList();
-            ZipCodeFiltersRead?.Invoke();
+            _currentZipListName = zipCodeFilters.Trim();
         }
 
         private void ReadZipCodeFilterState()
         {
             ReadBooleanSetting(Configuration.GetSetting(Configuration.ZIP_CODE_FILTER_STATE_FILE), ZipCodeFilterStateRead);
+        }
+
+        private void ReadZipCodeLists()
+        {
+            IEnumerable<string> zipListFiles = Directory.EnumerateFiles(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), ZIP_LIST_NAME_PREFIX + "*.txt");
+            foreach(string zipListName in zipListFiles)
+            {
+                string zips = File.ReadAllText(zipListName);
+                _zipCodeLists[Path.GetFileNameWithoutExtension(zipListName)] = zips.Split(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR).ToList();
+            }
         }
 
         private void SaveBooleanSetting(string settingFileName, bool enabled)
@@ -356,13 +429,6 @@ namespace NJCourts.Models
         {
             string selectedCountiesFilePath = Path.Combine(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), Configuration.GetSetting(Configuration.SELECTED_COUNTIES_FILE));
             File.WriteAllLines(selectedCountiesFilePath, selectedCounties.Select(county => county.Name).ToArray());
-        }
-
-        private void SaveZipCodeFilters(List<string> zipCodeFilters)
-        {
-            string toSave = string.Join(",", zipCodeFilters);
-            string zipCodeFiltersFilePath = Path.Combine(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), Configuration.GetSetting(Configuration.ZIP_CODE_FILTERS_FILE));
-            File.WriteAllText(zipCodeFiltersFilePath, toSave);
         }
 
     }
