@@ -44,11 +44,23 @@ namespace NJCourts.Presenters
             }
         }
 
+        /// <summary>
+        /// Delete file, remove from zip lists and update current zip list
+        /// </summary>
         public void DeleteCurrentZipList()
         {
             _model.DeleteCurrentZipList();
             UpdateZipLists();
             _view.CurrentZipList = _model.CurrentZipList;
+        }
+
+        /// <summary>
+        /// Stop applying a specific filter
+        /// </summary>
+        /// <param name="fieldName">Field on which to disable filter</param>
+        public void DisableComparisonFilter(string fieldName)
+        {
+            _model.DisableComparisonFilter(fieldName);
         }
 
         /// <summary>
@@ -70,6 +82,14 @@ namespace NJCourts.Presenters
         }
 
         /// <summary>
+        /// Without exception
+        /// </summary>
+        public void MarkRecordsAsOld(IEnumerable<int> recordIds)
+        {
+            _model.MarkRecordsAsOld(recordIds);
+        }
+
+        /// <summary>
         /// Save zip list for later selection
         /// </summary>
         /// <param name="listName">Selected list name; if empty, new list will be created</param>
@@ -83,6 +103,16 @@ namespace NJCourts.Presenters
         }
 
         /// <summary>
+        /// Configure filter for a Yes/No field
+        /// </summary>
+        /// <param name="fieldName">The field name; see Constants.FieldNames for allowed values</param>
+        /// <param name="fieldValue">Tells whether to filter by fieldName == true or false</param>
+        public void SetFilterParameters(string fieldName, bool fieldValue)
+        {
+            _model.SetFilterParameters(fieldName, fieldValue);
+        }
+
+        /// <summary>
         /// Configure range comparison filter for a given field
         /// </summary>
         /// <param name="fieldName">The field name; see Constants.FieldNames for allowed values</param>
@@ -91,7 +121,7 @@ namespace NJCourts.Presenters
         /// <param name="value2">The filter expression will be: value1 comparison value2</param>
         public void SetFilterParameters(string fieldName, Constants.Comparison comparison, string value1, string value2)
         {
-            _model.SetFilterParemeters(fieldName, comparison, value1, value2);
+            _model.SetFilterParameters(fieldName, comparison, value1, value2);
         }
 
         /// <summary>

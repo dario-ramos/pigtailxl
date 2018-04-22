@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -69,6 +70,7 @@ namespace NJCourts.Views
             var bSource = new BindingSource();
             bSource.DataSource = data;
             dgvCourts.DataSource = bSource;
+            dgvCourts.Columns[Constants.FieldNames.NEW_RECORD_FLAG].Visible = false;
             dgvCourts.Sort(dgvCourts.Columns[Constants.DisplayFieldNames.DATE_TIME_OF_CREATION], System.ComponentModel.ListSortDirection.Descending);
         }
 
@@ -86,6 +88,12 @@ namespace NJCourts.Views
         {
             cmbPredefinedZipLists.Items.Clear();
             cmbPredefinedZipLists.Items.AddRange(zipListNames.ToArray());
+        }
+
+        private void ApplyFilter()
+        {
+            BindingSource bSource = (BindingSource)dgvCourts.DataSource;
+            bSource.Filter = _presenter.Filter;
         }
 
         private void BtnDeleteZipList_OnClick(object sender, EventArgs e)
@@ -110,13 +118,46 @@ namespace NJCourts.Views
 
         private void BtnFilter_OnClick(object sender, EventArgs e)
         {
-            BindingSource bSource = (BindingSource)dgvCourts.DataSource;
-            bSource.Filter = _presenter.Filter;
+            ApplyFilter();
+        }
+
+        private void BtnMarkRecordsAsOld_OnClick(object sender, EventArgs e)
+        {
+            var recordIds = from DataGridViewRow r in dgvCourts.Rows
+                            where r != null && r.Visible
+                            select (int) r.Cells[Constants.DisplayFieldNames.ID].Value;
+            _presenter.MarkRecordsAsOld(recordIds);
+            ApplyFilter();
         }
 
         private void BtnSaveZipList_OnClick(object sender, EventArgs e)
         {
+            string listName = cmbPredefinedZipLists.Text;
+            if (string.IsNullOrWhiteSpace(listName))
+            {
+                MessageBox.Show("Cannot save list with an empty name");
+                return;
+            }
+            if(listName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            {
+                MessageBox.Show("List name cannot contain the following characters: " + string.Join(",", Path.GetInvalidFileNameChars()));
+                return;
+            }
             _presenter.SaveZipList((string)cmbPredefinedZipLists.Text, txtZipFilter.Text);
+        }
+
+        private void CbShowAllRecords_OnCheckedChanged(object sender, EventArgs e)
+        {
+            var checkBox = sender as KryptonCheckBox;
+            if (checkBox.Checked)
+            {
+                _presenter.DisableComparisonFilter(Constants.FieldNames.NEW_RECORD_FLAG);
+            }
+            else
+            {
+                _presenter.SetFilterParameters(Constants.FieldNames.NEW_RECORD_FLAG, true);
+            }
+            ApplyFilter();
         }
 
         private void CmbCaseFiledDateComparison_OnSelectedIndexChanged(object sender, EventArgs e)

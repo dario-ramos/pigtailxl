@@ -53,6 +53,8 @@
             this.txtStateFilter = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.txtZipFilter = new ComponentFactory.Krypton.Toolkit.KryptonRichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.cbShowAllRecords = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
+            this.btnMarkRecordsAsOld = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.btnDeleteZipList = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.btnSaveZipList = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.cmbPredefinedZipLists = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
@@ -78,10 +80,11 @@
             this.dgvCourts.AllowUserToAddRows = false;
             this.dgvCourts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgvCourts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvCourts.Dock = System.Windows.Forms.DockStyle.Top;
             this.dgvCourts.Location = new System.Drawing.Point(0, 0);
             this.dgvCourts.Margin = new System.Windows.Forms.Padding(4);
             this.dgvCourts.Name = "dgvCourts";
-            this.dgvCourts.Size = new System.Drawing.Size(2412, 897);
+            this.dgvCourts.Size = new System.Drawing.Size(1924, 620);
             this.dgvCourts.TabIndex = 2;
             // 
             // kryptonComboBox1
@@ -95,7 +98,7 @@
             // kryptonLabel5
             // 
             this.kryptonLabel5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.kryptonLabel5.Location = new System.Drawing.Point(1243, 170);
+            this.kryptonLabel5.Location = new System.Drawing.Point(1039, 170);
             this.kryptonLabel5.Margin = new System.Windows.Forms.Padding(4);
             this.kryptonLabel5.Name = "kryptonLabel5";
             this.kryptonLabel5.Size = new System.Drawing.Size(102, 24);
@@ -105,7 +108,7 @@
             // txtDocketValueFilter
             // 
             this.txtDocketValueFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtDocketValueFilter.Location = new System.Drawing.Point(1243, 194);
+            this.txtDocketValueFilter.Location = new System.Drawing.Point(1039, 194);
             this.txtDocketValueFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtDocketValueFilter.Name = "txtDocketValueFilter";
             this.txtDocketValueFilter.Size = new System.Drawing.Size(221, 27);
@@ -177,7 +180,7 @@
             this.gbDemandAmountFilter.CaptionStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
             this.gbDemandAmountFilter.GroupBackStyle = ComponentFactory.Krypton.Toolkit.PaletteBackStyle.ButtonLowProfile;
             this.gbDemandAmountFilter.GroupBorderStyle = ComponentFactory.Krypton.Toolkit.PaletteBorderStyle.GridHeaderColumnList;
-            this.gbDemandAmountFilter.Location = new System.Drawing.Point(945, 171);
+            this.gbDemandAmountFilter.Location = new System.Drawing.Point(764, 171);
             this.gbDemandAmountFilter.Margin = new System.Windows.Forms.Padding(4);
             this.gbDemandAmountFilter.Name = "gbDemandAmountFilter";
             // 
@@ -229,7 +232,7 @@
             // kryptonLabel3
             // 
             this.kryptonLabel3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.kryptonLabel3.Location = new System.Drawing.Point(1585, 172);
+            this.kryptonLabel3.Location = new System.Drawing.Point(1283, 168);
             this.kryptonLabel3.Margin = new System.Windows.Forms.Padding(4);
             this.kryptonLabel3.Name = "kryptonLabel3";
             this.kryptonLabel3.Size = new System.Drawing.Size(38, 24);
@@ -239,7 +242,7 @@
             // kryptonLabel2
             // 
             this.kryptonLabel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.kryptonLabel2.Location = new System.Drawing.Point(597, 172);
+            this.kryptonLabel2.Location = new System.Drawing.Point(487, 172);
             this.kryptonLabel2.Margin = new System.Windows.Forms.Padding(4);
             this.kryptonLabel2.Name = "kryptonLabel2";
             this.kryptonLabel2.Size = new System.Drawing.Size(90, 24);
@@ -259,7 +262,7 @@
             // txtCityFilter
             // 
             this.txtCityFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtCityFilter.Location = new System.Drawing.Point(1585, 197);
+            this.txtCityFilter.Location = new System.Drawing.Point(1285, 193);
             this.txtCityFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtCityFilter.Name = "txtCityFilter";
             this.txtCityFilter.Size = new System.Drawing.Size(224, 27);
@@ -269,7 +272,7 @@
             // txtCaseStatusFilter
             // 
             this.txtCaseStatusFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtCaseStatusFilter.Location = new System.Drawing.Point(597, 197);
+            this.txtCaseStatusFilter.Location = new System.Drawing.Point(487, 197);
             this.txtCaseStatusFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtCaseStatusFilter.Name = "txtCaseStatusFilter";
             this.txtCaseStatusFilter.Size = new System.Drawing.Size(229, 27);
@@ -290,10 +293,10 @@
             // btnExport
             // 
             this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnExport.Location = new System.Drawing.Point(2221, 98);
+            this.btnExport.Location = new System.Drawing.Point(1584, 90);
             this.btnExport.Margin = new System.Windows.Forms.Padding(4);
             this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(155, 31);
+            this.btnExport.Size = new System.Drawing.Size(189, 31);
             this.btnExport.TabIndex = 29;
             this.btnExport.Values.Text = "Export";
             this.btnExport.Click += new System.EventHandler(this.BtnExport_OnClick);
@@ -301,10 +304,10 @@
             // btnFilter
             // 
             this.btnFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnFilter.Location = new System.Drawing.Point(2221, 46);
+            this.btnFilter.Location = new System.Drawing.Point(1584, 48);
             this.btnFilter.Margin = new System.Windows.Forms.Padding(4);
             this.btnFilter.Name = "btnFilter";
-            this.btnFilter.Size = new System.Drawing.Size(155, 31);
+            this.btnFilter.Size = new System.Drawing.Size(189, 31);
             this.btnFilter.TabIndex = 28;
             this.btnFilter.Values.Text = "Filter";
             this.btnFilter.Click += new System.EventHandler(this.BtnFilter_OnClick);
@@ -322,7 +325,7 @@
             // kryptonLabel4
             // 
             this.kryptonLabel4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.kryptonLabel4.Location = new System.Drawing.Point(1937, 172);
+            this.kryptonLabel4.Location = new System.Drawing.Point(1536, 169);
             this.kryptonLabel4.Margin = new System.Windows.Forms.Padding(4);
             this.kryptonLabel4.Name = "kryptonLabel4";
             this.kryptonLabel4.Size = new System.Drawing.Size(46, 24);
@@ -332,7 +335,7 @@
             // txtStateFilter
             // 
             this.txtStateFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtStateFilter.Location = new System.Drawing.Point(1937, 197);
+            this.txtStateFilter.Location = new System.Drawing.Point(1536, 193);
             this.txtStateFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtStateFilter.Name = "txtStateFilter";
             this.txtStateFilter.Size = new System.Drawing.Size(236, 27);
@@ -342,16 +345,18 @@
             // txtZipFilter
             // 
             this.txtZipFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtZipFilter.Location = new System.Drawing.Point(204, 48);
+            this.txtZipFilter.Location = new System.Drawing.Point(196, 48);
             this.txtZipFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtZipFilter.Name = "txtZipFilter";
-            this.txtZipFilter.Size = new System.Drawing.Size(1969, 118);
+            this.txtZipFilter.Size = new System.Drawing.Size(1313, 118);
             this.txtZipFilter.TabIndex = 32;
             this.txtZipFilter.Text = "";
             this.txtZipFilter.TextChanged += new System.EventHandler(this.TxtZipFilter_OnTextChanged);
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.cbShowAllRecords);
+            this.panel1.Controls.Add(this.btnMarkRecordsAsOld);
             this.panel1.Controls.Add(this.btnDeleteZipList);
             this.panel1.Controls.Add(this.btnSaveZipList);
             this.panel1.Controls.Add(this.cmbPredefinedZipLists);
@@ -372,11 +377,31 @@
             this.panel1.Controls.Add(this.kryptonLabel5);
             this.panel1.Controls.Add(this.txtDocketValueFilter);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(0, 620);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1924, 321);
             this.panel1.TabIndex = 33;
+            // 
+            // cbShowAllRecords
+            // 
+            this.cbShowAllRecords.Location = new System.Drawing.Point(1618, 13);
+            this.cbShowAllRecords.Name = "cbShowAllRecords";
+            this.cbShowAllRecords.Size = new System.Drawing.Size(136, 24);
+            this.cbShowAllRecords.TabIndex = 37;
+            this.cbShowAllRecords.Values.Text = "Show all records";
+            this.cbShowAllRecords.CheckedChanged += new System.EventHandler(this.CbShowAllRecords_OnCheckedChanged);
+            // 
+            // btnMarkRecordsAsOld
+            // 
+            this.btnMarkRecordsAsOld.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnMarkRecordsAsOld.Location = new System.Drawing.Point(1584, 135);
+            this.btnMarkRecordsAsOld.Margin = new System.Windows.Forms.Padding(4);
+            this.btnMarkRecordsAsOld.Name = "btnMarkRecordsAsOld";
+            this.btnMarkRecordsAsOld.Size = new System.Drawing.Size(189, 31);
+            this.btnMarkRecordsAsOld.TabIndex = 36;
+            this.btnMarkRecordsAsOld.Values.Text = "Mark records as old";
+            this.btnMarkRecordsAsOld.Click += new System.EventHandler(this.BtnMarkRecordsAsOld_OnClick);
             // 
             // btnDeleteZipList
             // 
@@ -473,5 +498,7 @@
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox cmbPredefinedZipLists;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnDeleteZipList;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnSaveZipList;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnMarkRecordsAsOld;
+        private ComponentFactory.Krypton.Toolkit.KryptonCheckBox cbShowAllRecords;
     }
 }

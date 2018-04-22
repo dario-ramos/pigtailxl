@@ -10,6 +10,7 @@ namespace NJCourts.Models
     {
         public enum Comparison
         {
+            BOOLEAN,
             EQUAL,
             GREATER,
             GREATER_OR_EQUAL,
@@ -106,6 +107,7 @@ namespace NJCourts.Models
             public const string DOCKET_VALUE = "njcDocketValue";
             public const string ID = "njcId";
             public const string VENUE = "njcVenue";
+            public const string NEW_RECORD_FLAG = "njcFlagNew";
         }
 
         public static class Placeholders
@@ -113,6 +115,7 @@ namespace NJCourts.Models
             public const char MULTIVALUE_FILTER_SEPARATOR = ',';
             public const string CASE_FILED_DATE_COMPARISON = "___njcCaseFiledDateComparison___";
             public const string DEMAND_AMOUNT_COMPARISON = "___njcDemandAmountComparison___";
+            public const string NEW_RECORD_FLAG_COMPARISON = "___njcNewFlagComparison___";
             public const string NEW_ZIP_LIST = "New List...";
             public const string ZIP_COMPARISON = "___njcZipComparison___";
         }

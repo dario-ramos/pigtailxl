@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
-using System.IO;
 using System.Linq;
 
 namespace NJCourts.Models
@@ -23,12 +22,12 @@ namespace NJCourts.Models
 
         public DatabaseDataHandler()
         {
-            Data = new DataTable();
             _filterTemplate = "[" + Constants.DisplayFieldNames.VENUE + "] like '%" + Constants.DisplayFieldNames.VENUE + "%' and " +
                               "[" + Constants.DisplayFieldNames.CASE_STATUS + "] like '%" + Constants.DisplayFieldNames.CASE_STATUS + "%' and " +
                               "[" + Constants.DisplayFieldNames.DEBTOR_CITY + "] like '%" + Constants.DisplayFieldNames.DEBTOR_CITY + "%' and " +
                               "[" + Constants.DisplayFieldNames.DOCKET_VALUE + "] like '%" + Constants.DisplayFieldNames.DOCKET_VALUE + "%' and " +
                               "[" + Constants.DisplayFieldNames.DEBTOR_STATE + "] like '%" + Constants.DisplayFieldNames.DEBTOR_STATE + "%' and " +
+                              Constants.Placeholders.NEW_RECORD_FLAG_COMPARISON + " and " +
                               Constants.Placeholders.DEMAND_AMOUNT_COMPARISON + " and " +
                               Constants.Placeholders.CASE_FILED_DATE_COMPARISON + " and " +
                               Constants.Placeholders.ZIP_COMPARISON;
@@ -47,6 +46,11 @@ namespace NJCourts.Models
             _comparisonFilterValues[Constants.DisplayFieldNames.CASE_FILED_DATE] = new ComparisonFilter
             {
                 Placeholder = Constants.Placeholders.CASE_FILED_DATE_COMPARISON,
+                Value = "true"
+            };
+            _comparisonFilterValues[Constants.FieldNames.NEW_RECORD_FLAG] = new ComparisonFilter
+            {
+                Placeholder = Constants.Placeholders.NEW_RECORD_FLAG_COMPARISON,
                 Value = "true"
             };
             _multivalueFilterValues = new Dictionary<string, ComparisonFilter>();
@@ -83,11 +87,42 @@ namespace NJCourts.Models
             }
         }
 
+        public void DisableComparisonFilter(string fieldName)
+        {
+            ComparisonFilter comparisonFilter = _comparisonFilterValues[fieldName];
+            comparisonFilter.Value = "true";
+            _comparisonFilterValues[fieldName] = comparisonFilter;
+        }
+
         public void Export(string exportedFilePath)
         {
             DataView filteredData = new DataView(Data);
             filteredData.RowFilter = UpdateFilter();
             filteredData.ToTable().ExportToExcel(exportedFilePath);
+        }
+
+        public void MarkRecordsAsOld(IEnumerable<int> recordIds)
+        {
+            using (OleDbConnection connection = new OleDbConnection(Configuration.GetSetting(Configuration.CONNECTION_STRING)))
+            {
+                OleDbCommand cmd = new OleDbCommand();
+                cmd.CommandType = CommandType.Text;
+                OleDbCommand command = new OleDbCommand("select * from NJCourts_Data;", connection);
+                string inClause = "(" + string.Join(",", recordIds) + ")";
+                cmd.CommandText = "UPDATE NJCourts_Data SET " + Constants.FieldNames.NEW_RECORD_FLAG + " = False WHERE " + Constants.FieldNames.ID + " IN " + inClause;
+                cmd.Connection = connection;
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            }
+            ReadData();
+        }
+
+        public void SetFilterParameters(string fieldName, bool fieldValue)
+        {
+            ComparisonFilter comparisonFilter = _comparisonFilterValues[fieldName];
+            string condition = fieldValue ? "True" : "False";
+            comparisonFilter.Value = fieldName + " = " + condition;
+            _comparisonFilterValues[fieldName] = comparisonFilter;
         }
 
         public void SetFilterParameters(string fieldName, string fieldValue)
@@ -140,6 +175,7 @@ namespace NJCourts.Models
 
         public void ReadData()
         {
+            Data = new DataTable();
             using (OleDbConnection connection = new OleDbConnection(Configuration.GetSetting(Configuration.CONNECTION_STRING)))
             {
                 connection.Open();
