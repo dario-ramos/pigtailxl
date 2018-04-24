@@ -105,7 +105,7 @@ namespace NJCourts.Models
             {
                 return;
             }
-            string fileToDelete = Path.Combine(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), CurrentZipList + ".txt");
+            string fileToDelete = Path.Combine(Configuration.GetSetting(Configuration.INPUT_DIRECTORY), ZIP_LISTS_SUBFOLDER, CurrentZipList + ".txt");
             _zipCodeLists.Remove(CurrentZipList);
             File.Delete(fileToDelete);
             CurrentZipList = Constants.Placeholders.NEW_ZIP_LIST;
