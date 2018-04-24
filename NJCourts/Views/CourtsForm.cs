@@ -72,6 +72,7 @@ namespace NJCourts.Views
             dgvCourts.DataSource = bSource;
             dgvCourts.Columns[Constants.FieldNames.NEW_RECORD_FLAG].Visible = false;
             dgvCourts.Sort(dgvCourts.Columns[Constants.DisplayFieldNames.DATE_TIME_OF_CREATION], System.ComponentModel.ListSortDirection.Descending);
+            ApplyFilter();
         }
 
         public void UpdateZipFilter(List<string> zipValues)

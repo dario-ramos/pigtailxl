@@ -51,7 +51,7 @@ namespace NJCourts.Models
             _comparisonFilterValues[Constants.FieldNames.NEW_RECORD_FLAG] = new ComparisonFilter
             {
                 Placeholder = Constants.Placeholders.NEW_RECORD_FLAG_COMPARISON,
-                Value = "true"
+                Value = Constants.FieldNames.NEW_RECORD_FLAG + " = True" //We only want new records on startup
             };
             _multivalueFilterValues = new Dictionary<string, ComparisonFilter>();
             _multivalueFilterValues[Constants.DisplayFieldNames.DEBTOR_ZIP] = new ComparisonFilter
