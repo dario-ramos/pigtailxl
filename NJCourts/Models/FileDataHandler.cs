@@ -79,7 +79,7 @@ namespace NJCourts.Models
             get
             {
                 List<string> sortedKeys = _zipCodeLists.Keys.ToList();
-                sortedKeys.Sort((zip1, zip2) => zip1 == Constants.Placeholders.NEW_ZIP_LIST ? 1 : zip1.CompareTo(zip2));
+                sortedKeys.Sort((zip1, zip2) => zip1 == Constants.Placeholders.NEW_ZIP_LIST ? 1 : zip2 == Constants.Placeholders.NEW_ZIP_LIST? -1 : zip1.CompareTo(zip2));
                 return sortedKeys;
             }
         }

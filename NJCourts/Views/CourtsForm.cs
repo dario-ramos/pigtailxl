@@ -32,14 +32,17 @@ namespace NJCourts.Views
         {
             set
             {
-                if (cmbPredefinedZipLists.Items.Contains(value))
+                BeginInvoke((Action)(() =>
                 {
-                    cmbPredefinedZipLists.SelectedItem = value;
-                }
-                else
-                {
-                    cmbPredefinedZipLists.SelectedItem = Constants.Placeholders.NEW_ZIP_LIST;
-                }
+                    if (cmbPredefinedZipLists.Items.Contains(value))
+                    {
+                        cmbPredefinedZipLists.SelectedItem = value;
+                    }
+                    else
+                    {
+                        cmbPredefinedZipLists.SelectedItem = Constants.Placeholders.NEW_ZIP_LIST;
+                    }
+                }));
             }
         }
 
@@ -49,8 +52,11 @@ namespace NJCourts.Views
         /// <param name="venues">List of possible venues</param>
         public void LoadVenueFilter(List<string> venues)
         {
-            cmbVenueFilter.Items.Clear();
-            cmbVenueFilter.Items.AddRange(venues.ToArray());
+            BeginInvoke((Action)(() =>
+            {
+                cmbVenueFilter.Items.Clear();
+                cmbVenueFilter.Items.AddRange(venues.ToArray());
+            }));
         }
 
         /// <summary>
@@ -60,7 +66,10 @@ namespace NJCourts.Views
         /// <param name="errorMsg">Plain text error message</param>
         public void ShowErrorMessage(string errorMsg)
         {
-            ShowColoredTextMessage(errorMsg, Color.Red);
+            BeginInvoke((Action)(() =>
+            {
+                ShowColoredTextMessage(errorMsg, Color.Red);
+            }));
         }
 
         /// <summary>
@@ -69,18 +78,24 @@ namespace NJCourts.Views
         /// <param name="data">Court data rows</param>
         public void UpdateCourtsData(DataTable data)
         {
-            var bSource = new BindingSource();
-            bSource.DataSource = data;
-            dgvCourts.DataSource = bSource;
-            dgvCourts.Columns[Constants.FieldNames.NEW_RECORD_FLAG].Visible = false;
-            dgvCourts.Sort(dgvCourts.Columns[Constants.DisplayFieldNames.DATE_TIME_OF_CREATION], System.ComponentModel.ListSortDirection.Descending);
-            ApplyFilter();
+            BeginInvoke((Action)(() =>
+            {
+                var bSource = new BindingSource();
+                bSource.DataSource = data;
+                dgvCourts.DataSource = bSource;
+                dgvCourts.Columns[Constants.FieldNames.NEW_RECORD_FLAG].Visible = false;
+                dgvCourts.Sort(dgvCourts.Columns[Constants.DisplayFieldNames.DATE_TIME_OF_CREATION], System.ComponentModel.ListSortDirection.Descending);
+                ApplyFilter();
+            }));
         }
 
         public void UpdateZipFilter(List<string> zipValues)
         {
-            txtZipFilter.Clear();
-            txtZipFilter.Text = string.Join(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR.ToString(), zipValues.ToArray());
+            BeginInvoke((Action)(() =>
+            {
+                txtZipFilter.Clear();
+                txtZipFilter.Text = string.Join(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR.ToString(), zipValues.ToArray());
+            }));
         }
 
         /// <summary>
@@ -89,8 +104,11 @@ namespace NJCourts.Views
         /// <param name="zipListNames">List names</param>
         public void UpdateZipLists(IEnumerable<string> zipListNames)
         {
-            cmbPredefinedZipLists.Items.Clear();
-            cmbPredefinedZipLists.Items.AddRange(zipListNames.ToArray());
+            BeginInvoke((Action)(() =>
+            {
+                cmbPredefinedZipLists.Items.Clear();
+                cmbPredefinedZipLists.Items.AddRange(zipListNames.ToArray());
+            }));
         }
 
         private void ApplyFilter()
