@@ -78,6 +78,7 @@ namespace NJCourts.Presenters
         public void Init()
         {
             _model.Init();
+            CurrentZipList = Constants.Placeholders.NEW_ZIP_LIST;
             UpdateZipLists();
         }
 
