@@ -2,10 +2,12 @@
 using NJCourts.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace NJCourts.Views
@@ -97,6 +99,31 @@ namespace NJCourts.Views
             bSource.Filter = _presenter.Filter;
         }
 
+        private void BgwMarkingRecords_OnDoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+            worker.ReportProgress(10);
+            var recordIds = from DataGridViewRow r in dgvCourts.Rows
+                            where r != null && r.Visible
+                            select (int)r.Cells[Constants.DisplayFieldNames.ID].Value;
+            worker.ReportProgress(20);
+            _presenter.MarkRecordsAsOld(recordIds);
+            worker.ReportProgress(90);
+            ApplyFilter();
+            worker.ReportProgress(100);
+        }
+
+        private void BgwMarkingRecords_OnProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            pgbMarkingRecords.Value = e.ProgressPercentage;
+        }
+
+        private void BgwMarkingRecords_OnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            btnMarkRecordsAsOld.Enabled = true;
+            pgbMarkingRecords.Visible = false;
+        }
+
         private void BtnDeleteZipList_OnClick(object sender, EventArgs e)
         {
             _presenter.DeleteCurrentZipList();
@@ -124,11 +151,13 @@ namespace NJCourts.Views
 
         private void BtnMarkRecordsAsOld_OnClick(object sender, EventArgs e)
         {
-            var recordIds = from DataGridViewRow r in dgvCourts.Rows
-                            where r != null && r.Visible
-                            select (int) r.Cells[Constants.DisplayFieldNames.ID].Value;
-            _presenter.MarkRecordsAsOld(recordIds);
-            ApplyFilter();
+            if( ! bgwMarkingRecords.IsBusy)
+            {
+                btnMarkRecordsAsOld.Enabled = false;
+                pgbMarkingRecords.Value = 0;
+                pgbMarkingRecords.Visible = true;
+                bgwMarkingRecords.RunWorkerAsync();
+            }
         }
 
         private void BtnSaveZipList_OnClick(object sender, EventArgs e)
