@@ -121,6 +121,7 @@ namespace NJCourts.Models
         /// </summary>
         public void Init()
         {
+            _databaseDataHandler.Init();
             _databaseDataHandler.ReadData();
         }
 
@@ -130,6 +131,14 @@ namespace NJCourts.Models
         public void MarkRecordsAsOld(IEnumerable<int> recordIds)
         {
             _databaseDataHandler.MarkRecordsAsOld(recordIds);
+        }
+
+        /// <summary>
+        /// Read from database using current filter
+        /// </summary>
+        public void ReadFromDatabase()
+        {
+            _databaseDataHandler.ReadData();
         }
 
         /// <summary>

@@ -22,28 +22,28 @@ namespace NJCourts.Models
 
         public DatabaseDataHandler()
         {
-            _filterTemplate = "[" + Constants.DisplayFieldNames.VENUE + "] like '%" + Constants.DisplayFieldNames.VENUE + "%' and " +
-                              "[" + Constants.DisplayFieldNames.CASE_STATUS + "] like '%" + Constants.DisplayFieldNames.CASE_STATUS + "%' and " +
-                              "[" + Constants.DisplayFieldNames.DEBTOR_CITY + "] like '%" + Constants.DisplayFieldNames.DEBTOR_CITY + "%' and " +
-                              "[" + Constants.DisplayFieldNames.DOCKET_VALUE + "] like '%" + Constants.DisplayFieldNames.DOCKET_VALUE + "%' and " +
-                              "[" + Constants.DisplayFieldNames.DEBTOR_STATE + "] like '%" + Constants.DisplayFieldNames.DEBTOR_STATE + "%' and " +
+            _filterTemplate = "[" + Constants.FieldNames.VENUE + "] like '%" + Constants.FieldNames.VENUE + "%' and " +
+                              "[" + Constants.FieldNames.CASE_STATUS + "] like '%" + Constants.FieldNames.CASE_STATUS + "%' and " +
+                              "[" + Constants.FieldNames.DEBTOR_CITY + "] like '%" + Constants.FieldNames.DEBTOR_CITY + "%' and " +
+                              "[" + Constants.FieldNames.DOCKET_VALUE + "] like '%" + Constants.FieldNames.DOCKET_VALUE + "%' and " +
+                              "[" + Constants.FieldNames.DEBTOR_STATE + "] like '%" + Constants.FieldNames.DEBTOR_STATE + "%' and " +
                               Constants.Placeholders.NEW_RECORD_FLAG_COMPARISON + " and " +
                               Constants.Placeholders.DEMAND_AMOUNT_COMPARISON + " and " +
                               Constants.Placeholders.CASE_FILED_DATE_COMPARISON + " and " +
                               Constants.Placeholders.ZIP_COMPARISON;
             _textFilterValues = new Dictionary<string, string>();
-            _textFilterValues[Constants.DisplayFieldNames.CASE_STATUS] = "";
-            _textFilterValues[Constants.DisplayFieldNames.DEBTOR_CITY] = "";
-            _textFilterValues[Constants.DisplayFieldNames.DOCKET_VALUE] = "";
-            _textFilterValues[Constants.DisplayFieldNames.DEBTOR_STATE] = "";
-            _textFilterValues[Constants.DisplayFieldNames.VENUE] = "";
+            _textFilterValues[Constants.FieldNames.CASE_STATUS] = "";
+            _textFilterValues[Constants.FieldNames.DEBTOR_CITY] = "";
+            _textFilterValues[Constants.FieldNames.DOCKET_VALUE] = "";
+            _textFilterValues[Constants.FieldNames.DEBTOR_STATE] = "";
+            _textFilterValues[Constants.FieldNames.VENUE] = "";
             _comparisonFilterValues = new Dictionary<string, ComparisonFilter>();
-            _comparisonFilterValues[Constants.DisplayFieldNames.DEMAND_AMOUNT] = new ComparisonFilter
+            _comparisonFilterValues[Constants.FieldNames.DEMAND_AMOUNT] = new ComparisonFilter
             {
                 Placeholder = Constants.Placeholders.DEMAND_AMOUNT_COMPARISON,
                 Value = "true"
             };
-            _comparisonFilterValues[Constants.DisplayFieldNames.CASE_FILED_DATE] = new ComparisonFilter
+            _comparisonFilterValues[Constants.FieldNames.CASE_FILED_DATE] = new ComparisonFilter
             {
                 Placeholder = Constants.Placeholders.CASE_FILED_DATE_COMPARISON,
                 Value = "true"
@@ -54,7 +54,7 @@ namespace NJCourts.Models
                 Value = Constants.FieldNames.NEW_RECORD_FLAG + " = True" //We only want new records on startup
             };
             _multivalueFilterValues = new Dictionary<string, ComparisonFilter>();
-            _multivalueFilterValues[Constants.DisplayFieldNames.DEBTOR_ZIP] = new ComparisonFilter
+            _multivalueFilterValues[Constants.FieldNames.DEBTOR_ZIP] = new ComparisonFilter
             {
                 Placeholder = Constants.Placeholders.ZIP_COMPARISON,
                 Value = "true"
@@ -69,14 +69,8 @@ namespace NJCourts.Models
 
         public List<string> Venues
         {
-            get
-            {
-                return Data.AsEnumerable()
-                    .GroupBy( row => row[Constants.DisplayFieldNames.VENUE] )
-                    .Select( group => group.First() )
-                    .Select( row => (string) row[Constants.DisplayFieldNames.VENUE] )
-                    .OrderBy(row => row).ToList();
-            }
+            get;
+            private set;
         }
 
         public string Filter
@@ -99,6 +93,19 @@ namespace NJCourts.Models
             DataView filteredData = new DataView(Data);
             filteredData.RowFilter = UpdateFilter();
             filteredData.ToTable().ExportToExcel(exportedFilePath);
+        }
+
+        public void Init()
+        {
+            var venues = new DataTable();
+            using (OleDbConnection connection = new OleDbConnection(Configuration.GetSetting(Configuration.CONNECTION_STRING)))
+            {
+                connection.Open();
+                OleDbCommand command = new OleDbCommand("SELECT distinct njcVenue from NJCourts_Data order by njcVenue;", connection);
+                OleDbDataAdapter adapter = new OleDbDataAdapter(command);
+                adapter.Fill(venues);
+            }
+            Venues = venues.AsEnumerable().Select(row => (string)row[Constants.FieldNames.VENUE]).ToList();
         }
 
         public void MarkRecordsAsOld(IEnumerable<int> recordIds)
@@ -141,14 +148,14 @@ namespace NJCourts.Models
             else if(comparison != Constants.Comparison.RANGE)
             {
                 ComparisonFilter comparisonFilter = _comparisonFilterValues[fieldName];
-                comparisonFilter.Value = "[" + fieldName + "] " + comparison.ComparisonToString() + " '" + value1 + "'";
+                comparisonFilter.Value = "[" + fieldName + "] " + comparison.ComparisonToString() + " " + value1 + " ";
                 _comparisonFilterValues[fieldName] = comparisonFilter;
             }
             else
             {
                 ComparisonFilter comparisonFilter = _comparisonFilterValues[fieldName];
-                comparisonFilter.Value = "([" + fieldName + "] " + Constants.Comparison.GREATER.ComparisonToString() + " '" + value1 + "' and [" +
-                                         fieldName + "] " + Constants.Comparison.LOWER.ComparisonToString() + " '" + value2 + "')";
+                comparisonFilter.Value = "([" + fieldName + "] " + Constants.Comparison.GREATER.ComparisonToString() + " " + value1 + " and [" +
+                                         fieldName + "] " + Constants.Comparison.LOWER.ComparisonToString() + " " + value2 + ")";
                 _comparisonFilterValues[fieldName] = comparisonFilter;
             }
         }
@@ -179,7 +186,7 @@ namespace NJCourts.Models
             using (OleDbConnection connection = new OleDbConnection(Configuration.GetSetting(Configuration.CONNECTION_STRING)))
             {
                 connection.Open();
-                OleDbCommand command = new OleDbCommand("select * from NJCourts_Data;", connection);
+                OleDbCommand command = new OleDbCommand("select * from NJCourts_Data where " + Filter + "; ", connection);
                 OleDbDataAdapter adapter = new OleDbDataAdapter(command);
                 adapter.Fill(Data);
             }

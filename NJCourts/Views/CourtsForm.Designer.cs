@@ -53,6 +53,7 @@
             this.txtStateFilter = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.txtZipFilter = new ComponentFactory.Krypton.Toolkit.KryptonRichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pgbReadingDatabase = new System.Windows.Forms.ProgressBar();
             this.pgbMarkingRecords = new System.Windows.Forms.ProgressBar();
             this.cbShowAllRecords = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.btnMarkRecordsAsOld = new ComponentFactory.Krypton.Toolkit.KryptonButton();
@@ -60,6 +61,7 @@
             this.btnSaveZipList = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.cmbPredefinedZipLists = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.bgwMarkingRecords = new System.ComponentModel.BackgroundWorker();
+            this.bgwReadingDatabase = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCourts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gbCaseFiledDate)).BeginInit();
@@ -357,6 +359,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.pgbReadingDatabase);
             this.panel1.Controls.Add(this.pgbMarkingRecords);
             this.panel1.Controls.Add(this.cbShowAllRecords);
             this.panel1.Controls.Add(this.btnMarkRecordsAsOld);
@@ -385,6 +388,14 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1924, 321);
             this.panel1.TabIndex = 33;
+            // 
+            // pgbReadingDatabase
+            // 
+            this.pgbReadingDatabase.Location = new System.Drawing.Point(1780, 48);
+            this.pgbReadingDatabase.Name = "pgbReadingDatabase";
+            this.pgbReadingDatabase.Size = new System.Drawing.Size(131, 31);
+            this.pgbReadingDatabase.TabIndex = 39;
+            this.pgbReadingDatabase.Visible = false;
             // 
             // pgbMarkingRecords
             // 
@@ -451,6 +462,13 @@
             this.bgwMarkingRecords.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BgwMarkingRecords_OnDoWork);
             this.bgwMarkingRecords.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BgwMarkingRecords_OnProgressChanged);
             this.bgwMarkingRecords.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BgwMarkingRecords_OnRunWorkerCompleted);
+            // 
+            // bgwReadingDatabase
+            // 
+            this.bgwReadingDatabase.WorkerReportsProgress = true;
+            this.bgwReadingDatabase.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BgwReadingDatabase_OnDoWork);
+            this.bgwReadingDatabase.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BgwReadingDatabase_OnProgressChanged);
+            this.bgwReadingDatabase.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BgwReadingDatabase_OnRunWorkerCompleted);
             // 
             // CourtsForm
             // 
@@ -520,5 +538,7 @@
         private ComponentFactory.Krypton.Toolkit.KryptonCheckBox cbShowAllRecords;
         private System.ComponentModel.BackgroundWorker bgwMarkingRecords;
         private System.Windows.Forms.ProgressBar pgbMarkingRecords;
+        private System.ComponentModel.BackgroundWorker bgwReadingDatabase;
+        private System.Windows.Forms.ProgressBar pgbReadingDatabase;
     }
 }

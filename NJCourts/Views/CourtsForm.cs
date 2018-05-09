@@ -85,7 +85,6 @@ namespace NJCourts.Views
                 dgvCourts.DataSource = bSource;
                 dgvCourts.Columns[Constants.FieldNames.NEW_RECORD_FLAG].Visible = false;
                 dgvCourts.Sort(dgvCourts.Columns[Constants.DisplayFieldNames.DATE_TIME_OF_CREATION], System.ComponentModel.ListSortDirection.Descending);
-                ApplyFilter();
             }));
         }
 
@@ -113,8 +112,8 @@ namespace NJCourts.Views
 
         private void ApplyFilter()
         {
-            BindingSource bSource = (BindingSource)dgvCourts.DataSource;
-            bSource.Filter = _presenter.Filter;
+            pgbReadingDatabase.Visible = true;
+            bgwReadingDatabase.RunWorkerAsync();
         }
 
         private void BgwMarkingRecords_OnDoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -127,7 +126,7 @@ namespace NJCourts.Views
             worker.ReportProgress(20);
             _presenter.MarkRecordsAsOld(recordIds);
             worker.ReportProgress(90);
-            ApplyFilter();
+            _presenter.ReadFromDatabase();
             worker.ReportProgress(100);
         }
 
@@ -140,6 +139,26 @@ namespace NJCourts.Views
         {
             btnMarkRecordsAsOld.Enabled = true;
             pgbMarkingRecords.Visible = false;
+        }
+
+        private void BgwReadingDatabase_OnDoWork(object sender, DoWorkEventArgs e)
+
+
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+            worker.ReportProgress(50);
+            _presenter.ReadFromDatabase();
+            worker.ReportProgress(100);
+        }
+
+        private void BgwReadingDatabase_OnProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            pgbReadingDatabase.Value = e.ProgressPercentage;
+        }
+
+        private void BgwReadingDatabase_OnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            pgbReadingDatabase.Visible = false;
         }
 
         private void BtnDeleteZipList_OnClick(object sender, EventArgs e)
@@ -234,7 +253,7 @@ namespace NJCourts.Views
         {
             var venueCombo = (KryptonComboBox)sender;
             string selectedVenue = (string)venueCombo.SelectedItem;
-            _presenter.SetFilterParameters(Constants.DisplayFieldNames.VENUE, selectedVenue);
+            _presenter.SetFilterParameters(Constants.FieldNames.VENUE, selectedVenue);
         }
 
         private void CourtsForm_OnLoad(object sender, System.EventArgs e)
@@ -276,7 +295,7 @@ namespace NJCourts.Views
             dtpCaseFiledDate2.Enabled = comparison == Constants.Comparison.RANGE;
             string value1 = dtpCaseFiledDate1.Text;
             string value2 = dtpCaseFiledDate2.Text;
-            _presenter.SetFilterParameters(Constants.DisplayFieldNames.CASE_FILED_DATE, comparison, value1, value2);
+            _presenter.SetFilterParameters(Constants.FieldNames.CASE_FILED_DATE, comparison, value1, value2);
         }
 
         private void OnDemandAmountFilterChanged()
@@ -284,7 +303,7 @@ namespace NJCourts.Views
             Constants.Comparison comparison = Constants.ComparisonFromString((string)cmbDemandAmountComparison.SelectedItem);
             string value1 = txtDemandAmountValue1.Text;
             string value2 = txtDemandAmountValue2.Text;
-            _presenter.SetFilterParameters(Constants.DisplayFieldNames.DEMAND_AMOUNT, comparison, value1, value2);
+            _presenter.SetFilterParameters(Constants.FieldNames.DEMAND_AMOUNT, comparison, value1, value2);
         }
 
         private void ShowColoredTextMessage(string msg, Color color)
@@ -297,7 +316,7 @@ namespace NJCourts.Views
 
         private void TxtCaseStatusFilter_OnTextChanged(object sender, EventArgs e)
         {
-            UpdateFilterTextField(sender, Constants.DisplayFieldNames.CASE_STATUS);
+            UpdateFilterTextField(sender, Constants.FieldNames.CASE_STATUS);
         }
 
         private void TxtDemandAmountValue1_OnTextChanged(object sender, EventArgs e)
@@ -312,24 +331,24 @@ namespace NJCourts.Views
 
         private void TxtCityFilter_OnTextChanged(object sender, EventArgs e)
         {
-            UpdateFilterTextField(sender, Constants.DisplayFieldNames.DEBTOR_CITY);
+            UpdateFilterTextField(sender, Constants.FieldNames.DEBTOR_CITY);
         }
 
         private void TxtDocketValueFilter_OnTextChanged(object sender, EventArgs e)
         {
-            UpdateFilterTextField(sender, Constants.DisplayFieldNames.DOCKET_VALUE);
+            UpdateFilterTextField(sender, Constants.FieldNames.DOCKET_VALUE);
         }
 
         private void TxtStateFilter_OnTextChanged(object sender, EventArgs e)
         {
-            UpdateFilterTextField(sender, Constants.DisplayFieldNames.DEBTOR_STATE);
+            UpdateFilterTextField(sender, Constants.FieldNames.DEBTOR_STATE);
         }
 
         private void TxtZipFilter_OnTextChanged(object sender, EventArgs e)
         {
             KryptonRichTextBox textControl = (KryptonRichTextBox)sender;
             List<string> zips = textControl.Text.Split(Constants.Placeholders.MULTIVALUE_FILTER_SEPARATOR).Select(s => s.Trim()).ToList();
-            _presenter.SetFilterParameters(Constants.DisplayFieldNames.DEBTOR_ZIP, zips);
+            _presenter.SetFilterParameters(Constants.FieldNames.DEBTOR_ZIP, zips);
         }
 
         private void UpdateFilterTextField(object sender, string fieldName)

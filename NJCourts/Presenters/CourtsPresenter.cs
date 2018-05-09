@@ -80,6 +80,7 @@ namespace NJCourts.Presenters
             _model.Init();
             CurrentZipList = Constants.Placeholders.NEW_ZIP_LIST;
             UpdateZipLists();
+            _view.LoadVenueFilter(_model.Venues);
         }
 
         /// <summary>
@@ -88,6 +89,14 @@ namespace NJCourts.Presenters
         public void MarkRecordsAsOld(IEnumerable<int> recordIds)
         {
             _model.MarkRecordsAsOld(recordIds);
+        }
+
+        /// <summary>
+        /// Fetch data from database using current filter
+        /// </summary>
+        public void ReadFromDatabase()
+        {
+            _model.ReadFromDatabase();
         }
 
         /// <summary>
@@ -157,7 +166,6 @@ namespace NJCourts.Presenters
         {
             //When data is read, send it to the view for display
             _view.UpdateCourtsData(_model.CourtsData);
-            _view.LoadVenueFilter(_model.Venues);
         }
     }
 }
