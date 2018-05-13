@@ -91,7 +91,6 @@ namespace NJCourts.Models
         public void Export(string exportedFilePath)
         {
             DataView filteredData = new DataView(Data);
-            filteredData.RowFilter = UpdateFilter();
             filteredData.ToTable().ExportToExcel(exportedFilePath);
         }
 
