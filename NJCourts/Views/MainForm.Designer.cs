@@ -49,10 +49,11 @@ namespace NJCourts
             // 
             // rtbMessageLog
             // 
-            this.rtbMessageLog.Location = new System.Drawing.Point(12, 647);
+            this.rtbMessageLog.Location = new System.Drawing.Point(21, 712);
+            this.rtbMessageLog.Margin = new System.Windows.Forms.Padding(4);
             this.rtbMessageLog.Name = "rtbMessageLog";
             this.rtbMessageLog.ReadOnly = true;
-            this.rtbMessageLog.Size = new System.Drawing.Size(593, 76);
+            this.rtbMessageLog.Size = new System.Drawing.Size(791, 94);
             this.rtbMessageLog.TabIndex = 0;
             this.rtbMessageLog.Text = "";
             // 
@@ -65,9 +66,10 @@ namespace NJCourts
             this.CountyName,
             this.CountyCode,
             this.Processed});
-            this.dgvCounties.Location = new System.Drawing.Point(16, 12);
+            this.dgvCounties.Location = new System.Drawing.Point(21, 15);
+            this.dgvCounties.Margin = new System.Windows.Forms.Padding(4);
             this.dgvCounties.Name = "dgvCounties";
-            this.dgvCounties.Size = new System.Drawing.Size(589, 557);
+            this.dgvCounties.Size = new System.Drawing.Size(785, 594);
             this.dgvCounties.TabIndex = 0;
             this.dgvCounties.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DgvCounties_OnCellMouseUp);
             this.dgvCounties.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvCounties_OnCellValueChanged);
@@ -115,50 +117,55 @@ namespace NJCourts
             // 
             // btnStartStopProcess
             // 
-            this.btnStartStopProcess.Location = new System.Drawing.Point(16, 580);
+            this.btnStartStopProcess.Location = new System.Drawing.Point(21, 630);
+            this.btnStartStopProcess.Margin = new System.Windows.Forms.Padding(4);
             this.btnStartStopProcess.Name = "btnStartStopProcess";
-            this.btnStartStopProcess.Size = new System.Drawing.Size(109, 35);
+            this.btnStartStopProcess.Size = new System.Drawing.Size(145, 43);
             this.btnStartStopProcess.TabIndex = 14;
             this.btnStartStopProcess.Values.Text = "Start Process";
             this.btnStartStopProcess.Click += new System.EventHandler(this.BtnStartStopProcess_OnClick);
             // 
             // kryptonLabel1
             // 
-            this.kryptonLabel1.Location = new System.Drawing.Point(12, 621);
+            this.kryptonLabel1.Location = new System.Drawing.Point(16, 680);
+            this.kryptonLabel1.Margin = new System.Windows.Forms.Padding(4);
             this.kryptonLabel1.Name = "kryptonLabel1";
-            this.kryptonLabel1.Size = new System.Drawing.Size(82, 20);
+            this.kryptonLabel1.Size = new System.Drawing.Size(101, 24);
             this.kryptonLabel1.TabIndex = 18;
             this.kryptonLabel1.Values.Text = "Message Log";
             // 
             // btnOpenCourtsDB
             // 
-            this.btnOpenCourtsDB.Location = new System.Drawing.Point(235, 582);
+            this.btnOpenCourtsDB.Location = new System.Drawing.Point(313, 632);
+            this.btnOpenCourtsDB.Margin = new System.Windows.Forms.Padding(4);
             this.btnOpenCourtsDB.Name = "btnOpenCourtsDB";
-            this.btnOpenCourtsDB.Size = new System.Drawing.Size(120, 33);
+            this.btnOpenCourtsDB.Size = new System.Drawing.Size(160, 41);
             this.btnOpenCourtsDB.TabIndex = 19;
             this.btnOpenCourtsDB.Values.Text = "Open Database";
             this.btnOpenCourtsDB.Click += new System.EventHandler(this.BtnOpenCourtsDB_OnClick);
             // 
             // txtDocketYear
             // 
-            this.txtDocketYear.Location = new System.Drawing.Point(491, 585);
+            this.txtDocketYear.Location = new System.Drawing.Point(655, 636);
+            this.txtDocketYear.Margin = new System.Windows.Forms.Padding(4);
             this.txtDocketYear.Name = "txtDocketYear";
-            this.txtDocketYear.Size = new System.Drawing.Size(114, 23);
+            this.txtDocketYear.Size = new System.Drawing.Size(152, 27);
             this.txtDocketYear.TabIndex = 20;
             // 
             // kryptonLabel2
             // 
-            this.kryptonLabel2.Location = new System.Drawing.Point(409, 585);
+            this.kryptonLabel2.Location = new System.Drawing.Point(545, 636);
+            this.kryptonLabel2.Margin = new System.Windows.Forms.Padding(4);
             this.kryptonLabel2.Name = "kryptonLabel2";
-            this.kryptonLabel2.Size = new System.Drawing.Size(76, 20);
+            this.kryptonLabel2.Size = new System.Drawing.Size(94, 24);
             this.kryptonLabel2.TabIndex = 21;
             this.kryptonLabel2.Values.Text = "Docket Year";
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(625, 733);
+            this.ClientSize = new System.Drawing.Size(833, 835);
             this.Controls.Add(this.kryptonLabel2);
             this.Controls.Add(this.txtDocketYear);
             this.Controls.Add(this.btnOpenCourtsDB);
@@ -166,6 +173,10 @@ namespace NJCourts
             this.Controls.Add(this.dgvCounties);
             this.Controls.Add(this.btnStartStopProcess);
             this.Controls.Add(this.rtbMessageLog);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximumSize = new System.Drawing.Size(851, 882);
+            this.MinimizeBox = false;
             this.Name = "MainForm";
             this.Text = "NJCourts - Desktop App";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
